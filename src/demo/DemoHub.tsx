@@ -22,6 +22,8 @@ import {
   TextField,
   TextFieldRow,
   type ThemeMode,
+  buildTranslatorExportPacket,
+  translatorExportPages,
   translatorFewShot,
   translatorPromptTemplate,
   useBinding,
@@ -405,6 +407,10 @@ const TextImageGallery: FC = () => {
 }
 
 const TranslatorSpecDemo: FC = () => {
+  const selectedPacket = useBinding('qq')
+  const packet = buildTranslatorExportPacket(selectedPacket.value)
+  const packetPreview = packet ? JSON.stringify(packet, null, 2) : ''
+
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <FormSection title="DSL 约束">
@@ -436,6 +442,27 @@ const TranslatorSpecDemo: FC = () => {
 
       <FormSection title="Prompt 模板">
         <TextEditor text={useBinding(translatorPromptTemplate)} frame={{ height: 320, maxWidth: 'infinity' }} />
+      </FormSection>
+
+      <FormSection title="Translator Export Packet">
+        <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <Picker
+            selection={selectedPacket}
+            pickerStyle="segmented"
+            options={translatorExportPages.map(page => ({
+              label: page.title,
+              value: page.id,
+            }))}
+          />
+          <Text foregroundStyle="secondary">
+            这不是整段源码直喂 AI，而是先导出结构化 context 包。
+          </Text>
+          <ScrollView frame={{ height: 360, maxWidth: 'infinity' }}>
+            <Text font="caption2.monospaced" textSelection="enabled">
+              {packetPreview}
+            </Text>
+          </ScrollView>
+        </VStack>
       </FormSection>
 
       <FormSection title="Few-shot">
