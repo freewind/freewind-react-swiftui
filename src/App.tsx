@@ -1,6 +1,6 @@
 import type { FC } from 'react'
-import { ContactsDemoScreen } from './demo/ContactsDemoScreen'
+import { DemoHub } from './demo/DemoHub'
 
 export const App: FC = () => {
-  return <ContactsDemoScreen />
+  return <DemoHub />
 }

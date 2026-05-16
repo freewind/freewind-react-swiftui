@@ -54,6 +54,7 @@ type ForegroundStyleToken =
   | 'green'
   | 'accentColor'
 type MaterialToken = 'thinMaterial' | 'ultraThinMaterial'
+type ThemeMode = 'light' | 'dark'
 type ButtonStyleToken = 'plain' | 'bordered' | 'borderedProminent' | 'borderless'
 type ControlSizeToken = 'mini' | 'small' | 'regular' | 'large'
 type PickerStyleToken = 'segmented'
@@ -214,21 +215,60 @@ type ContextMenuProps = {
 type WindowStyleProps = {
   minWidth?: number
   minHeight?: number
+  theme?: ThemeMode
 }
 
 const surfaceColors = {
-  appBg: '#f5f5f7',
-  panelBg: '#ffffff',
-  border: 'rgba(15, 23, 42, 0.08)',
-  secondaryText: '#6b7280',
-  tertiaryText: '#94a3b8',
-  accent: '#2563eb',
-  red: '#dc2626',
-  green: '#16a34a',
-  blue: '#2563eb',
-  material: 'rgba(255, 255, 255, 0.78)',
-  ultraThinMaterial: 'rgba(255, 255, 255, 0.6)',
+  appBg: 'var(--swui-app-bg)',
+  panelBg: 'var(--swui-panel-bg)',
+  border: 'var(--swui-border)',
+  primaryText: 'var(--swui-primary-text)',
+  secondaryText: 'var(--swui-secondary-text)',
+  tertiaryText: 'var(--swui-tertiary-text)',
+  accent: 'var(--swui-accent)',
+  red: 'var(--swui-red)',
+  green: 'var(--swui-green)',
+  blue: 'var(--swui-blue)',
+  material: 'var(--swui-material)',
+  ultraThinMaterial: 'var(--swui-ultra-thin-material)',
+  tertiaryFill: 'var(--swui-tertiary-fill)',
+  inputBg: 'var(--swui-input-bg)',
 } as const
+
+const themePalettes: Record<ThemeMode, Record<string, string>> = {
+  light: {
+    '--swui-app-bg': '#f3f3f5',
+    '--swui-panel-bg': '#ffffff',
+    '--swui-border': 'rgba(60, 60, 67, 0.16)',
+    '--swui-primary-text': '#111111',
+    '--swui-secondary-text': '#6e6e73',
+    '--swui-tertiary-text': '#8e8e93',
+    '--swui-accent': '#0a84ff',
+    '--swui-red': '#ff3b30',
+    '--swui-green': '#34c759',
+    '--swui-blue': '#0a84ff',
+    '--swui-material': 'rgba(255, 255, 255, 0.78)',
+    '--swui-ultra-thin-material': 'rgba(255, 255, 255, 0.58)',
+    '--swui-tertiary-fill': 'rgba(118, 118, 128, 0.12)',
+    '--swui-input-bg': '#ffffff',
+  },
+  dark: {
+    '--swui-app-bg': '#161618',
+    '--swui-panel-bg': '#1f1f22',
+    '--swui-border': 'rgba(84, 84, 88, 0.65)',
+    '--swui-primary-text': '#f5f5f7',
+    '--swui-secondary-text': '#a1a1aa',
+    '--swui-tertiary-text': '#8e8e93',
+    '--swui-accent': '#0a84ff',
+    '--swui-red': '#ff453a',
+    '--swui-green': '#32d74b',
+    '--swui-blue': '#64d2ff',
+    '--swui-material': 'rgba(44, 44, 46, 0.74)',
+    '--swui-ultra-thin-material': 'rgba(58, 58, 60, 0.52)',
+    '--swui-tertiary-fill': 'rgba(118, 118, 128, 0.24)',
+    '--swui-input-bg': '#2c2c2e',
+  },
+}
 
 const foregroundTokens: readonly ForegroundStyleToken[] = [
   'primary',
@@ -268,7 +308,7 @@ const fontStyles: Record<FontToken, CSSProperties> = {
 }
 
 const textColorMap: Record<ForegroundStyleToken, string> = {
-  primary: '#111827',
+  primary: surfaceColors.primaryText,
   secondary: surfaceColors.secondaryText,
   tertiary: surfaceColors.tertiaryText,
   red: surfaceColors.red,
@@ -678,10 +718,17 @@ export const ContextMenu: FC<ContextMenuProps> = ({ items, children }) => {
   )
 }
 
-export const WindowGroup: FC<PropsWithChildren<WindowStyleProps>> = ({ children, minWidth, minHeight }) => {
+export const WindowGroup: FC<PropsWithChildren<WindowStyleProps>> = ({
+  children,
+  minWidth,
+  minHeight,
+  theme = 'light',
+}) => {
+  const vars = themePalettes[theme] as CSSProperties
   return (
     <div
       style={{
+        ...vars,
         minWidth,
         minHeight,
         width: '100vw',
@@ -706,7 +753,7 @@ const inputChrome = (_style: TextFieldStyleToken): CSSProperties => {
     width: '100%',
     borderRadius: 10,
     border: `1px solid ${surfaceColors.border}`,
-    background: '#fff',
+    background: surfaceColors.inputBg,
     color: textColorMap.primary,
     padding: '10px 12px',
     fontSize: 15,
@@ -740,7 +787,7 @@ const buttonChrome = (
 
   switch (buttonStyle) {
     case 'bordered':
-      return { ...common, borderColor: surfaceColors.border, background: '#fff' }
+      return { ...common, borderColor: surfaceColors.border, background: surfaceColors.panelBg }
     case 'borderedProminent':
       return { ...common, background: surfaceColors.accent, color: '#fff' }
     case 'borderless':
@@ -944,7 +991,7 @@ const applyBackground = (style: CSSProperties, background?: BackgroundSpec) => {
 
   if (typeof background === 'string') {
     if (isForegroundToken(background)) {
-      style.background = background === 'tertiary' ? 'rgba(148, 163, 184, 0.14)' : textColorMap[background]
+      style.background = background === 'tertiary' ? surfaceColors.tertiaryFill : textColorMap[background]
       return
     }
     style.background = materialValue(background)
@@ -955,7 +1002,7 @@ const applyBackground = (style: CSSProperties, background?: BackgroundSpec) => {
   style.backdropFilter = background.fill.includes('Material') ? 'blur(18px)' : undefined
   style.backgroundColor = isForegroundToken(background.fill)
     ? background.fill === 'tertiary'
-      ? 'rgba(148, 163, 184, 0.14)'
+      ? surfaceColors.tertiaryFill
       : textColorMap[background.fill]
     : materialValue(background.fill)
 
@@ -996,6 +1043,7 @@ export type {
   FrameSpec,
   PickerOption,
   ShapeSpec,
+  ThemeMode,
   TextFieldStyleToken,
   ViewBaseProps,
 }
