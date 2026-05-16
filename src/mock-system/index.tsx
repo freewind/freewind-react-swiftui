@@ -17,6 +17,19 @@ export type DeviceIdentity = {
   deviceName: string
 }
 
+export type Peer = {
+  deviceId: string
+  deviceName: string
+  platform: 'macos' | 'ios'
+  isOnline: boolean
+  pinnedAt: number | null
+}
+
+export type PeerDigest = {
+  peer: Peer
+  lastMessagePreview: string
+}
+
 export type MockFileNode = {
   path: string
   fileName: string
@@ -84,6 +97,36 @@ export type MockEnvironment = {
   listFolder: (path: string) => MockFileNode[]
   setClipboardPath: (path: string | null) => void
   setPickedFiles: (paths: string[]) => void
+  appShell: AppShell
+}
+
+export type AppShell = {
+  deviceId: string
+  deviceName: string
+  logDogVersion: number
+  peerDigests: PeerDigest[]
+  openedDigest: PeerDigest | null
+  openedPeerId: string | null
+  isScanLogsPresented: boolean
+  scanLogs: string[]
+  downloadRoot: string
+  localAccessAddress: string
+  setScanLogsPresented: (isPresented: boolean) => void
+  openPeer: (peerDeviceId: string) => void
+  closeOpenedPeer: () => void
+  scanNow: () => void
+  renameDevice: (to: string) => void
+  togglePinned: (peerDeviceId: string) => void
+  hidePeer: (peerDeviceId: string) => void
+  clearChat: (peerDeviceId: string) => void
+  messages: (peerDeviceId: string) => ChatMessage[]
+  sendText: (to: Peer, text: string) => void
+  chooseFilesAndSend: (to: Peer) => void
+  sendClipboardImageFromPasteboard: (to: Peer) => void
+  saveMessageAttachment: (message: ChatMessage) => string | null
+  revealMessageAttachment: (message: ChatMessage) => void
+  openMessageAttachment: (message: ChatMessage) => void
+  openDirectory: (url: string) => void
 }
 
 type MockEnvironmentProviderProps = PropsWithChildren
@@ -164,6 +207,76 @@ const initialFiles: MockFileNode[] = [
   },
 ]
 
+const initialPeers: Peer[] = [
+  {
+    deviceId: 'peer-mac',
+    deviceName: 'MacBook Pro',
+    platform: 'macos',
+    isOnline: true,
+    pinnedAt: Date.now(),
+  },
+  {
+    deviceId: 'peer-ios',
+    deviceName: 'iPhone 16',
+    platform: 'ios',
+    isOnline: false,
+    pinnedAt: null,
+  },
+  {
+    deviceId: 'peer-test',
+    deviceName: '测试机',
+    platform: 'ios',
+    isOnline: true,
+    pinnedAt: null,
+  },
+]
+
+const initialMessages: Record<string, ChatMessage[]> = {
+  'peer-mac': [
+    {
+      messageId: 'm1',
+      conversationId: 'peer-mac',
+      kind: 'text',
+      status: 'sent',
+      textContent: '这个方向对，先做受限 DSL。',
+    },
+    {
+      messageId: 'm2',
+      conversationId: 'peer-mac',
+      kind: 'file',
+      status: 'sent',
+      filePath: '/Downloads/peer-mac/files/brief.md',
+      fileName: 'brief.md',
+    },
+    {
+      messageId: 'm3',
+      conversationId: 'peer-mac',
+      kind: 'image',
+      status: 'saved',
+      filePath: '/Downloads/peer-mac/images/sunrise.png',
+      fileName: 'sunrise.png',
+    },
+  ],
+  'peer-ios': [
+    {
+      messageId: 'm4',
+      conversationId: 'peer-ios',
+      kind: 'text',
+      status: 'pending',
+      textContent: '离线待发送',
+    },
+  ],
+  'peer-test': [
+    {
+      messageId: 'm5',
+      conversationId: 'peer-test',
+      kind: 'text',
+      status: 'sent',
+      textContent: '文件传输完成',
+    },
+  ],
+}
+
 const createInitialIdentity = (): DeviceIdentity => ({
   deviceId: 'mock-device-001',
   deviceName: 'macos-device',
@@ -177,6 +290,11 @@ export const MockEnvironmentProvider: FC<MockEnvironmentProviderProps & { childr
   const [clipboardPath, setClipboardPathState] = useState<string | null>('/Pictures/emoji-board.png')
   const [pickedFiles, setPickedFilesState] = useState<string[]>(['/Downloads/mock-note.txt'])
   const [recentEvents, setRecentEvents] = useState<MockOpenEvent[]>([])
+  const [peers, setPeers] = useState<Peer[]>(initialPeers)
+  const [openedPeerId, setOpenedPeerId] = useState<string | null>('peer-mac')
+  const [scanLogs, setScanLogs] = useState<string[]>(['discover peer 192.168.1.20', 'sync digest 3 conversations', 'rebuild list done'])
+  const [isScanLogsPresented, setIsScanLogsPresented] = useState(true)
+  const [messagesByPeer, setMessagesByPeer] = useState<Record<string, ChatMessage[]>>(initialMessages)
 
   const pushEvent = (event: MockOpenEvent) => {
     setRecentEvents(prev => [event, ...prev].slice(0, 12))
@@ -314,6 +432,144 @@ export const MockEnvironmentProvider: FC<MockEnvironmentProviderProps & { childr
     [createFile, files],
   )
 
+  const peerDigests = useMemo<PeerDigest[]>(
+    () =>
+      peers.map(peer => ({
+        peer,
+        lastMessagePreview: fileApi.messagePreview(
+          messagesByPeer[peer.deviceId]?.[messagesByPeer[peer.deviceId].length - 1] ?? {
+            messageId: `empty-${peer.deviceId}`,
+            conversationId: peer.deviceId,
+            kind: 'text',
+            status: 'sent',
+            textContent: '',
+          },
+        ),
+      })),
+    [fileApi, messagesByPeer, peers],
+  )
+
+  const openedDigest = peerDigests.find(item => item.peer.deviceId === openedPeerId) ?? null
+
+  const appShell = useMemo<AppShell>(
+    () => ({
+      deviceId: identity.deviceId,
+      deviceName: identity.deviceName,
+      logDogVersion: 1,
+      peerDigests,
+      openedDigest,
+      openedPeerId,
+      isScanLogsPresented,
+      scanLogs,
+      downloadRoot: makeDownloadRoot(),
+      localAccessAddress: '192.168.1.8:50321',
+      setScanLogsPresented: isPresented => setIsScanLogsPresented(isPresented),
+      openPeer: peerDeviceId => setOpenedPeerId(peerDeviceId),
+      closeOpenedPeer: () => setOpenedPeerId(null),
+      scanNow: () =>
+        setScanLogs(prev => [`scan at ${new Date().toLocaleTimeString()}`, 'discover peer 192.168.1.33', ...prev].slice(0, 8)),
+      renameDevice: to => {
+        const next = systemApi.renameDevice(systemApi.loadIdentity(), to)
+        if (next) {
+          setIdentity(next)
+        }
+      },
+      togglePinned: peerDeviceId =>
+        setPeers(prev =>
+          prev.map(peer =>
+            peer.deviceId === peerDeviceId
+              ? {
+                  ...peer,
+                  pinnedAt: peer.pinnedAt == null ? Date.now() : null,
+                }
+              : peer,
+          ),
+        ),
+      hidePeer: peerDeviceId => {
+        setPeers(prev => prev.filter(peer => peer.deviceId !== peerDeviceId))
+        setOpenedPeerId(prev => (prev === peerDeviceId ? null : prev))
+      },
+      clearChat: peerDeviceId =>
+        setMessagesByPeer(prev => ({
+          ...prev,
+          [peerDeviceId]: [],
+        })),
+      messages: peerDeviceId => messagesByPeer[peerDeviceId] ?? [],
+      sendText: (to, text) => {
+        const trimmed = text.trim()
+        if (!trimmed) {
+          return
+        }
+        const nextMessage: ChatMessage = {
+          messageId: `m-${Date.now()}`,
+          conversationId: to.deviceId,
+          kind: 'text',
+          status: to.isOnline ? 'sent' : 'pending',
+          textContent: trimmed,
+        }
+        setMessagesByPeer(prev => ({
+          ...prev,
+          [to.deviceId]: [...(prev[to.deviceId] ?? []), nextMessage],
+        }))
+      },
+      chooseFilesAndSend: to => {
+        const paths = systemApi.pickFiles()
+        const nextMessages: ChatMessage[] = paths
+          .map(path => fileApi.prepareOutgoingFile(path))
+          .filter((item): item is OutgoingFile => Boolean(item))
+          .map(file => ({
+            messageId: `m-${Date.now()}-${file.fileName}`,
+            conversationId: to.deviceId,
+            kind: file.kind,
+            status: to.isOnline ? 'sent' : 'pending',
+            filePath: file.url,
+            fileName: file.fileName,
+          }))
+        if (!nextMessages.length) {
+          return
+        }
+        setMessagesByPeer(prev => ({
+          ...prev,
+          [to.deviceId]: [...(prev[to.deviceId] ?? []), ...nextMessages],
+        }))
+      },
+      sendClipboardImageFromPasteboard: to => {
+        const image = systemApi.clipboardImage()
+        if (!image) {
+          return
+        }
+        pushEvent({ kind: 'clipboard', path: image.path })
+        const nextMessage: ChatMessage = {
+          messageId: `m-${Date.now()}-clipboard`,
+          conversationId: to.deviceId,
+          kind: 'image',
+          status: to.isOnline ? 'sent' : 'pending',
+          filePath: image.path,
+          fileName: image.fileName,
+        }
+        setMessagesByPeer(prev => ({
+          ...prev,
+          [to.deviceId]: [...(prev[to.deviceId] ?? []), nextMessage],
+        }))
+      },
+      saveMessageAttachment: message => fileApi.ensureSavedAttachment(message),
+      revealMessageAttachment: message => fileApi.revealAttachment(message),
+      openMessageAttachment: message => fileApi.openAttachment(message),
+      openDirectory: url => pushEvent({ kind: 'directory', path: url }),
+    }),
+    [
+      fileApi,
+      identity,
+      isScanLogsPresented,
+      messagesByPeer,
+      openedDigest,
+      openedPeerId,
+      peerDigests,
+      scanLogs,
+      systemApi,
+    ],
+  )
+
   const value = useMemo<MockEnvironment>(
     () => ({
       identity,
@@ -328,8 +584,9 @@ export const MockEnvironmentProvider: FC<MockEnvironmentProviderProps & { childr
       listFolder,
       setClipboardPath: setClipboardPathState,
       setPickedFiles: setPickedFilesState,
+      appShell,
     }),
-    [createFile, fileApi, files, identity, recentEvents, systemApi],
+    [appShell, createFile, fileApi, files, identity, recentEvents, systemApi],
   )
 
   return <MockEnvironmentContext.Provider value={value}>{children}</MockEnvironmentContext.Provider>
@@ -341,6 +598,10 @@ export const useMockEnvironment = (): MockEnvironment => {
     throw new Error('useMockEnvironment must be called inside MockEnvironmentProvider')
   }
   return value
+}
+
+export const useMockAppShell = (): AppShell => {
+  return useMockEnvironment().appShell
 }
 
 const findNode = (nodes: MockFileNode[], path: string): MockFileNode | null => {

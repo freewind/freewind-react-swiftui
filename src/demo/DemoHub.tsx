@@ -23,6 +23,7 @@ import {
   TextFieldRow,
   type ThemeMode,
   useBinding,
+  useMockAppShell,
   VStack,
   WindowGroup,
   useMockEnvironment,
@@ -48,12 +49,6 @@ const demoPages: DemoPage[] = [
   { id: 'image-browser', title: '图片浏览器', category: 'apps' },
   { id: 'file-browser', title: '文件浏览器', category: 'apps' },
   { id: 'system-api', title: '系统 API Mock', category: 'apps' },
-]
-
-const qqPeers = [
-  { id: '1', name: 'MacBook Pro', online: true, pinned: true, lastMessage: '刚收到图片', platform: 'macos' as const },
-  { id: '2', name: 'iPhone 16', online: false, pinned: false, lastMessage: '离线待发送', platform: 'ios' as const },
-  { id: '3', name: '测试机', online: true, pinned: false, lastMessage: '文件传输完成', platform: 'ios' as const },
 ]
 
 const todoItems = [
@@ -517,9 +512,9 @@ const FormAndSheetLayouts: FC = () => {
 }
 
 const QQDemo: FC = () => {
+  const shell = useMockAppShell()
   const selectedTab = useBinding(0)
   const draft = useBinding('这里先做 SwiftUI 风格 JSX。')
-  const scanLogsPresented = useBinding(true)
 
   return (
     <FormSection title="QQ / Chat Layout">
@@ -530,7 +525,7 @@ const QQDemo: FC = () => {
           background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 18 } }}
         >
           <VStack spacing={0} frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }}>
-            {selectedTab.value === 0 ? <ContactsPaneMini scanLogsPresented={scanLogsPresented} /> : null}
+            {selectedTab.value === 0 ? <ContactsPaneMini /> : null}
             {selectedTab.value === 1 ? <AttachmentPane title="图片" emptyText="还没有收到图片" /> : null}
             {selectedTab.value === 2 ? <AttachmentPane title="文件" emptyText="还没有收到文件" /> : null}
             {selectedTab.value === 3 ? <MePaneMini /> : null}
@@ -549,37 +544,43 @@ const QQDemo: FC = () => {
           />
         </VStack>
         <Divider axis="vertical" />
-        <ChatPanel draft={draft} />
+        {shell.openedDigest ? <ChatPanel draft={draft} /> : <EmptyChatPanel />}
       </HStack>
     </FormSection>
   )
 }
 
-const ContactsPaneMini: FC<{
-  scanLogsPresented: ReturnType<typeof useBinding<boolean>>
-}> = ({ scanLogsPresented }) => {
+const ContactsPaneMini: FC = () => {
+  const shell = useMockAppShell()
   return (
     <VStack spacing={0} frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }}>
       <HStack padding={{ horizontal: 10, top: 4, bottom: 8 }}>
         <Text font="title3.semibold">联系人</Text>
         <Spacer />
-        <Button title="扫描" buttonStyle="bordered" controlSize="small" />
+        <Button title="扫描" buttonStyle="bordered" controlSize="small" onPress={() => shell.scanNow()} />
       </HStack>
       <ScrollView frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }}>
         <VStack spacing={10} padding={10}>
-          {qqPeers.map(peer => (
-            <PeerRow key={peer.id} peer={peer} />
+          {shell.peerDigests.map(digest => (
+            <PeerRow key={digest.peer.deviceId} digest={digest} />
           ))}
         </VStack>
       </ScrollView>
-      <If when={scanLogsPresented.value}>
+      <If when={shell.isScanLogsPresented}>
         <Divider />
         <VStack spacing={6} padding={{ horizontal: 10, vertical: 8 }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-          <Text font="caption.semibold" foregroundStyle="secondary">
-            扫描日志
-          </Text>
-          <Text font="caption2.monospaced">discover peer 192.168.1.20</Text>
-          <Text font="caption2.monospaced">rebuild list done</Text>
+          <HStack>
+            <Text font="caption.semibold" foregroundStyle="secondary">
+              扫描日志
+            </Text>
+            <Spacer />
+            <Button title="关闭" buttonStyle="bordered" controlSize="small" onPress={() => shell.setScanLogsPresented(false)} />
+          </HStack>
+          {shell.scanLogs.map(line => (
+            <Text key={line} font="caption2.monospaced">
+              {line}
+            </Text>
+          ))}
         </VStack>
       </If>
     </VStack>
@@ -587,15 +588,19 @@ const ContactsPaneMini: FC<{
 }
 
 const PeerRow: FC<{
-  peer: {
-    id: string
-    name: string
-    online: boolean
-    pinned: boolean
-    lastMessage: string
-    platform: 'macos' | 'ios'
+  digest: {
+    peer: {
+      deviceId: string
+      deviceName: string
+      isOnline: boolean
+      pinnedAt: number | null
+      platform: 'macos' | 'ios'
+    }
+    lastMessagePreview: string
   }
-}> = ({ peer }) => {
+}> = ({ digest }) => {
+  const shell = useMockAppShell()
+  const peer = digest.peer
   return (
     <VStack
       spacing={8}
@@ -604,19 +609,22 @@ const PeerRow: FC<{
       background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
     >
       <HStack spacing={8}>
-        <Image systemName={peer.platform === 'macos' ? 'laptopcomputer' : 'iphone'} />
+        <Button buttonStyle="plain" onPress={() => shell.openPeer(peer.deviceId)}>
+          <Image systemName={peer.platform === 'macos' ? 'laptopcomputer' : 'iphone'} />
+        </Button>
         <VStack spacing={2} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
           <HStack spacing={4}>
-            <Text font="headline.semibold">{peer.name}</Text>
-            {peer.pinned ? <Image systemName="pin.fill" /> : null}
+            <Text font="headline.semibold">{peer.deviceName}</Text>
+            {peer.pinnedAt != null ? <Image systemName="pin.fill" /> : null}
           </HStack>
           <Text font="caption" foregroundStyle="secondary">
-            {peer.online ? '在线' : '离线'}
+            {peer.isOnline ? '在线' : '离线'}
           </Text>
         </VStack>
+        <Button title="置顶" buttonStyle="plain" onPress={() => shell.togglePinned(peer.deviceId)} />
       </HStack>
       <Text font="caption" foregroundStyle="secondary">
-        {peer.lastMessage}
+        {digest.lastMessagePreview}
       </Text>
     </VStack>
   )
@@ -637,25 +645,33 @@ const AttachmentPane: FC<{
 }
 
 const MePaneMini: FC = () => {
-  const draftDeviceName = useBinding('freewind-mac')
+  const shell = useMockAppShell()
+  const draftDeviceName = useBinding(shell.deviceName)
 
   return (
     <ScrollView frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }}>
       <VStack spacing={12} padding={14}>
         <FormSection title="我">
-          <Text font="headline">freewind-mac</Text>
+          <Text font="headline">{shell.deviceName}</Text>
           <Text font="caption2" foregroundStyle="secondary">
-            deviceId: abc-123 logV: 1
+            deviceId: {shell.deviceId} logV: {String(shell.logDogVersion)}
           </Text>
           <Text font="caption2.monospaced" foregroundStyle="secondary" textSelection="enabled">
-            192.168.1.8:50321
+            {shell.localAccessAddress}
           </Text>
         </FormSection>
         <FormSection title="设置">
           <TextFieldRow label="device name" text={draftDeviceName} placeholder="device name" />
           <HStack>
             <Spacer />
-            <Button title="保存" buttonStyle="borderedProminent" />
+            <Button title="保存" buttonStyle="borderedProminent" onPress={() => shell.renameDevice(draftDeviceName.value)} />
+          </HStack>
+        </FormSection>
+        <FormSection title="下载目录">
+          <HStack>
+            <Text foregroundStyle="secondary">{shell.downloadRoot}</Text>
+            <Spacer />
+            <Button title="打开" buttonStyle="bordered" onPress={() => shell.openDirectory(shell.downloadRoot)} />
           </HStack>
         </FormSection>
       </VStack>
@@ -666,29 +682,56 @@ const MePaneMini: FC = () => {
 const ChatPanel: FC<{
   draft: ReturnType<typeof useBinding<string>>
 }> = ({ draft }) => {
+  const shell = useMockAppShell()
+  const digest = shell.openedDigest
   const sheetPresented = useBinding(false)
+
+  if (!digest) {
+    return null
+  }
+
+  const chatMessages = shell.messages(digest.peer.deviceId)
 
   return (
     <VStack spacing={0} frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }}>
       <HStack spacing={12} padding={{ horizontal: 24, vertical: 10 }}>
-        <Image systemName="laptopcomputer" />
+        <Image systemName={digest.peer.platform === 'macos' ? 'laptopcomputer' : 'iphone'} />
         <VStack spacing={4} alignment="leading">
-          <Text font="title3.semibold">MacBook Pro</Text>
+          <Text font="title3.semibold">{digest.peer.deviceName}</Text>
           <Text font="caption" foregroundStyle="secondary">
-            在线
+            {digest.peer.isOnline ? '在线' : '离线'}
           </Text>
         </VStack>
         <Spacer />
-        <Button buttonStyle="borderless" onPress={() => sheetPresented.setValue(true)}>
+        <Button buttonStyle="borderless" onPress={() => shell.closeOpenedPeer()}>
           <Image systemName="xmark" />
         </Button>
       </HStack>
       <Divider />
       <ScrollView frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }}>
         <VStack spacing={14} padding={{ horizontal: 20, vertical: 18 }}>
-          <Bubble direction="inbound" text="这个方向对，先做受限 DSL。" meta="09:41" />
-          <Bubble direction="outbound" text="行，那我直接拿 React 热更调 UI。" meta="09:43" />
-          <Bubble direction="inbound" text="最后 AI 再转 SwiftUI。" meta="09:44" />
+          {chatMessages.map((message, index) => (
+            <Bubble
+              key={message.messageId}
+              direction={index % 2 === 0 ? 'inbound' : 'outbound'}
+              text={message.textContent ?? message.fileName ?? '[附件]'}
+              meta={message.status}
+              onOpen={
+                message.filePath
+                  ? () => {
+                      shell.openMessageAttachment(message)
+                    }
+                  : undefined
+              }
+              onSave={
+                message.filePath
+                  ? () => {
+                      shell.saveMessageAttachment(message)
+                    }
+                  : undefined
+              }
+            />
+          ))}
         </VStack>
       </ScrollView>
       <Divider />
@@ -700,8 +743,16 @@ const ChatPanel: FC<{
           </Text>
           <HStack>
             <Spacer />
-            <Button title="选文件" buttonStyle="bordered" />
-            <Button title="发送" buttonStyle="borderedProminent" />
+            <Button title="贴图" buttonStyle="bordered" onPress={() => shell.sendClipboardImageFromPasteboard(digest.peer)} />
+            <Button title="选文件" buttonStyle="bordered" onPress={() => shell.chooseFilesAndSend(digest.peer)} />
+            <Button
+              title="发送"
+              buttonStyle="borderedProminent"
+              onPress={() => {
+                shell.sendText(digest.peer, draft.value)
+                draft.setValue('')
+              }}
+            />
           </HStack>
         </VStack>
       </VStack>
@@ -724,11 +775,22 @@ const ChatPanel: FC<{
   )
 }
 
+const EmptyChatPanel: FC = () => {
+  return (
+    <VStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }} spacing={12}>
+      <Text font="title3.semibold">未选中会话</Text>
+      <Text foregroundStyle="secondary">从左侧选择联系人，或重新扫描。</Text>
+    </VStack>
+  )
+}
+
 const Bubble: FC<{
   direction: 'inbound' | 'outbound'
   text: string
   meta: string
-}> = ({ direction, text, meta }) => {
+  onOpen?: () => void
+  onSave?: () => void
+}> = ({ direction, text, meta, onOpen, onSave }) => {
   return (
     <HStack frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       {direction === 'outbound' ? <Spacer minLength={90} /> : null}
@@ -742,6 +804,12 @@ const Bubble: FC<{
         <Text font="caption" foregroundStyle="secondary">
           {meta}
         </Text>
+        {onOpen || onSave ? (
+          <HStack spacing={8}>
+            {onOpen ? <Button title="打开" buttonStyle="bordered" controlSize="small" onPress={onOpen} /> : null}
+            {onSave ? <Button title="保存" buttonStyle="bordered" controlSize="small" onPress={onSave} /> : null}
+          </HStack>
+        ) : null}
       </VStack>
       {direction === 'inbound' ? <Spacer minLength={90} /> : null}
     </HStack>
