@@ -526,6 +526,10 @@ export const LazyVStack: FC<StackProps> = props => {
   return <VStack {...props} />
 }
 
+export const LazyHStack: FC<StackProps> = props => {
+  return <HStack {...props} />
+}
+
 export const Spacer: FC<SpacerProps> = ({ minLength = 0 }) => {
   return <div style={{ flex: 1, minWidth: minLength, minHeight: minLength }} />
 }

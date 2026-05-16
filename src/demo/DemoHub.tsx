@@ -7,6 +7,7 @@ import {
   AppSystemApi,
   Button,
   ChatMessage,
+  ContextMenu,
   Divider,
   DropArea,
   FormSection,
@@ -15,6 +16,7 @@ import {
   If,
   Image,
   Label,
+  LazyHStack,
   MockEnvironmentProvider,
   MockFileNode,
   Picker,
@@ -316,6 +318,33 @@ const ComponentsGallery: FC = () => {
           </VStack>
         </FormSection>
       </HStack>
+
+      <FormSection title="Native-ish Controls">
+        <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <HStack spacing={10}>
+            <Button title="link style button" buttonStyle="link" />
+            <ContextMenu
+              items={[
+                { title: '置顶' },
+                { title: '清空聊天' },
+                { title: '删除' },
+              ]}
+            >
+              <Button title="contextMenu trigger" buttonStyle="bordered" />
+            </ContextMenu>
+          </HStack>
+
+          <ScrollView axes="horizontal" frame={{ maxWidth: 'infinity' }}>
+            <LazyHStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+              <Chip title="LazyHStack" />
+              <Chip title="GeometryReader" />
+              <Chip title="ScrollViewReader" />
+              <Chip title="WindowAccessor" />
+              <Chip title="DropArea" />
+            </LazyHStack>
+          </ScrollView>
+        </VStack>
+      </FormSection>
     </VStack>
   )
 }
@@ -470,9 +499,7 @@ const TranslatorSpecDemo: FC = () => {
             这不是整段源码直喂 AI，而是先导出结构化 context 包。
           </Text>
           <ScrollView frame={{ height: 360, maxWidth: 'infinity' }}>
-            <Text font="caption2.monospaced" textSelection="enabled">
-              {packetPreview}
-            </Text>
+            <CodePanel>{packetPreview}</CodePanel>
           </ScrollView>
         </VStack>
       </FormSection>
@@ -483,9 +510,7 @@ const TranslatorSpecDemo: FC = () => {
             这里先给一版 repo 内置 draft，后续再让 AI 在这个基础上细修。
           </Text>
           <ScrollView frame={{ height: 420, maxWidth: 'infinity' }}>
-            <Text font="caption2.monospaced" textSelection="enabled">
-              {swiftDraft}
-            </Text>
+            <CodePanel>{swiftDraft}</CodePanel>
           </ScrollView>
         </VStack>
       </FormSection>
@@ -562,9 +587,7 @@ const NativeSwiftSourceDemo: FC = () => {
           </Text>
           <Text font="headline">{currentSource.title}</Text>
           <ScrollView frame={{ height: 420, maxWidth: 'infinity' }}>
-            <Text font="caption2.monospaced" textSelection="enabled">
-              {currentSource.source}
-            </Text>
+            <CodePanel>{currentSource.source}</CodePanel>
           </ScrollView>
         </VStack>
       </FormSection>
@@ -644,17 +667,13 @@ const NativeSwiftSourceDemo: FC = () => {
 
       <FormSection title="Export Packet">
         <ScrollView frame={{ height: 260, maxWidth: 'infinity' }}>
-          <Text font="caption2.monospaced" textSelection="enabled">
-            {packet ? JSON.stringify(packet, null, 2) : ''}
-          </Text>
+          <CodePanel>{packet ? JSON.stringify(packet, null, 2) : ''}</CodePanel>
         </ScrollView>
       </FormSection>
 
       <FormSection title="SwiftUI Draft">
         <ScrollView frame={{ height: 420, maxWidth: 'infinity' }}>
-          <Text font="caption2.monospaced" textSelection="enabled">
-            {swiftDraft}
-          </Text>
+          <CodePanel>{swiftDraft}</CodePanel>
         </ScrollView>
       </FormSection>
     </VStack>
@@ -1488,5 +1507,35 @@ const MetricCard: FC<{
         {meta}
       </Text>
     </VStack>
+  )
+}
+
+const Chip: FC<{
+  title: string
+}> = ({ title }) => {
+  return (
+    <Text
+      padding={{ horizontal: 10, vertical: 6 }}
+      background={{ fill: 'thinMaterial', in: { kind: 'capsule' } }}
+      font="caption.semibold"
+    >
+      {title}
+    </Text>
+  )
+}
+
+const CodePanel: FC<{
+  children: string
+}> = ({ children }) => {
+  return (
+    <Text
+      font="caption2.monospaced"
+      textSelection="enabled"
+      padding={12}
+      frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+      background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+    >
+      {children}
+    </Text>
   )
 }
