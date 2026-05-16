@@ -1,12 +1,17 @@
 import type { FC } from 'react'
 import {
+  AppFileApi,
+  AppSystemApi,
   Button,
+  ChatMessage,
   Divider,
   FormSection,
   HStack,
   If,
   Image,
   Label,
+  MockEnvironmentProvider,
+  MockFileNode,
   Picker,
   ScrollView,
   Sheet,
@@ -20,6 +25,7 @@ import {
   useBinding,
   VStack,
   WindowGroup,
+  useMockEnvironment,
 } from '../swiftui'
 
 type DemoCategory = 'components' | 'layouts' | 'apps'
@@ -41,6 +47,7 @@ const demoPages: DemoPage[] = [
   { id: 'emoji', title: 'Emoji 选择器', category: 'apps' },
   { id: 'image-browser', title: '图片浏览器', category: 'apps' },
   { id: 'file-browser', title: '文件浏览器', category: 'apps' },
+  { id: 'system-api', title: '系统 API Mock', category: 'apps' },
 ]
 
 const qqPeers = [
@@ -88,26 +95,28 @@ export const DemoHub: FC = () => {
   const activePage = demoPages.find(page => page.id === currentPage.value) ?? demoPages[0]
 
   return (
-    <WindowGroup minWidth={1100} minHeight={760} theme={theme.value}>
-      <HStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }} spacing={0}>
-        <Sidebar
-          theme={theme}
-          category={category}
-          currentPage={currentPage}
-          pages={pages}
-          onOpenNotes={() => notesSheetPresented.setValue(true)}
-        />
-        <Divider axis="vertical" />
-        <ScrollView frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }}>
-          <VStack spacing={18} padding={20} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-            <HeroHeader activePage={activePage.title} />
-            {renderDemoPage(activePage.id)}
-          </VStack>
-        </ScrollView>
-      </HStack>
+    <MockEnvironmentProvider>
+      <WindowGroup minWidth={1100} minHeight={760} theme={theme.value}>
+        <HStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }} spacing={0}>
+          <Sidebar
+            theme={theme}
+            category={category}
+            currentPage={currentPage}
+            pages={pages}
+            onOpenNotes={() => notesSheetPresented.setValue(true)}
+          />
+          <Divider axis="vertical" />
+          <ScrollView frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }}>
+            <VStack spacing={18} padding={20} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+              <HeroHeader activePage={activePage.title} />
+              {renderDemoPage(activePage.id)}
+            </VStack>
+          </ScrollView>
+        </HStack>
 
-      <TextEditorSheet title="Demo Notes" isPresented={notesSheetPresented} text={notes} />
-    </WindowGroup>
+        <TextEditorSheet title="Demo Notes" isPresented={notesSheetPresented} text={notes} />
+      </WindowGroup>
+    </MockEnvironmentProvider>
   )
 }
 
@@ -225,6 +234,8 @@ const renderDemoPage = (pageId: string) => {
       return <ImageBrowserDemo />
     case 'file-browser':
       return <FileBrowserDemo />
+    case 'system-api':
+      return <SystemApiMockDemo />
     default:
       return <ComponentsGallery />
   }
@@ -909,6 +920,168 @@ const FileBrowserDemo: FC = () => {
         </VStack>
       </HStack>
     </FormSection>
+  )
+}
+
+const SystemApiMockDemo: FC = () => {
+  const env = useMockEnvironment()
+  const renameInput = useBinding(env.identity.deviceName)
+  const createFileName = useBinding('draft.txt')
+  const createFolderName = useBinding('new-folder')
+  const selectedFolder = useBinding('/Downloads')
+  const selectedPath = useBinding('/Downloads/mock-note.txt')
+  const message: ChatMessage = {
+    messageId: 'm1',
+    conversationId: 'peer-mac',
+    kind: 'file',
+    status: 'sent',
+    filePath: selectedPath.value,
+    fileName: selectedPath.value.split('/').pop(),
+  }
+  const [systemApi, fileApi] = [env.systemApi, env.fileApi] as [AppSystemApi, AppFileApi]
+
+  const folderOptions = ['/Downloads', '/Downloads/peer-mac/files', '/Downloads/peer-mac/images', '/Pictures']
+  const folderItems = env.listFolder(selectedFolder.value)
+
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="AppSystemApi">
+        <VStack spacing={12} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <Text>deviceId: {systemApi.loadIdentity().deviceId}</Text>
+          <Text>deviceName: {systemApi.loadIdentity().deviceName}</Text>
+          <Text>downloadRoot: {systemApi.makeDownloadRoot()}</Text>
+          <Text>pickFiles(): {systemApi.pickFiles().join(', ') || '[]'}</Text>
+          <Text>clipboardImage(): {systemApi.clipboardImage()?.fileName ?? 'nil'}</Text>
+          <HStack spacing={10}>
+            <TextField text={renameInput} placeholder="rename device" textFieldStyle="roundedBorder" frame={{ maxWidth: 'infinity' }} />
+            <Button
+              title="renameDevice"
+              buttonStyle="borderedProminent"
+              onPress={() => {
+                const next = systemApi.renameDevice(systemApi.loadIdentity(), renameInput.value)
+                if (next) {
+                  renameInput.setValue(next.deviceName)
+                }
+              }}
+            />
+          </HStack>
+        </VStack>
+      </FormSection>
+
+      <FormSection title="Mock File System">
+        <VStack spacing={12} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <Picker
+            selection={selectedFolder}
+            pickerStyle="segmented"
+            options={folderOptions.map(path => ({ label: path.split('/').pop() || '/', value: path }))}
+          />
+          <HStack spacing={10}>
+            <TextField text={createFolderName} placeholder="new folder" textFieldStyle="roundedBorder" frame={{ maxWidth: 'infinity' }} />
+            <Button
+              title="mkdir"
+              buttonStyle="bordered"
+              onPress={() =>
+                env.createFile(selectedFolder.value, {
+                  fileName: createFolderName.value,
+                  kind: 'folder',
+                  mimeType: 'inode/directory',
+                  data: '',
+                  children: [],
+                })
+              }
+            />
+          </HStack>
+          <HStack spacing={10}>
+            <TextField text={createFileName} placeholder="new file" textFieldStyle="roundedBorder" frame={{ maxWidth: 'infinity' }} />
+            <Button
+              title="touch"
+              buttonStyle="borderedProminent"
+              onPress={() =>
+                env.createFile(selectedFolder.value, {
+                  fileName: createFileName.value,
+                  kind: createFileName.value.endsWith('.png') ? 'image' : 'file',
+                  mimeType: createFileName.value.endsWith('.png') ? 'image/png' : 'text/plain',
+                  data: `mock data for ${createFileName.value}`,
+                })
+              }
+            />
+          </HStack>
+          <VStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            {folderItems.map(item => (
+              <MockFileRow
+                key={item.path}
+                item={item}
+                isSelected={selectedPath.value === item.path}
+                onSelect={() => selectedPath.setValue(item.path)}
+                onDelete={() => env.removePath(item.path)}
+                onReveal={() => fileApi.revealPath(item.path)}
+              />
+            ))}
+          </VStack>
+        </VStack>
+      </FormSection>
+
+      <FormSection title="AppFileApi">
+        <VStack spacing={12} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <Text>prepareOutgoingFile(): {JSON.stringify(fileApi.prepareOutgoingFile(selectedPath.value))}</Text>
+          <Text>readMessageData(): {fileApi.readMessageData(message) ?? 'nil'}</Text>
+          <Text>filePreview(): {fileApi.filePreview('file', 'brief.md')}</Text>
+          <Text>messagePreview(): {fileApi.messagePreview(message)}</Text>
+          <HStack spacing={10}>
+            <Button title="ensureSavedAttachment" buttonStyle="bordered" onPress={() => fileApi.ensureSavedAttachment(message)} />
+            <Button title="openAttachment" buttonStyle="bordered" onPress={() => fileApi.openAttachment(message)} />
+            <Button title="revealAttachment" buttonStyle="bordered" onPress={() => fileApi.revealAttachment(message)} />
+            <Button
+              title="saveIncomingFile"
+              buttonStyle="borderedProminent"
+              onPress={() => fileApi.saveIncomingFile('peer-ios', 'file', 'incoming.txt', 'mock incoming data')}
+            />
+          </HStack>
+        </VStack>
+      </FormSection>
+
+      <FormSection title="Recent Mock Events">
+        <VStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          {env.recentEvents.map((event, index) => (
+            <Text key={`${event.kind}-${event.path}-${String(index)}`} font="caption2.monospaced">
+              {event.kind}: {event.path}
+            </Text>
+          ))}
+        </VStack>
+      </FormSection>
+    </VStack>
+  )
+}
+
+const MockFileRow: FC<{
+  item: MockFileNode
+  isSelected: boolean
+  onSelect: () => void
+  onDelete: () => void
+  onReveal: () => void
+}> = ({ item, isSelected, onSelect, onDelete, onReveal }) => {
+  return (
+    <HStack
+      spacing={10}
+      padding={12}
+      frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+      background={{
+        fill: isSelected ? 'accentColor' : 'thinMaterial',
+        in: { kind: 'roundedRectangle', cornerRadius: 14 },
+      }}
+    >
+      <Button buttonStyle="plain" onPress={onSelect}>
+        <Image systemName={item.kind === 'image' ? 'photo' : item.kind === 'folder' ? 'doc' : 'doc'} />
+      </Button>
+      <VStack spacing={2} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        <Text foregroundColor={isSelected ? '#ffffff' : undefined}>{item.fileName}</Text>
+        <Text font="caption" foregroundColor={isSelected ? 'rgba(255,255,255,0.82)' : undefined} foregroundStyle={isSelected ? undefined : 'secondary'}>
+          {item.path}
+        </Text>
+      </VStack>
+      <Button title="reveal" buttonStyle="bordered" onPress={onReveal} />
+      <Button title="delete" buttonStyle="bordered" onPress={onDelete} />
+    </HStack>
   )
 }
 
