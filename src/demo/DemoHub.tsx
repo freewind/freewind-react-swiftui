@@ -23,6 +23,7 @@ import {
   TextFieldRow,
   type ThemeMode,
   buildTranslatorExportPacket,
+  buildSwiftUiDraft,
   translatorExportPages,
   translatorFewShot,
   translatorPromptTemplate,
@@ -410,6 +411,7 @@ const TranslatorSpecDemo: FC = () => {
   const selectedPacket = useBinding('qq')
   const packet = buildTranslatorExportPacket(selectedPacket.value)
   const packetPreview = packet ? JSON.stringify(packet, null, 2) : ''
+  const swiftDraft = buildSwiftUiDraft(packet)
 
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
@@ -460,6 +462,19 @@ const TranslatorSpecDemo: FC = () => {
           <ScrollView frame={{ height: 360, maxWidth: 'infinity' }}>
             <Text font="caption2.monospaced" textSelection="enabled">
               {packetPreview}
+            </Text>
+          </ScrollView>
+        </VStack>
+      </FormSection>
+
+      <FormSection title="SwiftUI Draft">
+        <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <Text foregroundStyle="secondary">
+            这里先给一版 repo 内置 draft，后续再让 AI 在这个基础上细修。
+          </Text>
+          <ScrollView frame={{ height: 420, maxWidth: 'infinity' }}>
+            <Text font="caption2.monospaced" textSelection="enabled">
+              {swiftDraft}
             </Text>
           </ScrollView>
         </VStack>
