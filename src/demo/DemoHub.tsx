@@ -1,11 +1,16 @@
 import type { FC } from 'react'
+import chatScreenSwiftSource from '../../../freewind-qq/native/macos/Sources/FreewindQQMac/Features/ChatScreen.swift?raw'
+import composerTextViewSwiftSource from '../../../freewind-qq/native/macos/Sources/FreewindQQMac/ComposerTextView.swift?raw'
+import rootViewSwiftSource from '../../../freewind-qq/native/macos/Sources/FreewindQQMac/Features/RootView.swift?raw'
 import {
   AppFileApi,
   AppSystemApi,
   Button,
   ChatMessage,
   Divider,
+  DropArea,
   FormSection,
+  GeometryReader,
   HStack,
   If,
   Image,
@@ -22,6 +27,7 @@ import {
   TextField,
   TextFieldRow,
   type ThemeMode,
+  ScrollViewReader,
   buildTranslatorExportPacket,
   buildSwiftUiDraft,
   translatorExportPages,
@@ -34,6 +40,7 @@ import {
   useMockEnvironment,
   swiftUiDslRules,
   swiftUiMappings,
+  WindowAccessor,
 } from '../swiftui'
 
 type DemoCategory = 'components' | 'layouts' | 'apps'
@@ -57,6 +64,7 @@ const demoPages: DemoPage[] = [
   { id: 'file-browser', title: '文件浏览器', category: 'apps' },
   { id: 'system-api', title: '系统 API Mock', category: 'apps' },
   { id: 'translator', title: '转换规约', category: 'components' },
+  { id: 'native-swift', title: '真实 Swift 代码', category: 'components' },
 ]
 
 const todoItems = [
@@ -223,6 +231,8 @@ const renderDemoPage = (pageId: string) => {
       return <TextImageGallery />
     case 'translator':
       return <TranslatorSpecDemo />
+    case 'native-swift':
+      return <NativeSwiftSourceDemo />
     case 'split-view':
       return <SplitViewLayouts />
     case 'dashboard':
@@ -506,6 +516,146 @@ const TranslatorSpecDemo: FC = () => {
             </VStack>
           ))}
         </VStack>
+      </FormSection>
+    </VStack>
+  )
+}
+
+const NativeSwiftSourceDemo: FC = () => {
+  const selectedSource = useBinding<'root' | 'chat' | 'composer'>('root')
+  const selectedPacket = useBinding<'qq' | 'system-api'>('qq')
+  const packet = buildTranslatorExportPacket(selectedPacket.value)
+  const swiftDraft = buildSwiftUiDraft(packet)
+
+  const sourceMap = {
+    root: {
+      title: 'RootView.swift',
+      source: rootViewSwiftSource,
+    },
+    chat: {
+      title: 'ChatScreen.swift',
+      source: chatScreenSwiftSource,
+    },
+    composer: {
+      title: 'ComposerTextView.swift',
+      source: composerTextViewSwiftSource,
+    },
+  } as const
+
+  const currentSource = sourceMap[selectedSource.value]
+
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="真实 Swift 源文件">
+        <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <Picker
+            selection={selectedSource}
+            pickerStyle="segmented"
+            options={[
+              { label: 'RootView', value: 'root' },
+              { label: 'ChatScreen', value: 'chat' },
+              { label: 'ComposerTextView', value: 'composer' },
+            ]}
+          />
+          <Text foregroundStyle="secondary">
+            这里直接显示 `/Users/peng.li/workspace/freewind-qq/native/macos` 里的真实 Swift 源码。
+          </Text>
+          <Text font="headline">{currentSource.title}</Text>
+          <ScrollView frame={{ height: 420, maxWidth: 'infinity' }}>
+            <Text font="caption2.monospaced" textSelection="enabled">
+              {currentSource.source}
+            </Text>
+          </ScrollView>
+        </VStack>
+      </FormSection>
+
+      <FormSection title="已补的 native/mock 对应">
+        <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <Text foregroundStyle="secondary">
+            为了对齐 `freewind-qq/native/macos` 真实用面，这里已补一批对应 mock/runtime 能力。
+          </Text>
+          <GeometryReader
+            padding={12}
+            background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+            frame={{ maxWidth: 'infinity' }}
+          >
+            {proxy => (
+              <VStack spacing={8} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+                <Text font="headline">GeometryReader</Text>
+                <Text font="caption2.monospaced">
+                  width: {String(proxy.size.width)} height: {String(proxy.size.height)}
+                </Text>
+              </VStack>
+            )}
+          </GeometryReader>
+
+          <ScrollViewReader
+            padding={12}
+            background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+            frame={{ maxWidth: 'infinity' }}
+          >
+            {proxy => (
+              <HStack>
+                <Text>ScrollViewReader mock</Text>
+                <Spacer />
+                <Button title="scrollTo(bottom)" buttonStyle="bordered" onPress={() => proxy.scrollTo('bottom', { anchor: 'bottom' })} />
+              </HStack>
+            )}
+          </ScrollViewReader>
+
+          <DropArea
+            padding={12}
+            background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+            frame={{ maxWidth: 'infinity' }}
+            onDrop={() => {}}
+          >
+            <Text>DropArea mock，对应 SwiftUI `onDrop` 语义。</Text>
+          </DropArea>
+
+          <VStack
+            spacing={8}
+            padding={12}
+            background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+            frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+          >
+            <Text font="headline">WindowAccessor</Text>
+            <Text foregroundStyle="secondary">对应 `NSViewRepresentable` bridge 的最小 mock。</Text>
+            <WindowAccessor onResolve={window => void window.title} />
+          </VStack>
+        </VStack>
+      </FormSection>
+
+      <FormSection title="对应 Demo / 预览">
+        <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <Picker
+            selection={selectedPacket}
+            pickerStyle="segmented"
+            options={[
+              { label: 'QQ', value: 'qq' },
+              { label: 'System API', value: 'system-api' },
+            ]}
+          />
+          <Text foregroundStyle="secondary">
+            用真实 Swift 源码做输入参考；下面是当前 repo 的 mock 预览与导出的 SwiftUI 草稿。
+          </Text>
+          {selectedPacket.value === 'qq' ? <QQDemo /> : <SystemApiMockDemo />}
+        </VStack>
+      </FormSection>
+
+      <FormSection title="Export Packet">
+        <ScrollView frame={{ height: 260, maxWidth: 'infinity' }}>
+          <Text font="caption2.monospaced" textSelection="enabled">
+            {packet ? JSON.stringify(packet, null, 2) : ''}
+          </Text>
+        </ScrollView>
+      </FormSection>
+
+      <FormSection title="SwiftUI Draft">
+        <ScrollView frame={{ height: 420, maxWidth: 'infinity' }}>
+          <Text font="caption2.monospaced" textSelection="enabled">
+            {swiftDraft}
+          </Text>
+        </ScrollView>
       </FormSection>
     </VStack>
   )

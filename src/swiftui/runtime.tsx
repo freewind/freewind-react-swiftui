@@ -12,6 +12,7 @@ import {
   type PropsWithChildren,
   type ReactElement,
   type ReactNode,
+  type RefObject,
 } from 'react'
 
 type Axis = 'horizontal' | 'vertical'
@@ -55,7 +56,7 @@ type ForegroundStyleToken =
   | 'accentColor'
 type MaterialToken = 'thinMaterial' | 'ultraThinMaterial'
 type ThemeMode = 'light' | 'dark'
-type ButtonStyleToken = 'plain' | 'bordered' | 'borderedProminent' | 'borderless'
+type ButtonStyleToken = 'plain' | 'bordered' | 'borderedProminent' | 'borderless' | 'link'
 type ControlSizeToken = 'mini' | 'small' | 'regular' | 'large'
 type PickerStyleToken = 'segmented'
 type TextFieldStyleToken = 'roundedBorder'
@@ -135,6 +136,23 @@ type ScrollViewProps = ViewBaseProps & {
   axes?: Axis | Axis[]
 }
 
+type GeometryProxy = {
+  size: {
+    width: number
+    height: number
+  }
+}
+
+type GeometryReaderProps = Omit<ViewBaseProps, 'children'> & {
+  children: (proxy: GeometryProxy) => ReactNode
+}
+
+type ScrollViewReaderProps = Omit<ViewBaseProps, 'children'> & {
+  children: (proxy: {
+    scrollTo: (id: string, options?: { anchor?: 'top' | 'center' | 'bottom' }) => void
+  }) => ReactNode
+}
+
 type ButtonProps = ViewBaseProps & {
   title?: string
   onPress?: () => void
@@ -210,6 +228,15 @@ type ContextMenuItem = {
 type ContextMenuProps = {
   items: ContextMenuItem[]
   children: ReactElement
+}
+
+type DropAreaProps = ViewBaseProps & {
+  isTargeted?: Binding<boolean>
+  onDrop?: () => void
+}
+
+type WindowAccessorProps = {
+  onResolve?: (window: { title: string }) => void
 }
 
 type WindowStyleProps = {
@@ -472,6 +499,29 @@ export const ScrollView: FC<ScrollViewProps> = ({ axes = 'vertical', children, .
   return <div style={style}>{children}</div>
 }
 
+export const GeometryReader: FC<GeometryReaderProps> = ({ children, ...rest }) => {
+  return (
+    <View {...rest}>
+      {children({
+        size: {
+          width: 1280,
+          height: 800,
+        },
+      })}
+    </View>
+  )
+}
+
+export const ScrollViewReader: FC<ScrollViewReaderProps> = ({ children, ...rest }) => {
+  return (
+    <View {...rest}>
+      {children({
+        scrollTo: () => {},
+      })}
+    </View>
+  )
+}
+
 export const LazyVStack: FC<StackProps> = props => {
   return <VStack {...props} />
 }
@@ -718,6 +768,45 @@ export const ContextMenu: FC<ContextMenuProps> = ({ items, children }) => {
   )
 }
 
+export const DropArea: FC<DropAreaProps> = ({ children, isTargeted, onDrop, ...rest }) => {
+  const targeted = Boolean(isTargeted?.value)
+  return (
+    <View
+      {...rest}
+      overlay={
+        targeted ? (
+          <Text
+            font="caption.semibold"
+            padding={{ horizontal: 12, vertical: 8 }}
+            background={{ fill: 'ultraThinMaterial', in: { kind: 'capsule' } }}
+          >
+            Drop Targeted
+          </Text>
+        ) : undefined
+      }
+    >
+      <Button
+        title="mock drop"
+        buttonStyle="plain"
+        onPress={() => {
+          if (isTargeted) {
+            isTargeted.setValue(!isTargeted.value)
+          }
+          onDrop?.()
+        }}
+      />
+      {children}
+    </View>
+  )
+}
+
+export const WindowAccessor: FC<WindowAccessorProps> = ({ onResolve }) => {
+  if (onResolve) {
+    onResolve({ title: 'Mock Window' })
+  }
+  return null
+}
+
 export const WindowGroup: FC<PropsWithChildren<WindowStyleProps>> = ({
   children,
   minWidth,
@@ -792,6 +881,8 @@ const buttonChrome = (
       return { ...common, background: surfaceColors.accent, color: '#fff' }
     case 'borderless':
       return { ...common, padding: 0 }
+    case 'link':
+      return { ...common, color: surfaceColors.accent, padding: 0, border: 'none', background: 'transparent' }
     case 'plain':
     default:
       return common
