@@ -22,11 +22,15 @@ import {
   TextField,
   TextFieldRow,
   type ThemeMode,
+  translatorFewShot,
+  translatorPromptTemplate,
   useBinding,
   useMockAppShell,
   VStack,
   WindowGroup,
   useMockEnvironment,
+  swiftUiDslRules,
+  swiftUiMappings,
 } from '../swiftui'
 
 type DemoCategory = 'components' | 'layouts' | 'apps'
@@ -49,6 +53,7 @@ const demoPages: DemoPage[] = [
   { id: 'image-browser', title: '图片浏览器', category: 'apps' },
   { id: 'file-browser', title: '文件浏览器', category: 'apps' },
   { id: 'system-api', title: '系统 API Mock', category: 'apps' },
+  { id: 'translator', title: '转换规约', category: 'components' },
 ]
 
 const todoItems = [
@@ -213,6 +218,8 @@ const renderDemoPage = (pageId: string) => {
       return <ControlsGallery />
     case 'text-image':
       return <TextImageGallery />
+    case 'translator':
+      return <TranslatorSpecDemo />
     case 'split-view':
       return <SplitViewLayouts />
     case 'dashboard':
@@ -391,6 +398,71 @@ const TextImageGallery: FC = () => {
               </Text>
             </VStack>
           </HStack>
+        </VStack>
+      </FormSection>
+    </VStack>
+  )
+}
+
+const TranslatorSpecDemo: FC = () => {
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="DSL 约束">
+        <VStack spacing={8} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          {swiftUiDslRules.map(rule => (
+            <Text key={rule}>{rule}</Text>
+          ))}
+        </VStack>
+      </FormSection>
+
+      <FormSection title="JSX -> SwiftUI 映射">
+        <VStack spacing={8} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          {swiftUiMappings.map(([jsxSide, swiftSide]) => (
+            <HStack
+              key={jsxSide}
+              spacing={10}
+              padding={12}
+              frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+              background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+            >
+              <Text font="caption2.monospaced" frame={{ width: 320, alignment: 'leading' }}>
+                {jsxSide}
+              </Text>
+              <Text foregroundStyle="secondary">{swiftSide}</Text>
+            </HStack>
+          ))}
+        </VStack>
+      </FormSection>
+
+      <FormSection title="Prompt 模板">
+        <TextEditor text={useBinding(translatorPromptTemplate)} frame={{ height: 320, maxWidth: 'infinity' }} />
+      </FormSection>
+
+      <FormSection title="Few-shot">
+        <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          {translatorFewShot.map(example => (
+            <VStack
+              key={example.title}
+              spacing={10}
+              padding={14}
+              frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+              background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
+            >
+              <Text font="headline">{example.title}</Text>
+              <Text font="caption.semibold" foregroundStyle="secondary">
+                JSX
+              </Text>
+              <Text font="caption2.monospaced" textSelection="enabled">
+                {example.jsx}
+              </Text>
+              <Text font="caption.semibold" foregroundStyle="secondary">
+                SwiftUI
+              </Text>
+              <Text font="caption2.monospaced" textSelection="enabled">
+                {example.swift}
+              </Text>
+            </VStack>
+          ))}
         </VStack>
       </FormSection>
     </VStack>
