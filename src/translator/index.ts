@@ -1,4 +1,5 @@
 export * from './types'
 export * from './pageRegistry'
+export * from './draftTemplates'
 export * from './buildTranslatorExportPacket'
 export * from './buildSwiftUiDraft'

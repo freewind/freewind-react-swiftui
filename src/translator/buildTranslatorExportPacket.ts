@@ -248,6 +248,138 @@ const packets: Record<string, TranslatorExportPacket> = {
       '</Scene>',
     ].join('\n'),
   },
+  'component-navigation-stack': {
+    page: getTranslatorPageMeta('component-navigation-stack')!,
+    constraints: baseConstraints,
+    mappings: baseMappings,
+    stateModels: ['NavigationPath', 'Binding<NavigationPath>'],
+    apiFacades: ['SceneLifecycleProvider'],
+    components: ['NavigationStack', 'NavigationLink', 'Toolbar', 'Button', 'Text'],
+    modifiers: ['padding', 'frame', 'background'],
+    fewShot: [
+      'destination push -> NavigationLink(destination:)',
+      'value route -> NavigationLink(value:)',
+    ],
+    prompt:
+      '把 NavigationStack demo 提炼成 SwiftUI 导航 reference，保留 path/value-driven 语义与本地栈状态。',
+    jsxSource: [
+      '<NavigationStack path={path}>',
+      '  <NavigationLink value="message-c" destination={<DetailPane />} />',
+      '</NavigationStack>',
+    ].join('\n'),
+  },
+  'component-list': {
+    page: getTranslatorPageMeta('component-list')!,
+    constraints: baseConstraints,
+    mappings: baseMappings,
+    stateModels: ['Binding<string | null>'],
+    apiFacades: ['AppShell'],
+    components: ['List', 'Section', 'NavigationLink', 'Text'],
+    modifiers: ['padding', 'frame', 'background', 'labelsHidden'],
+    fewShot: [
+      'plain list -> List',
+      'inset grouped section list -> List + Section',
+    ],
+    prompt:
+      '把 List demo 提炼成 SwiftUI 列表 reference，保留 selection、section、style 差异。',
+    jsxSource: [
+      '<List selection={selection} style="insetGrouped">',
+      '  <Section title="Devices">...</Section>',
+      '</List>',
+    ].join('\n'),
+  },
+  'component-sheet': {
+    page: getTranslatorPageMeta('component-sheet')!,
+    constraints: baseConstraints,
+    mappings: baseMappings,
+    stateModels: ['Binding<boolean>'],
+    apiFacades: ['SceneLifecycleProvider'],
+    components: ['Sheet', 'Button', 'Text', 'HStack', 'VStack'],
+    modifiers: ['padding', 'frame', 'background'],
+    fewShot: [
+      'standard sheet -> detents .large',
+      'compact confirm -> detents .medium + dismiss disabled',
+    ],
+    prompt:
+      '把 Sheet demo 提炼成 SwiftUI modal reference，保留 detents、dismiss 行为与内容层级。',
+    jsxSource: [
+      '<Sheet isPresented={presented} detents={["large"]}>',
+      '  <Text>Sheet 内容</Text>',
+      '</Sheet>',
+    ].join('\n'),
+  },
+  'component-popover': {
+    page: getTranslatorPageMeta('component-popover')!,
+    constraints: baseConstraints,
+    mappings: baseMappings,
+    stateModels: ['Binding<boolean>'],
+    apiFacades: ['AppSystemApi'],
+    components: ['Popover', 'Button', 'Text', 'VStack'],
+    modifiers: ['padding', 'frame', 'background'],
+    fewShot: [
+      'quick preview -> popover title/content',
+      'peer info card -> trailing edge popover',
+    ],
+    prompt:
+      '把 Popover demo 提炼成 SwiftUI quick action reference，保留 arrowEdge/title/dismiss。',
+    jsxSource: [
+      '<Popover isPresented={shown} title="Peer Info" arrowEdge="trailing">...</Popover>',
+    ].join('\n'),
+  },
+  'component-table': {
+    page: getTranslatorPageMeta('component-table')!,
+    constraints: baseConstraints,
+    mappings: baseMappings,
+    stateModels: ['Binding<string | null>'],
+    apiFacades: ['AppShell'],
+    components: ['Table', 'Button', 'Text', 'HStack'],
+    modifiers: ['padding', 'frame', 'background'],
+    fewShot: [
+      'column config -> TableColumn[]',
+      'row action -> rowActions',
+    ],
+    prompt:
+      '把 Table demo 提炼成 SwiftUI 数据表 reference，保留 column、selection、rowActions 语义。',
+    jsxSource: [
+      '<Table columns={columns} dataSource={peers} selection={selection} rowActions={...} />',
+    ].join('\n'),
+  },
+  'component-text-field': {
+    page: getTranslatorPageMeta('component-text-field')!,
+    constraints: baseConstraints,
+    mappings: baseMappings,
+    stateModels: ['Binding<string>', 'FocusState<string | null>'],
+    apiFacades: ['FocusedValuesProvider'],
+    components: ['TextField', 'Button', 'Text', 'VStack'],
+    modifiers: ['frame', 'tint', 'controlSize'],
+    fewShot: [
+      'focus binding -> focused/equals',
+      'submit label -> onSubmit/submitLabel',
+    ],
+    prompt:
+      '把 TextField demo 提炼成 SwiftUI 输入框 reference，保留 focus、submit、tint、controlSize。',
+    jsxSource: [
+      '<TextField text={deviceName} focused={focus} equals="deviceName" submitLabel="search" />',
+    ].join('\n'),
+  },
+  'component-text-editor': {
+    page: getTranslatorPageMeta('component-text-editor')!,
+    constraints: baseConstraints,
+    mappings: baseMappings,
+    stateModels: ['Binding<string>', 'FocusState<string | null>'],
+    apiFacades: ['FocusedValuesProvider'],
+    components: ['TextEditor', 'Button', 'Text', 'VStack'],
+    modifiers: ['frame', 'tint'],
+    fewShot: [
+      'multiline draft -> TextEditor',
+      'focus long editor -> focus state binding',
+    ],
+    prompt:
+      '把 TextEditor demo 提炼成 SwiftUI 多行输入 reference，保留 draft/focus/height 语义。',
+    jsxSource: [
+      '<TextEditor text={draft} focused={focus} equals="draft" frame={{ height: 140 }} />',
+    ].join('\n'),
+  },
 }
 
 export const buildTranslatorExportPacket = (pageId: string): TranslatorExportPacket => {

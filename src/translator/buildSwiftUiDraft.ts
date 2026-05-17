@@ -1,6 +1,12 @@
 import type { TranslatorExportPacket } from './types'
+import { draftTemplates } from './draftTemplates'
 
 export const buildSwiftUiDraft = (packet: TranslatorExportPacket): string => {
+  const pageAwareTemplate = draftTemplates[packet.page.id]
+  if (pageAwareTemplate) {
+    return pageAwareTemplate(packet)
+  }
+
   const components = packet.components.join(', ')
   const modifiers = packet.modifiers.join(', ')
 

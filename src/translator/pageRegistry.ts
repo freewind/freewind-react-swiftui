@@ -80,6 +80,48 @@ export const translatorPageRegistry: TranslatorPageMeta[] = [
     intent: '展示 scene role 与 phase/lifecycle stub。',
     category: 'component',
   },
+  {
+    id: 'component-navigation-stack',
+    title: 'NavigationStack',
+    intent: '展示 path/value-driven 导航与本地栈状态。',
+    category: 'component',
+  },
+  {
+    id: 'component-list',
+    title: 'List',
+    intent: '展示 plain/insetGrouped、selection 与 section 组合。',
+    category: 'component',
+  },
+  {
+    id: 'component-sheet',
+    title: 'Sheet',
+    intent: '展示 detents、dismiss、modal 生命周期 stub。',
+    category: 'component',
+  },
+  {
+    id: 'component-popover',
+    title: 'Popover',
+    intent: '展示 title/arrowEdge/quick action 浮层语义。',
+    category: 'component',
+  },
+  {
+    id: 'component-table',
+    title: 'Table',
+    intent: '展示 column/selection/rowActions 数据表语义。',
+    category: 'component',
+  },
+  {
+    id: 'component-text-field',
+    title: 'TextField',
+    intent: '展示 focus/submit/tint/controlSize 文本输入语义。',
+    category: 'component',
+  },
+  {
+    id: 'component-text-editor',
+    title: 'TextEditor',
+    intent: '展示多行输入、focus、高度与 draft state。',
+    category: 'component',
+  },
 ]
 
 export const getTranslatorPageMeta = (pageId: string): TranslatorPageMeta | undefined => {
