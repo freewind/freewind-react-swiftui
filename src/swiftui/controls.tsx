@@ -1,5 +1,5 @@
 import { useMemo, useState, type FC, type ReactNode } from 'react'
-import { Button, HStack, Sheet, Text, TextEditor, TextField, VStack, type Binding } from './runtime'
+import { Button, HStack, Sheet, Spacer, Text, TextEditor, TextField, VStack, type Binding } from './runtime'
 
 export type ObservableObject<T extends object> = {
   value: T
@@ -50,7 +50,7 @@ export const SheetActions: FC<{
 }> = ({ onCancel, onConfirm, cancelTitle = '取消', confirmTitle = '保存' }) => {
   return (
     <HStack spacing={10}>
-      <div style={{ flex: 1 }} />
+      <Spacer />
       <Button title={cancelTitle} buttonStyle="bordered" onPress={onCancel} />
       <Button title={confirmTitle} buttonStyle="borderedProminent" onPress={onConfirm} />
     </HStack>

@@ -17,15 +17,16 @@ export const WindowAccessorDemo: FC = () => {
         </VStack>
       </FormSection>
       <PlaygroundSection
-        title="WindowAccessor Playground"
+        title="读取窗口信息"
+        summary="当前兼容层先 mock `onResolve(window)`，用于桥接窗口对象。"
         preview={
           <VStack spacing={8} padding={12} background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
             <Text font="headline">WindowAccessor</Text>
+            <Text foregroundStyle="secondary">resolve 后把 title 写回 binding。</Text>
             <WindowAccessor onResolve={window => resolved.setValue(window.title)} />
             <Text font="caption2.monospaced">{resolved.value}</Text>
           </VStack>
         }
-        form={<Text foregroundStyle="secondary">当前支持面：`onResolve(window)` mock</Text>}
       />
     </VStack>
   )

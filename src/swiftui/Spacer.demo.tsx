@@ -1,14 +1,12 @@
 import type { FC } from 'react'
-import { HStack, Spacer, Text, useBinding, VStack } from './runtime'
+import { HStack, Spacer, Text, VStack } from './runtime'
 import { FormSection } from './controls'
-import { NumberField, PlaygroundSection, toNumber } from './demo-playground'
+import { PlaygroundSection } from './demo-playground'
 
 export const SpacerDemo: FC = () => {
-  const minLength = useBinding('60')
-
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-      <FormSection title="静态例子">
+      <FormSection title="基础占位">
         <HStack padding={12} frame={{ maxWidth: 'infinity' }} background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}>
           <Text>Leading</Text>
           <Spacer />
@@ -16,15 +14,22 @@ export const SpacerDemo: FC = () => {
         </HStack>
       </FormSection>
       <PlaygroundSection
-        title="Spacer Playground"
+        title="不同 minLength"
+        summary="对比默认 Spacer 与显式 minLength，便于看推挤效果。"
         preview={
-          <HStack padding={12} frame={{ maxWidth: 'infinity' }} background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}>
-            <Text>Leading</Text>
-            <Spacer minLength={toNumber(minLength.value, 60)} />
-            <Text>Trailing</Text>
-          </HStack>
+          <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            <HStack padding={12} frame={{ maxWidth: 'infinity' }} background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}>
+              <Text>default</Text>
+              <Spacer />
+              <Text>fill</Text>
+            </HStack>
+            <HStack padding={12} frame={{ maxWidth: 'infinity' }} background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}>
+              <Text>min 120</Text>
+              <Spacer minLength={120} />
+              <Text>push</Text>
+            </HStack>
+          </VStack>
         }
-        form={<NumberField label="minLength" binding={minLength} />}
       />
     </VStack>
   )

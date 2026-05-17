@@ -1,25 +1,22 @@
 import type { FC } from 'react'
-import { TextEditor, useBinding, VStack } from './runtime'
+import { TextEditor, VStack } from './runtime'
 import { FormSection } from './controls'
-import { NumberField, PlaygroundSection, StringField, toNumber } from './demo-playground'
+import { PlaygroundSection } from './demo-playground'
 
 export const TextEditorDemo: FC = () => {
-  const text = useBinding('多行输入，后续映射 TextEditor。')
-  const height = useBinding('140')
-
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-      <FormSection title="静态例子">
-        <TextEditor text={text} frame={{ height: 140, maxWidth: 'infinity' }} />
+      <FormSection title="基础多行输入">
+        <TextEditor text={{ value: '多行输入，后续映射 TextEditor。', setValue: () => {} }} frame={{ height: 140, maxWidth: 'infinity' }} />
       </FormSection>
       <PlaygroundSection
-        title="TextEditor Playground"
-        preview={<TextEditor text={text} frame={{ height: toNumber(height.value, 140), maxWidth: 'infinity' }} />}
-        form={
-          <>
-            <StringField label="text" binding={text} />
-            <NumberField label="frame.height" binding={height} />
-          </>
+        title="不同高度"
+        summary="展示 TextEditor 在不同高度与内容密度下的效果。"
+        preview={
+          <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            <TextEditor text={{ value: '短内容', setValue: () => {} }} frame={{ height: 100, maxWidth: 'infinity' }} />
+            <TextEditor text={{ value: '更长的内容\n第二行\n第三行', setValue: () => {} }} frame={{ height: 180, maxWidth: 'infinity' }} />
+          </VStack>
         }
       />
     </VStack>

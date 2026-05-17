@@ -1,15 +1,12 @@
 import type { FC } from 'react'
-import { GeometryReader, Text, useBinding, VStack, type ForegroundStyleToken } from './runtime'
+import { GeometryReader, HStack, Text, VStack } from './runtime'
 import { FormSection } from './controls'
-import { EnumField, PlaygroundSection } from './demo-playground'
-import { foregroundOptions } from './demo-shared'
+import { PlaygroundSection } from './demo-playground'
 
 export const GeometryReaderDemo: FC = () => {
-  const fill = useBinding<ForegroundStyleToken>('secondary')
-
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-      <FormSection title="静态例子">
+      <FormSection title="读取容器尺寸">
         <GeometryReader
           padding={12}
           background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
@@ -19,17 +16,26 @@ export const GeometryReaderDemo: FC = () => {
         </GeometryReader>
       </FormSection>
       <PlaygroundSection
-        title="GeometryReader Playground"
+        title="不同背景层"
+        summary="保持同样尺寸读取逻辑，只切换外层背景与容器宽度。"
         preview={
-          <GeometryReader
-            padding={12}
-            background={{ fill: fill.value, in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
-            frame={{ maxWidth: 'infinity' }}
-          >
-            {proxy => <Text font="caption2.monospaced">width: {String(proxy.size.width)} height: {String(proxy.size.height)}</Text>}
-          </GeometryReader>
+          <HStack spacing={14} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            <GeometryReader
+              padding={12}
+              background={{ fill: 'secondary', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+              frame={{ width: 260 }}
+            >
+              {proxy => <Text font="caption2.monospaced" foregroundColor="#ffffff">width: {String(proxy.size.width)}</Text>}
+            </GeometryReader>
+            <GeometryReader
+              padding={12}
+              background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+              frame={{ width: 360 }}
+            >
+              {proxy => <Text font="caption2.monospaced">width: {String(proxy.size.width)}</Text>}
+            </GeometryReader>
+          </HStack>
         }
-        form={<EnumField label="background.fill" binding={fill} options={foregroundOptions} />}
       />
     </VStack>
   )

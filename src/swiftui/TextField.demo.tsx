@@ -1,25 +1,25 @@
 import type { FC } from 'react'
-import { TextField, useBinding, VStack } from './runtime'
+import { TextField, VStack } from './runtime'
 import { FormSection } from './controls'
-import { PlaygroundSection, StringField } from './demo-playground'
+import { PlaygroundSection } from './demo-playground'
 
 export const TextFieldDemo: FC = () => {
-  const text = useBinding('freewind-mac')
-  const placeholder = useBinding('input device name')
-
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-      <FormSection title="静态例子">
-        <TextField text={text} placeholder="input device name" textFieldStyle="roundedBorder" frame={{ maxWidth: 'infinity' }} />
+      <FormSection title="基础输入">
+        <VStack spacing={10} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <TextField text={{ value: 'freewind-mac', setValue: () => {} }} placeholder="input device name" textFieldStyle="roundedBorder" frame={{ maxWidth: 'infinity' }} />
+          <TextField text={{ value: 'rename device', setValue: () => {} }} placeholder="rename device" textFieldStyle="roundedBorder" frame={{ maxWidth: 'infinity' }} />
+        </VStack>
       </FormSection>
       <PlaygroundSection
-        title="TextField Playground"
-        preview={<TextField text={text} placeholder={placeholder.value} textFieldStyle="roundedBorder" frame={{ maxWidth: 'infinity' }} />}
-        form={
-          <>
-            <StringField label="text" binding={text} />
-            <StringField label="placeholder" binding={placeholder} />
-          </>
+        title="不同宽度与占位"
+        summary="展示 TextField 在不同占位文案与宽度下的视觉效果。"
+        preview={
+          <VStack spacing={10} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            <TextField text={{ value: '', setValue: () => {} }} placeholder="Search" textFieldStyle="roundedBorder" frame={{ width: 240 }} />
+            <TextField text={{ value: 'Selected File', setValue: () => {} }} placeholder="Choose File" textFieldStyle="roundedBorder" frame={{ maxWidth: 'infinity' }} />
+          </VStack>
         }
       />
     </VStack>

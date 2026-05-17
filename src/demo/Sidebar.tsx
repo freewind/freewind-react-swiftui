@@ -1,14 +1,12 @@
 import type { FC } from 'react'
-import { Button, FormSection, ScrollView, Text, type ThemeMode, useBinding, VStack } from '../swiftui'
-import type { DemoHomeSection, DemoPage, DemoSection } from './model'
+import { Button, FormSection, ScrollView, Text, useBinding, VStack } from '../swiftui'
+import type { DemoHomeSection, DemoPage } from './model'
 
 export const Sidebar: FC<{
-  theme: ReturnType<typeof useBinding<ThemeMode>>
   section: ReturnType<typeof useBinding<DemoHomeSection>>
   currentPage: ReturnType<typeof useBinding<string>>
   pages: DemoPage[]
   onOpenNotes: () => void
-  onOpenSection: (section: DemoSection) => void
 }> = ({ section, currentPage, pages, onOpenNotes }) => {
   return (
     <VStack

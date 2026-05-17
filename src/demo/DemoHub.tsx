@@ -24,7 +24,9 @@ export const DemoHub: FC = () => {
   const notes = useBinding('这里放 demo 说明、转换 hint、组件限制。')
 
   const pages = isDemoCategory(section.value) ? demoPages.filter(page => page.category === section.value) : []
-  const activePage = demoPages.find(page => page.id === currentPage.value) ?? demoPages[0]
+  const activePage = demoPages.find(page => page.id === currentPage.value)
+  const activeSection = sectionEntries.find(entry => entry.id === section.value)
+  const showSidebar = isDemoCategory(section.value)
 
   const onOpenSection = (nextSection: DemoSection) => {
     const entry = sectionEntries.find(item => item.id === nextSection)
@@ -37,28 +39,26 @@ export const DemoHub: FC = () => {
       <WindowGroup minWidth={1100} minHeight={760} theme={theme.value}>
         <VStack spacing={0} padding={16} frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }}>
           <AppHeader
-            title={section.value === 'home' ? 'Demo Home' : activePage.title}
+            title={section.value === 'home' ? 'Demo Home' : activePage?.title ?? activeSection?.title ?? 'Demo'}
             theme={theme}
             canGoBack={section.value !== 'home'}
             onBack={() => section.setValue('home')}
           />
           <HStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }} spacing={0} padding={{ top: 16 }}>
-            {section.value !== 'home' ? (
+            {showSidebar ? (
               <>
                 <Sidebar
-                  theme={theme}
                   section={section}
                   currentPage={currentPage}
                   pages={pages}
                   onOpenNotes={() => notesSheetPresented.setValue(true)}
-                  onOpenSection={onOpenSection}
                 />
                 <Divider axis="vertical" />
               </>
             ) : null}
             <VStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }}>
               <ScrollView frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }}>
-                <VStack spacing={18} padding={{ horizontal: 20, bottom: 20 }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+                <VStack spacing={18} padding={{ top: 12, horizontal: 20, bottom: 20 }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
                   {section.value === 'home' ? <HomePage onOpenSection={onOpenSection} /> : renderDemoPage(currentPage.value)}
                 </VStack>
               </ScrollView>

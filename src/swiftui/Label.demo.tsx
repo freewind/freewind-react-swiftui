@@ -1,15 +1,12 @@
 import type { FC } from 'react'
-import { Label, useBinding, VStack } from './runtime'
+import { Label, VStack } from './runtime'
 import { FormSection } from './controls'
-import { PlaygroundSection, StringField } from './demo-playground'
+import { PlaygroundSection } from './demo-playground'
 
 export const LabelDemo: FC = () => {
-  const title = useBinding('photo file')
-  const systemImage = useBinding('photo')
-
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-      <FormSection title="静态例子">
+      <FormSection title="基础组合">
         <VStack spacing={10} alignment="leading">
           <Label title="photo file" systemImage="photo" />
           <Label title="document file" systemImage="doc" />
@@ -17,13 +14,14 @@ export const LabelDemo: FC = () => {
         </VStack>
       </FormSection>
       <PlaygroundSection
-        title="Label Playground"
-        preview={<Label title={title.value} systemImage={systemImage.value} />}
-        form={
-          <>
-            <StringField label="title" binding={title} />
-            <StringField label="systemImage" binding={systemImage} />
-          </>
+        title="状态标签"
+        summary="展示 Label 在文件、状态、设备类型下的组合样式。"
+        preview={
+          <VStack spacing={10} alignment="leading">
+            <Label title="Mac Device" systemImage="laptopcomputer" />
+            <Label title="iPhone Device" systemImage="iphone" />
+            <Label title="Pinned Item" systemImage="pin.fill" />
+          </VStack>
         }
       />
     </VStack>

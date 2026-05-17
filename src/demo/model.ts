@@ -51,11 +51,11 @@ export const demoPages: DemoPage[] = [
 ]
 
 export const sectionEntries: DemoSectionEntry[] = [
-  { id: 'components', title: '组件展厅', summary: '按真实组件逐个看用法、静态例子、playground。', defaultPageId: 'component-text' },
+  { id: 'components', title: '组件展厅', summary: '按真实组件逐个看用法、静态例子、属性组合。', defaultPageId: 'component-text' },
   { id: 'layouts', title: '布局样例', summary: '看常见 split view、dashboard、sheet 等页面骨架。', defaultPageId: 'split-view' },
   { id: 'apps', title: '应用案例', summary: '看 QQ、todo、emoji、图片/文件浏览器、系统 mock。', defaultPageId: 'qq' },
-  { id: 'translator', title: '转换规约', summary: '查看 JSX DSL 到 SwiftUI 的约束、few-shot、导出包。', defaultPageId: 'translator' },
-  { id: 'native-swift', title: '真实 Swift 代码', summary: '直接对照现有 macOS SwiftUI 源码与目标形态。', defaultPageId: 'native-swift' },
+  { id: 'translator', title: '转换规约', summary: '查看 JSX DSL 约束、映射、导出包摘要。', defaultPageId: 'translator' },
+  { id: 'native-swift', title: '原生对照', summary: '对照现有 macOS SwiftUI 结构与已补 mock/runtime 能力。', defaultPageId: 'native-swift' },
 ]
 
 export const todoItems = [

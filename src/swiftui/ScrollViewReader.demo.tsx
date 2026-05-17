@@ -22,7 +22,8 @@ export const ScrollViewReaderDemo: FC = () => {
         </ScrollViewReader>
       </FormSection>
       <PlaygroundSection
-        title="ScrollViewReader Playground"
+        title="常见操作按钮"
+        summary="当前 mock 支持 `scrollTo(id, anchor)`，这里展示 top/bottom 两种调用入口。"
         preview={
           <ScrollViewReader
             padding={12}
@@ -30,15 +31,15 @@ export const ScrollViewReaderDemo: FC = () => {
             frame={{ maxWidth: 'infinity' }}
           >
             {proxy => (
-              <HStack>
+              <HStack spacing={10}>
                 <Text>ScrollViewReader mock</Text>
                 <Spacer />
+                <Button title="scrollTo(top)" buttonStyle="bordered" onPress={() => proxy.scrollTo('top', { anchor: 'top' })} />
                 <Button title="scrollTo(bottom)" buttonStyle="bordered" onPress={() => proxy.scrollTo('bottom', { anchor: 'bottom' })} />
               </HStack>
             )}
           </ScrollViewReader>
         }
-        form={<Text foregroundStyle="secondary">当前支持面：`scrollTo(id, anchor)` mock</Text>}
       />
     </VStack>
   )

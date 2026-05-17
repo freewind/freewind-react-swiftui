@@ -1,21 +1,12 @@
 import type { FC } from 'react'
-import { Text, useBinding, VStack, type FontToken, type ForegroundStyleToken, type TextAlign } from './runtime'
+import { HStack, Text, VStack } from './runtime'
 import { FormSection } from './controls'
-import { BoolField, EnumField, PlaygroundSection, StringField, toBoolBinding, useBoolBinding } from './demo-playground'
-import { fontOptions, foregroundOptions } from './demo-shared'
+import { PlaygroundSection } from './demo-playground'
 
 export const TextDemo: FC = () => {
-  const content = useBinding('SwiftUI-shaped JSX text preview')
-  const font = useBinding<FontToken>('title2')
-  const foreground = useBinding<ForegroundStyleToken>('accentColor')
-  const align = useBinding<TextAlign>('leading')
-  const italic = useBoolBinding(false)
-  const mono = useBoolBinding(false)
-  const selectable = useBoolBinding(true)
-
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-      <FormSection title="静态例子">
+      <FormSection title="字体等级">
         <VStack spacing={8} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
           <Text font="largeTitle">largeTitle</Text>
           <Text font="title">title</Text>
@@ -29,38 +20,24 @@ export const TextDemo: FC = () => {
       </FormSection>
 
       <PlaygroundSection
-        title="Text Playground"
+        title="文字样式组合"
+        summary="集中展示前景色、斜体、等宽、可选中、多行对齐。"
         preview={
-          <Text
-            font={font.value}
-            foregroundStyle={foreground.value}
-            italic={toBoolBinding(italic)}
-            monospaced={toBoolBinding(mono)}
-            textSelection={toBoolBinding(selectable) ? 'enabled' : 'disabled'}
-            multilineTextAlignment={align.value}
-            frame={{ maxWidth: 'infinity' }}
-          >
-            {content.value}
-          </Text>
-        }
-        form={
-          <>
-            <StringField label="children" binding={content} />
-            <EnumField label="font" binding={font} options={fontOptions} />
-            <EnumField label="foregroundStyle" binding={foreground} options={foregroundOptions} />
-            <EnumField
-              label="multilineTextAlignment"
-              binding={align}
-              options={[
-                { label: 'leading', value: 'leading' },
-                { label: 'center', value: 'center' },
-                { label: 'trailing', value: 'trailing' },
-              ]}
-            />
-            <BoolField label="italic" binding={italic} />
-            <BoolField label="monospaced" binding={mono} />
-            <BoolField label="textSelection" binding={selectable} />
-          </>
+          <VStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            <Text foregroundStyle="accentColor">accentColor foreground</Text>
+            <Text foregroundStyle="red">red foreground</Text>
+            <Text foregroundStyle="green">green foreground</Text>
+            <Text italic>italic text</Text>
+            <Text monospaced>monospaced text</Text>
+            <Text textSelection="enabled">selectable text</Text>
+            <Text multilineTextAlignment="center" frame={{ maxWidth: 'infinity' }}>
+              centered multiline text centered multiline text
+            </Text>
+            <HStack spacing={12}>
+              <Text font="caption" foregroundStyle="secondary">secondary</Text>
+              <Text font="caption" foregroundStyle="tertiary">tertiary</Text>
+            </HStack>
+          </VStack>
         }
       />
     </VStack>

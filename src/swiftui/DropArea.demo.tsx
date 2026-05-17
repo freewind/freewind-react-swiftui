@@ -1,14 +1,12 @@
 import type { FC } from 'react'
-import { DropArea, Text, useBinding, VStack } from './runtime'
+import { DropArea, HStack, Text, VStack } from './runtime'
 import { FormSection } from './controls'
-import { BoolField, PlaygroundSection, toBoolBinding } from './demo-playground'
+import { PlaygroundSection } from './demo-playground'
 
 export const DropAreaDemo: FC = () => {
-  const targeted = useBinding<'true' | 'false'>('false')
-
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-      <FormSection title="静态例子">
+      <FormSection title="基础拖放区域">
         <DropArea
           padding={12}
           background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
@@ -18,21 +16,27 @@ export const DropAreaDemo: FC = () => {
         </DropArea>
       </FormSection>
       <PlaygroundSection
-        title="DropArea Playground"
+        title="普通态与 targeted"
+        summary="对比未命中与已命中拖放态的视觉差异。"
         preview={
-          <DropArea
-            isTargeted={{
-              value: toBoolBinding(targeted),
-              setValue: next => targeted.setValue(next ? 'true' : 'false'),
-            }}
-            padding={12}
-            background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
-            frame={{ maxWidth: 'infinity' }}
-          >
-            <Text>DropArea mock，对应 SwiftUI `onDrop` 语义。</Text>
-          </DropArea>
+          <HStack spacing={14} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            <DropArea
+              padding={12}
+              background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+              frame={{ width: 280 }}
+            >
+              <Text>idle state</Text>
+            </DropArea>
+            <DropArea
+              isTargeted={{ value: true, setValue: () => {} }}
+              padding={12}
+              background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+              frame={{ width: 280 }}
+            >
+              <Text>targeted state</Text>
+            </DropArea>
+          </HStack>
         }
-        form={<BoolField label="isTargeted" binding={targeted} />}
       />
     </VStack>
   )

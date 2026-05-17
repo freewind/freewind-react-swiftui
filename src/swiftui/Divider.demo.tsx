@@ -1,14 +1,12 @@
 import type { FC } from 'react'
-import { Divider, HStack, Text, useBinding, VStack } from './runtime'
+import { Divider, HStack, Text, VStack } from './runtime'
 import { FormSection } from './controls'
-import { EnumField, PlaygroundSection } from './demo-playground'
+import { PlaygroundSection } from './demo-playground'
 
 export const DividerDemo: FC = () => {
-  const axis = useBinding<'horizontal' | 'vertical'>('horizontal')
-
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-      <FormSection title="静态例子">
+      <FormSection title="横向分隔">
         <VStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
           <Text>row 1</Text>
           <Divider />
@@ -16,31 +14,21 @@ export const DividerDemo: FC = () => {
         </VStack>
       </FormSection>
       <PlaygroundSection
-        title="Divider Playground"
+        title="横向与纵向"
+        summary="同一页对比默认 horizontal 与 vertical axis 的用法。"
         preview={
-          axis.value === 'horizontal' ? (
-            <VStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <HStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            <VStack spacing={8} frame={{ width: 220, alignment: 'leading' }}>
               <Text>row 1</Text>
               <Divider />
               <Text>row 2</Text>
             </VStack>
-          ) : (
-            <HStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            <HStack spacing={8} padding={12} background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}>
               <Text>A</Text>
               <Divider axis="vertical" />
               <Text>B</Text>
             </HStack>
-          )
-        }
-        form={
-          <EnumField
-            label="axis"
-            binding={axis}
-            options={[
-              { label: 'horizontal', value: 'horizontal' },
-              { label: 'vertical', value: 'vertical' },
-            ]}
-          />
+          </HStack>
         }
       />
     </VStack>

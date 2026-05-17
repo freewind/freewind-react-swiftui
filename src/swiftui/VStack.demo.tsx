@@ -1,15 +1,12 @@
 import type { FC } from 'react'
-import { Text, useBinding, VStack } from './runtime'
+import { HStack, Text, VStack } from './runtime'
 import { FormSection } from './controls'
-import { EnumField, NumberField, PlaygroundSection, toNumber } from './demo-playground'
+import { PlaygroundSection } from './demo-playground'
 
 export const VStackDemo: FC = () => {
-  const spacing = useBinding('8')
-  const alignment = useBinding<'leading' | 'center' | 'trailing'>('leading')
-
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-      <FormSection title="静态例子">
+      <FormSection title="基础纵向堆叠">
         <VStack spacing={8} alignment="leading" padding={12} background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}>
           <Text>row 1</Text>
           <Text>row 2</Text>
@@ -17,33 +14,29 @@ export const VStackDemo: FC = () => {
         </VStack>
       </FormSection>
       <PlaygroundSection
-        title="VStack Playground"
+        title="对齐与间距"
+        summary="对比 leading、center、trailing 三种 alignment，顺带展示不同 spacing。"
         preview={
-          <VStack
-            spacing={toNumber(spacing.value, 8)}
-            alignment={alignment.value}
-            padding={12}
-            frame={{ maxWidth: 'infinity', alignment: 'leading' }}
-            background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
-          >
-            <Text>row 1</Text>
-            <Text>row 2</Text>
-            <Text>row 3</Text>
-          </VStack>
-        }
-        form={
-          <>
-            <NumberField label="spacing" binding={spacing} />
-            <EnumField
-              label="alignment"
-              binding={alignment}
-              options={[
-                { label: 'leading', value: 'leading' },
-                { label: 'center', value: 'center' },
-                { label: 'trailing', value: 'trailing' },
-              ]}
-            />
-          </>
+          <HStack spacing={14} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            <VStack spacing={6} alignment="leading" padding={12} frame={{ width: 180, alignment: 'leading' }} background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}>
+              <Text font="caption" foregroundStyle="secondary">leading / 6</Text>
+              <Text>left</Text>
+              <Text>stack</Text>
+              <Text>preview</Text>
+            </VStack>
+            <VStack spacing={12} alignment="center" padding={12} frame={{ width: 180 }} background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}>
+              <Text font="caption" foregroundStyle="secondary">center / 12</Text>
+              <Text>center</Text>
+              <Text>stack</Text>
+              <Text>preview</Text>
+            </VStack>
+            <VStack spacing={18} alignment="trailing" padding={12} frame={{ width: 180, alignment: 'trailing' }} background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}>
+              <Text font="caption" foregroundStyle="secondary">trailing / 18</Text>
+              <Text>right</Text>
+              <Text>stack</Text>
+              <Text>preview</Text>
+            </VStack>
+          </HStack>
         }
       />
     </VStack>

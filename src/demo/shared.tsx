@@ -15,18 +15,23 @@ export const AppHeader: FC<{
       spacing={14}
       alignment="center"
     >
-      <HStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <HStack spacing={10} frame={{ width: 140, alignment: 'leading' }}>
         {canGoBack ? <Button title="返回" buttonStyle="bordered" onPress={onBack} /> : null}
-        <Text font="title3.semibold">{title}</Text>
       </HStack>
-      <Picker
-        selection={theme}
-        pickerStyle="segmented"
-        options={[
-          { label: 'Light', value: 'light' },
-          { label: 'Dark', value: 'dark' },
-        ]}
-      />
+      <Text font="title3.semibold" frame={{ maxWidth: 'infinity' }} multilineTextAlignment="center">
+        {title}
+      </Text>
+      <HStack frame={{ width: 180, alignment: 'trailing' }}>
+        <Picker
+          frame={{ width: 180 }}
+          selection={theme}
+          pickerStyle="segmented"
+          options={[
+            { label: 'Light', value: 'light' },
+            { label: 'Dark', value: 'dark' },
+          ]}
+        />
+      </HStack>
     </HStack>
   )
 }
@@ -140,22 +145,6 @@ export const Chip: FC<{
       font="caption.semibold"
     >
       {title}
-    </Text>
-  )
-}
-
-export const CodePanel: FC<{
-  children: string
-}> = ({ children }) => {
-  return (
-    <Text
-      font="caption2.monospaced"
-      textSelection="enabled"
-      padding={12}
-      frame={{ maxWidth: 'infinity', alignment: 'leading' }}
-      background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
-    >
-      {children}
     </Text>
   )
 }

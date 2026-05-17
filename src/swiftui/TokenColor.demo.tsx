@@ -1,15 +1,13 @@
 import type { FC } from 'react'
-import { HStack, Text, useBinding, VStack, type ForegroundStyleToken } from './runtime'
+import { HStack, Text, VStack } from './runtime'
 import { FormSection } from './controls'
-import { EnumField, PlaygroundSection } from './demo-playground'
+import { PlaygroundSection } from './demo-playground'
 import { foregroundOptions } from './demo-shared'
 
 export const TokenColorDemo: FC = () => {
-  const foreground = useBinding<ForegroundStyleToken>('accentColor')
-
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-      <FormSection title="静态例子">
+      <FormSection title="前景色 token">
         <VStack spacing={8} alignment="leading">
           {foregroundOptions.map(option => (
             <Text key={option.value} foregroundStyle={option.value}>
@@ -19,16 +17,25 @@ export const TokenColorDemo: FC = () => {
         </VStack>
       </FormSection>
       <PlaygroundSection
-        title="Token Color Playground"
+        title="文字与背景配合"
+        summary="一组看文字色，一组看 token 做背景时的表现。"
         preview={
-          <VStack spacing={12} alignment="leading">
-            <Text foregroundStyle={foreground.value}>foregroundStyle preview</Text>
-            <HStack padding={18} background={{ fill: foreground.value, in: { kind: 'roundedRectangle', cornerRadius: 16 } }}>
-              <Text foregroundColor="#ffffff">background token preview</Text>
+          <VStack spacing={12} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            <HStack spacing={10}>
+              <Text foregroundStyle="accentColor">accentColor</Text>
+              <Text foregroundStyle="green">green</Text>
+              <Text foregroundStyle="red">red</Text>
+            </HStack>
+            <HStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+              <HStack padding={18} background={{ fill: 'accentColor', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}>
+                <Text foregroundColor="#ffffff">accent background</Text>
+              </HStack>
+              <HStack padding={18} background={{ fill: 'secondary', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}>
+                <Text foregroundColor="#ffffff">secondary background</Text>
+              </HStack>
             </HStack>
           </VStack>
         }
-        form={<EnumField label="foregroundStyle" binding={foreground} options={foregroundOptions} />}
       />
     </VStack>
   )

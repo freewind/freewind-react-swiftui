@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import { Picker, Text, useBinding, VStack } from './runtime'
 import { FormSection } from './controls'
-import { EnumField, PlaygroundSection } from './demo-playground'
+import { PlaygroundSection } from './demo-playground'
 
 export const PickerDemo: FC = () => {
   const selection = useBinding<'all' | 'online' | 'offline'>('all')
@@ -20,7 +20,8 @@ export const PickerDemo: FC = () => {
         />
       </FormSection>
       <PlaygroundSection
-        title="Picker Playground"
+        title="交互状态"
+        summary="展示 segmented Picker 的不同分组和选中结果。"
         preview={
           <VStack spacing={8} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
             <Picker
@@ -34,17 +35,6 @@ export const PickerDemo: FC = () => {
             />
             <Text foregroundStyle="secondary">selection: {selection.value}</Text>
           </VStack>
-        }
-        form={
-          <EnumField
-            label="selection"
-            binding={selection}
-            options={[
-              { label: 'all', value: 'all' },
-              { label: 'online', value: 'online' },
-              { label: 'offline', value: 'offline' },
-            ]}
-          />
         }
       />
     </VStack>

@@ -20,9 +20,17 @@ import { TextFieldDemo } from '../swiftui/TextField.demo'
 import { TokenColorDemo } from '../swiftui/TokenColor.demo'
 import { VStackDemo } from '../swiftui/VStack.demo'
 import { WindowAccessorDemo } from '../swiftui/WindowAccessor.demo'
-import { DashboardLayouts, FormAndSheetLayouts, SplitViewLayouts } from './layoutPages'
-import { EmojiDemo, FileBrowserDemo, ImageBrowserDemo, QQDemo, SystemApiMockDemo, TodoDemo } from './appPages'
-import { NativeSwiftSourceDemo, TranslatorSpecDemo } from './translatorPages'
+import { DashboardDemo } from './Dashboard.demo'
+import { EmojiDemo } from './Emoji.demo'
+import { FileBrowserDemo } from './FileBrowser.demo'
+import { FormSheetDemo } from './FormSheet.demo'
+import { ImageBrowserDemo } from './ImageBrowser.demo'
+import { NativeSwiftSourceDemo } from './NativeSwiftSource.demo'
+import { QQDemo } from './QQ.demo'
+import { SplitViewDemo } from './SplitView.demo'
+import { SystemApiMockDemo } from './SystemApiMock.demo'
+import { TodoDemo } from './Todo.demo'
+import { TranslatorSpecDemo } from './TranslatorSpec.demo'
 
 export const renderDemoPage = (pageId: string) => {
   const pages: Record<string, FC> = {
@@ -49,9 +57,9 @@ export const renderDemoPage = (pageId: string) => {
     'component-window-accessor': WindowAccessorDemo,
     translator: TranslatorSpecDemo,
     'native-swift': NativeSwiftSourceDemo,
-    'split-view': SplitViewLayouts,
-    dashboard: DashboardLayouts,
-    'form-sheet': FormAndSheetLayouts,
+    'split-view': SplitViewDemo,
+    dashboard: DashboardDemo,
+    'form-sheet': FormSheetDemo,
     qq: QQDemo,
     todo: TodoDemo,
     emoji: EmojiDemo,

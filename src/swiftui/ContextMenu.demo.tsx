@@ -1,26 +1,29 @@
 import type { FC } from 'react'
-import { Button, ContextMenu, VStack } from './runtime'
+import { Button, ContextMenu, HStack, VStack } from './runtime'
 import { FormSection } from './controls'
-import { BoolField, PlaygroundSection, toBoolBinding, useBoolBinding } from './demo-playground'
+import { PlaygroundSection } from './demo-playground'
 
 export const ContextMenuDemo: FC = () => {
-  const altTitle = useBoolBinding(false)
-
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-      <FormSection title="静态例子">
+      <FormSection title="基础右键菜单">
         <ContextMenu items={[{ title: '置顶' }, { title: '清空聊天' }, { title: '删除' }]}>
           <Button title="contextMenu trigger" buttonStyle="bordered" />
         </ContextMenu>
       </FormSection>
       <PlaygroundSection
-        title="ContextMenu Playground"
+        title="不同触发器"
+        summary="同一组菜单项可挂在普通按钮、强调按钮等不同 trigger 上。"
         preview={
-          <ContextMenu items={[{ title: '置顶' }, { title: '清空聊天' }, { title: '删除' }]}>
-            <Button title={toBoolBinding(altTitle) ? '右键我' : 'contextMenu trigger'} buttonStyle="bordered" />
-          </ContextMenu>
+          <HStack spacing={12}>
+            <ContextMenu items={[{ title: '复制' }, { title: '转发' }, { title: '删除' }]}>
+              <Button title="消息菜单" buttonStyle="bordered" />
+            </ContextMenu>
+            <ContextMenu items={[{ title: '打开' }, { title: '显示简介' }, { title: '移到废纸篓' }]}>
+              <Button title="文件菜单" buttonStyle="borderedProminent" />
+            </ContextMenu>
+          </HStack>
         }
-        form={<BoolField label="alt title" binding={altTitle} />}
       />
     </VStack>
   )

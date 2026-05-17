@@ -1,17 +1,12 @@
 import type { FC } from 'react'
-import { Button, useBinding, VStack, type ButtonStyleToken, type ControlSizeToken } from './runtime'
+import { Button, HStack, VStack } from './runtime'
 import { FormSection } from './controls'
-import { BoolField, EnumField, PlaygroundSection, StringField, toBoolBinding, useBoolBinding } from './demo-playground'
+import { PlaygroundSection } from './demo-playground'
 
 export const ButtonDemo: FC = () => {
-  const title = useBinding('Send')
-  const buttonStyle = useBinding<ButtonStyleToken>('borderedProminent')
-  const controlSize = useBinding<ControlSizeToken>('regular')
-  const disabled = useBoolBinding(false)
-
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-      <FormSection title="静态例子">
+      <FormSection title="按钮样式">
         <VStack spacing={10} alignment="leading">
           <Button title="plain button" buttonStyle="plain" />
           <Button title="bordered button" buttonStyle="bordered" />
@@ -21,34 +16,22 @@ export const ButtonDemo: FC = () => {
         </VStack>
       </FormSection>
       <PlaygroundSection
-        title="Button Playground"
-        preview={<Button title={title.value} buttonStyle={buttonStyle.value} controlSize={controlSize.value} disabled={toBoolBinding(disabled)} />}
-        form={
-          <>
-            <StringField label="title" binding={title} />
-            <EnumField
-              label="buttonStyle"
-              binding={buttonStyle}
-              options={[
-                { label: 'plain', value: 'plain' },
-                { label: 'bordered', value: 'bordered' },
-                { label: 'prominent', value: 'borderedProminent' },
-                { label: 'borderless', value: 'borderless' },
-                { label: 'link', value: 'link' },
-              ]}
-            />
-            <EnumField
-              label="controlSize"
-              binding={controlSize}
-              options={[
-                { label: 'mini', value: 'mini' },
-                { label: 'small', value: 'small' },
-                { label: 'regular', value: 'regular' },
-                { label: 'large', value: 'large' },
-              ]}
-            />
-            <BoolField label="disabled" binding={disabled} />
-          </>
+        title="尺寸与状态"
+        summary="集中展示 controlSize、disabled、组合按钮排布。"
+        preview={
+          <VStack spacing={12} alignment="leading">
+            <HStack spacing={10}>
+              <Button title="mini" buttonStyle="bordered" controlSize="mini" />
+              <Button title="small" buttonStyle="bordered" controlSize="small" />
+              <Button title="regular" buttonStyle="bordered" controlSize="regular" />
+              <Button title="large" buttonStyle="borderedProminent" controlSize="large" />
+            </HStack>
+            <HStack spacing={10}>
+              <Button title="disabled plain" buttonStyle="plain" disabled />
+              <Button title="disabled bordered" buttonStyle="bordered" disabled />
+              <Button title="disabled prominent" buttonStyle="borderedProminent" disabled />
+            </HStack>
+          </VStack>
         }
       />
     </VStack>
