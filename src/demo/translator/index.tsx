@@ -1,8 +1,7 @@
 import type { FC } from 'react'
-import { ForEach, FormSection, HStack, Text, VStack } from '../../swift'
+import { Button, ForEach, FormSection, HStack, Picker, ScrollView, Text, VStack, useBinding } from '../../swift'
 import { GroupBox } from '../../swift/components/GroupBox'
-import { ScrollView } from '../../swift/components/ScrollView'
-import { buildSwiftUiDraft, buildTranslatorExportPacket } from '../../translator'
+import { buildSwiftUiDraft, buildTranslatorExportPacket, translatorPageRegistry } from '../../translator'
 
 type CapabilitySection = {
   title: string
@@ -55,9 +54,25 @@ const statusStyle: Record<CapabilitySection['rows'][number]['status'], 'green' |
   gap: 'red',
 }
 
+const categoryOptions = [
+  { label: '规约', value: 'translator' },
+  { label: '原生', value: 'native-swift' },
+  { label: '案例', value: 'app' },
+  { label: '组件', value: 'component' },
+] as const
+
 export const TranslatorSpecDemo: FC = () => {
-  const packet = buildTranslatorExportPacket('translator')
+  const categorySelection = useBinding<(typeof categoryOptions)[number]['value']>('translator')
+  const pageSelection = useBinding('translator')
+  const pageOptions = translatorPageRegistry.filter(item => item.page.category === categorySelection.value)
+  const selectedPage = pageOptions.find(item => item.page.id === pageSelection.value) ?? pageOptions[0] ?? translatorPageRegistry[0]
+  const packet = buildTranslatorExportPacket(selectedPage.page.id)
   const swiftUiDraft = buildSwiftUiDraft(packet)
+  const coverageRows = [
+    { title: 'Aligned', items: selectedPage.coverage?.aligned ?? [], tone: 'green' as const },
+    { title: 'Stub', items: selectedPage.coverage?.stub ?? [], tone: 'blue' as const },
+    { title: 'Gap', items: selectedPage.coverage?.gap ?? [], tone: 'red' as const },
+  ]
 
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
@@ -67,8 +82,77 @@ export const TranslatorSpecDemo: FC = () => {
           <Text font="caption" foregroundStyle="secondary">
             当前 translator 真导出层仍缺；这里先给 AE/AI 一份能力差异面板，判断哪些页面可直接转，哪些仍需补 runtime/mock。
           </Text>
+          <Picker
+            selection={categorySelection}
+            pickerStyle="segmented"
+            options={categoryOptions.map(item => ({
+              label: item.label,
+              value: item.value,
+            }))}
+          />
+          <ScrollView axes={['horizontal']} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            <HStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+              {pageOptions.map(item => (
+                <Button
+                  key={item.page.id}
+                  title={item.page.title}
+                  buttonStyle={item.page.id === selectedPage.page.id ? 'borderedProminent' : 'bordered'}
+                  onPress={() => pageSelection.setValue(item.page.id)}
+                />
+              ))}
+            </HStack>
+          </ScrollView>
+          <Picker
+            selection={pageSelection}
+            pickerStyle="segmented"
+            options={pageOptions.map(item => ({
+              label: item.page.title,
+              value: item.page.id,
+            }))}
+            labelsHidden
+          />
         </VStack>
       </FormSection>
+      <GroupBox title="Selected Page Meta" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        <VStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <Text>{selectedPage.page.intent}</Text>
+          <Text font="caption" foregroundStyle="secondary">
+            components: {selectedPage.components.join(', ')}
+          </Text>
+          <Text font="caption" foregroundStyle="secondary">
+            modifiers: {selectedPage.modifiers.join(', ')}
+          </Text>
+          <Text font="caption" foregroundStyle="secondary">
+            api facades: {selectedPage.apiFacades.join(', ')}
+          </Text>
+          <HStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            {coverageRows.map(section => (
+              <VStack
+                key={section.title}
+                spacing={6}
+                padding={12}
+                frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+                background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+              >
+                <Text font="caption.semibold" foregroundStyle={section.tone}>
+                  {section.title}
+                </Text>
+                {section.items.length ? (
+                  section.items.map(item => (
+                    <Text key={item} font="caption" foregroundStyle="secondary">
+                      {item}
+                    </Text>
+                  ))
+                ) : (
+                  <Text font="caption" foregroundStyle="secondary">
+                    none
+                  </Text>
+                )}
+              </VStack>
+            ))}
+          </HStack>
+        </VStack>
+      </GroupBox>
       <ForEach
         each={sections}
         keyBy={section => section.title}
