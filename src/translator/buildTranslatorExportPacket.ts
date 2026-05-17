@@ -43,6 +43,83 @@ const packets: Record<string, TranslatorExportPacket> = {
       '</VStack>',
     ].join('\n'),
   },
+  'native-swift-root-view': {
+    page: {
+      id: 'native-swift-root-view',
+      title: 'RootView',
+      intent: '把真实 Swift RootView 对照为可转 SwiftUI 的 JSX/mock 壳。',
+    },
+    constraints: baseConstraints,
+    mappings: baseMappings,
+    stateModels: ['Binding<Int>', 'NavigationPath', 'MockEnvironment', 'AppShell'],
+    apiFacades: ['AppShell', 'AppSystemApi', 'AppFileApi'],
+    components: ['NavigationStack', 'List', 'Picker', 'Text', 'Button', 'HStack', 'VStack'],
+    modifiers: ['padding', 'frame', 'background', 'foregroundStyle', 'tint', 'controlSize'],
+    fewShot: [
+      'Swift RootView 联系人侧栏 -> JSX HStack + VStack + Picker + mock app shell',
+      'Swift NavigationSplit-ish layout -> JSX HStack + detail pane',
+    ],
+    prompt:
+      '把 RootView.swift 对照成 SwiftUI/JSX 双向稳定表示，保留侧栏、选择态、mock facade 边界，不要引入真实 IO。',
+    jsxSource: [
+      '<HStack spacing={0}>',
+      '  <ContactsPaneMini />',
+      '  <Divider axis="vertical" />',
+      '  <ChatPanel draft={draft} />',
+      '</HStack>',
+    ].join('\n'),
+  },
+  'native-swift-chat-screen': {
+    page: {
+      id: 'native-swift-chat-screen',
+      title: 'ChatScreen',
+      intent: '把真实聊天页结构映射到 JSX DSL 与 SwiftUI draft。',
+    },
+    constraints: baseConstraints,
+    mappings: baseMappings,
+    stateModels: ['Binding<String>', 'ChatMessage[]', 'PeerDigest', 'FocusedValues'],
+    apiFacades: ['AppShell', 'AppFileApi'],
+    components: ['ScrollView', 'TextEditor', 'Button', 'Sheet', 'Popover', 'NavigationLink'],
+    modifiers: ['padding', 'frame', 'background', 'lineLimit', 'labelsHidden'],
+    fewShot: [
+      '消息列表 -> ScrollView + VStack + message row',
+      '附件弹层 -> Sheet/Popover + mock save/open facade',
+    ],
+    prompt:
+      '把 ChatScreen.swift 转成结构稳定的 SwiftUI/JSX，对消息列表、输入区、附件动作优先保留状态和 facade 边界。',
+    jsxSource: [
+      '<VStack spacing={0}>',
+      '  <ScrollView>...</ScrollView>',
+      '  <Divider />',
+      '  <TextEditor text={draft} />',
+      '</VStack>',
+    ].join('\n'),
+  },
+  'native-swift-composer-text-view': {
+    page: {
+      id: 'native-swift-composer-text-view',
+      title: 'ComposerTextView',
+      intent: '把真实输入框桥接层压缩为 DSL 可表达的输入语义。',
+    },
+    constraints: baseConstraints,
+    mappings: baseMappings,
+    stateModels: ['Binding<String>', 'FocusedValues', 'FocusState<String | null>'],
+    apiFacades: ['AppSystemApi'],
+    components: ['TextEditor', 'TextField', 'Button', 'Popover'],
+    modifiers: ['tint', 'controlSize', 'lineLimit'],
+    fewShot: [
+      'NSTextView bridge -> TextEditor + FocusState + submit/draft state',
+      '快捷动作按钮 -> Button + Popover',
+    ],
+    prompt:
+      '把 ComposerTextView.swift 提炼成输入控件 DSL，优先保留 focus、draft、submit 与系统能力边界。',
+    jsxSource: [
+      '<VStack spacing={8}>',
+      '  <TextEditor text={draft} focused={focus} equals="composer" />',
+      '  <HStack><Button title="Send" /></HStack>',
+      '</VStack>',
+    ].join('\n'),
+  },
 }
 
 export const buildTranslatorExportPacket = (pageId: string): TranslatorExportPacket => {
