@@ -8,7 +8,7 @@
 
 - 这个仓库不是普通 React 站点。核心目标是：用受限 JSX 模拟 SwiftUI/macOS UI 与系统边界，再导出给 AI/代码生成器转 SwiftUI。
 - 共享核心数据分 4 层：
-  - UI DSL 层：`src/swiftui/*`
+  - UI DSL 层：`src/swift/*`
   - mock app/system/file 层：`src/mock-system/index.tsx`
   - translator 规约/导出/草稿生成层：`src/translator/*`
   - demo 入口层：`src/demo/DemoHub.tsx`
@@ -16,7 +16,7 @@
 ### 关键对象 shape
 
 - `Binding<T>`
-  - 位置：`src/swiftui/runtime.tsx`
+  - 位置：`src/swift/runtime.tsx`
   - 形状：
   ```ts
   { value: T; setValue: (next: T) => void }
@@ -154,9 +154,9 @@
 
 ### 合法修改入口
 
-- UI/布局/样式语义：改 `src/swiftui/runtime.tsx`
-- 原生组件目录化实现：优先改 `src/swiftui/<Component>/`
-- 高阶控件封装：改 `src/swiftui/controls.tsx`
+- UI/布局/样式语义：改 `src/swift/runtime.tsx`
+- 原生组件目录化实现：优先改 `src/swift/components/<Component>/`
+- 高阶控件封装：改 `src/swift/controls.tsx`
 - mock 业务/系统/file 行为：改 `src/mock-system/index.tsx`
 - 翻译规则：改 `src/translator/spec.ts`
 - 导出结构：改 `src/translator/exporter.ts`
@@ -192,11 +192,11 @@
 
 - 用户层禁原生 DOM 标签、禁 CSS、禁外部 UI 组件。
 - 新增 demo 或功能，优先复用 DSL 组件，不要在业务层写 `style/className`。
-- `src/swiftui` 下原生组件用目录收敛：
-  - `src/swiftui/<Component>/<Component>.tsx`
-  - `src/swiftui/<Component>/<Component>.demo.tsx`
-  - `src/swiftui/<Component>/index.ts`
-- `Custom Components` 只能组合 `src/swiftui/*` 暴露的原生 DSL 组件。
+- `src/swift/components` 下原生组件用目录收敛：
+  - `src/swift/components/<Component>/<Component>.tsx`
+  - `src/swift/components/<Component>/<Component>.demo.tsx`
+  - `src/swift/components/<Component>/index.ts`
+- `Custom Components` 只能组合 `src/swift/components/*` 暴露的原生 DSL 组件。
 - `Custom Components` 禁直接依赖原生 DOM、禁外部 UI 库、禁绕过 DSL 直接吃 runtime 内部 helper。
 - 新增系统能力，优先加 mock facade，再决定 demo 如何消费。
 - 做 SwiftUI 转换相关工作，优先改 translator 层，不要把 prompt 散落在 demo 组件里。

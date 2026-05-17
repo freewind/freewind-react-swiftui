@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { Button, HStack, Label, Picker, Spacer, Text, type ThemeMode, useBinding, VStack } from '../swiftui'
+import { Button, HStack, Label, Picker, Spacer, Text, type ThemeMode, useBinding, VStack } from '../swift'
 
 export const AppHeader: FC<{
   title: string

@@ -14,7 +14,7 @@ import {
   buildTranslatorExportPacket,
   useBinding,
   VStack,
-} from '../swiftui'
+} from '../swift'
 import { QQDemo } from './QQ.demo'
 import { SystemApiMockDemo } from './SystemApiMock.demo'
 

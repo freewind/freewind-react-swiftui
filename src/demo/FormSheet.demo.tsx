@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { Button, HStack, Sheet, Spacer, Text, TextEditor, TextFieldRow, useBinding, VStack, FormSection } from '../swiftui'
+import { Button, HStack, Sheet, Spacer, Text, TextEditor, TextFieldRow, useBinding, VStack, FormSection } from '../swift'
 
 export const FormSheetDemo: FC = () => {
   const profileName = useBinding('freewind')

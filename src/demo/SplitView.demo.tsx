@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { Button, Divider, FormSection, HStack, Spacer, Text, VStack } from '../swiftui'
+import { Button, Divider, FormSection, HStack, Spacer, Text, VStack } from '../swift'
 
 export const SplitViewDemo: FC = () => {
   return (

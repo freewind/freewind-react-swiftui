@@ -22,7 +22,7 @@ import {
   useMockAppShell,
   useMockEnvironment,
   VStack,
-} from '../swiftui'
+} from '../swift'
 import { emojiGroups, fileRows, imageItems, todoItems } from './model'
 
 export const QQDemo: FC = () => {

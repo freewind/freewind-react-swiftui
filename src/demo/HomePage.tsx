@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { FormSection, VStack } from '../swiftui'
+import { FormSection, VStack } from '../swift'
 import type { DemoSection } from './model'
 import { sectionEntries } from './model'
 import { ButtonCard } from './shared'

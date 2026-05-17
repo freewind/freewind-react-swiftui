@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { Button, FormSection, ScrollView, Text, useBinding, VStack } from '../swiftui'
+import { Button, FormSection, ScrollView, Text, useBinding, VStack } from '../swift'
 import type { DemoHomeSection, DemoPage } from './model'
 
 export const Sidebar: FC<{

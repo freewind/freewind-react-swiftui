@@ -12,7 +12,7 @@ import {
   VStack,
   swiftUiDslRules,
   swiftUiMappings,
-} from '../swiftui'
+} from '../swift'
 
 export const TranslatorSpecDemo: FC = () => {
   const selectedPacket = useBinding('qq')

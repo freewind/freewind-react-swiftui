@@ -9,7 +9,7 @@ import {
   useBinding,
   VStack,
   WindowGroup,
-} from '../swiftui'
+} from '../swift'
 import { HomePage } from './HomePage'
 import { demoPages, isDemoCategory, sectionEntries, type DemoHomeSection, type DemoSection } from './model'
 import { renderDemoPage } from './renderDemoPage'

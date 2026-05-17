@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { Button, FormSection, HStack, VStack } from '../swiftui'
+import { Button, FormSection, HStack, VStack } from '../swift'
 import { GalleryRow, MetricCard } from './shared'
 
 export const DashboardDemo: FC = () => {
