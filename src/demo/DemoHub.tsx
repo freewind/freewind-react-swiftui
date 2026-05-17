@@ -53,9 +53,14 @@ type DemoPage = {
 }
 
 const demoPages: DemoPage[] = [
-  { id: 'components', title: '组件总览', category: 'components' },
-  { id: 'controls', title: '控件状态', category: 'components' },
-  { id: 'text-image', title: '文本图片', category: 'components' },
+  { id: 'component-text', title: 'Text', category: 'components' },
+  { id: 'component-button', title: 'Button', category: 'components' },
+  { id: 'component-image-label', title: 'Image / Label', category: 'components' },
+  { id: 'component-input', title: 'Input', category: 'components' },
+  { id: 'component-layout', title: 'Layout', category: 'components' },
+  { id: 'component-container', title: 'Container', category: 'components' },
+  { id: 'component-shape', title: 'Shape / Token', category: 'components' },
+  { id: 'component-native', title: 'Native Mock', category: 'components' },
   { id: 'split-view', title: '分栏布局', category: 'layouts' },
   { id: 'dashboard', title: '看板布局', category: 'layouts' },
   { id: 'form-sheet', title: '表单弹层', category: 'layouts' },
@@ -100,7 +105,7 @@ const fileRows = [
 export const DemoHub: FC = () => {
   const theme = useBinding<ThemeMode>('light')
   const category = useBinding<DemoCategory>('components')
-  const currentPage = useBinding('components')
+  const currentPage = useBinding('component-text')
   const notesSheetPresented = useBinding(false)
   const notes = useBinding('这里放 demo 说明、转换 hint、组件限制。')
 
@@ -110,7 +115,7 @@ export const DemoHub: FC = () => {
   return (
     <MockEnvironmentProvider>
       <WindowGroup minWidth={1100} minHeight={760} theme={theme.value}>
-        <HStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }} spacing={0}>
+        <HStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }} spacing={0}>
           <Sidebar
             theme={theme}
             category={category}
@@ -119,12 +124,14 @@ export const DemoHub: FC = () => {
             onOpenNotes={() => notesSheetPresented.setValue(true)}
           />
           <Divider axis="vertical" />
-          <ScrollView frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }}>
+          <VStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }}>
+            <ScrollView frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }}>
             <VStack spacing={18} padding={20} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
               <HeroHeader activePage={activePage.title} />
               {renderDemoPage(activePage.id)}
             </VStack>
-          </ScrollView>
+            </ScrollView>
+          </VStack>
         </HStack>
 
         <TextEditorSheet title="Demo Notes" isPresented={notesSheetPresented} text={notes} />
@@ -225,12 +232,22 @@ const HeroHeader: FC<{
 
 const renderDemoPage = (pageId: string) => {
   switch (pageId) {
-    case 'components':
-      return <ComponentsGallery />
-    case 'controls':
-      return <ControlsGallery />
-    case 'text-image':
-      return <TextImageGallery />
+    case 'component-text':
+      return <TextComponentDemo />
+    case 'component-button':
+      return <ButtonComponentDemo />
+    case 'component-image-label':
+      return <ImageLabelComponentDemo />
+    case 'component-input':
+      return <InputComponentDemo />
+    case 'component-layout':
+      return <LayoutComponentDemo />
+    case 'component-container':
+      return <ContainerComponentDemo />
+    case 'component-shape':
+      return <ShapeTokenComponentDemo />
+    case 'component-native':
+      return <NativeMockComponentDemo />
     case 'translator':
       return <TranslatorSpecDemo />
     case 'native-swift':
@@ -254,11 +271,11 @@ const renderDemoPage = (pageId: string) => {
     case 'system-api':
       return <SystemApiMockDemo />
     default:
-      return <ComponentsGallery />
+      return <TextComponentDemo />
   }
 }
 
-const ComponentsGallery: FC = () => {
+const TextComponentDemo: FC = () => {
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <FormSection title="Typography">
@@ -275,81 +292,70 @@ const ComponentsGallery: FC = () => {
           <Text font="caption2.monospaced" textSelection="enabled">
             caption2.monospaced selectable
           </Text>
-        </VStack>
-      </FormSection>
-
-      <HStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-        <FormSection title="Buttons">
-          <VStack spacing={10} alignment="leading">
-            <Button title="plain button" buttonStyle="plain" />
-            <Button title="bordered button" buttonStyle="bordered" />
-            <Button title="prominent button" buttonStyle="borderedProminent" />
-            <Button title="small button" buttonStyle="bordered" controlSize="small" />
-            <Button title="disabled button" buttonStyle="borderedProminent" disabled />
-          </VStack>
-        </FormSection>
-
-        <FormSection title="Tokens">
-          <VStack spacing={10} alignment="leading">
-            <Text foregroundStyle="primary">primary</Text>
-            <Text foregroundStyle="secondary">secondary</Text>
-            <Text foregroundStyle="tertiary">tertiary</Text>
-            <Text foregroundStyle="red">red</Text>
-            <Text foregroundStyle="green">green</Text>
-            <Text foregroundStyle="accentColor">accentColor</Text>
-          </VStack>
-        </FormSection>
-      </HStack>
-
-      <HStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-        <FormSection title="Shapes">
-          <HStack spacing={12}>
-            <SwatchCard title="Rounded" tone="blue" />
-            <SwatchCard title="Capsule" tone="green" capsule />
-            <SwatchCard title="Rect" tone="red" rectangle />
-          </HStack>
-        </FormSection>
-
-        <FormSection title="List Row">
-          <VStack spacing={8}>
-            <GalleryRow title="MessageBubble" meta="thinMaterial + padding + caption" />
-            <GalleryRow title="SidebarRow" meta="HStack + Spacer + secondary text" />
-            <GalleryRow title="InspectorRow" meta="leading align + divider stack" />
-          </VStack>
-        </FormSection>
-      </HStack>
-
-      <FormSection title="Native-ish Controls">
-        <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-          <HStack spacing={10}>
-            <Button title="link style button" buttonStyle="link" />
-            <ContextMenu
-              items={[
-                { title: '置顶' },
-                { title: '清空聊天' },
-                { title: '删除' },
-              ]}
-            >
-              <Button title="contextMenu trigger" buttonStyle="bordered" />
-            </ContextMenu>
-          </HStack>
-
-          <ScrollView axes="horizontal" frame={{ maxWidth: 'infinity' }}>
-            <LazyHStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-              <Chip title="LazyHStack" />
-              <Chip title="GeometryReader" />
-              <Chip title="ScrollViewReader" />
-              <Chip title="WindowAccessor" />
-              <Chip title="DropArea" />
-            </LazyHStack>
-          </ScrollView>
+          <Text foregroundStyle="red">red foreground</Text>
+          <Text foregroundStyle="green">green foreground</Text>
+          <Text foregroundStyle="accentColor">accentColor foreground</Text>
+          <Text multilineTextAlignment="center" frame={{ maxWidth: 'infinity' }}>
+            centered multiline text
+          </Text>
         </VStack>
       </FormSection>
     </VStack>
   )
 }
 
-const ControlsGallery: FC = () => {
+const ButtonComponentDemo: FC = () => {
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="buttonStyle">
+        <VStack spacing={10} alignment="leading">
+          <Button title="plain button" buttonStyle="plain" />
+          <Button title="bordered button" buttonStyle="bordered" />
+          <Button title="prominent button" buttonStyle="borderedProminent" />
+          <Button title="borderless button" buttonStyle="borderless" />
+          <Button title="link style button" buttonStyle="link" />
+        </VStack>
+      </FormSection>
+
+      <FormSection title="controlSize / disabled">
+        <HStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <Button title="mini" buttonStyle="bordered" controlSize="mini" />
+          <Button title="small" buttonStyle="bordered" controlSize="small" />
+          <Button title="regular" buttonStyle="bordered" controlSize="regular" />
+          <Button title="large" buttonStyle="borderedProminent" controlSize="large" />
+          <Button title="disabled" buttonStyle="borderedProminent" disabled />
+        </HStack>
+      </FormSection>
+    </VStack>
+  )
+}
+
+const ImageLabelComponentDemo: FC = () => {
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="System Image Tokens">
+        <HStack spacing={12}>
+          <Image systemName="iphone" />
+          <Image systemName="laptopcomputer" />
+          <Image systemName="pin.fill" />
+          <Image systemName="photo" />
+          <Image systemName="doc" />
+          <Image systemName="xmark" />
+        </HStack>
+      </FormSection>
+
+      <FormSection title="Label">
+        <VStack spacing={10} alignment="leading">
+          <Label title="photo file" systemImage="photo" />
+          <Label title="document file" systemImage="doc" />
+          <Label title="pinned item" systemImage="pin.fill" />
+        </VStack>
+      </FormSection>
+    </VStack>
+  )
+}
+
+const InputComponentDemo: FC = () => {
   const segmented = useBinding<'all' | 'online' | 'offline'>('all')
   const field = useBinding('freewind-mac')
   const editor = useBinding('多行输入，后续映射 TextEditor。')
@@ -403,43 +409,191 @@ const ControlsGallery: FC = () => {
   )
 }
 
-const TextImageGallery: FC = () => {
+const LayoutComponentDemo: FC = () => {
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-      <FormSection title="System Image Tokens">
+      <FormSection title="VStack / HStack / Spacer / Divider">
+        <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <HStack
+            spacing={12}
+            padding={12}
+            background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
+            frame={{ maxWidth: 'infinity' }}
+          >
+            <Text>A</Text>
+            <Spacer />
+            <Text>B</Text>
+            <Divider axis="vertical" />
+            <Text>C</Text>
+          </HStack>
+
+          <VStack
+            spacing={8}
+            padding={12}
+            background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
+            frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+          >
+            <Text>row 1</Text>
+            <Divider />
+            <Text>row 2</Text>
+            <Divider />
+            <Text>row 3</Text>
+          </VStack>
+        </VStack>
+      </FormSection>
+
+      <FormSection title="LazyHStack">
+        <ScrollView axes="horizontal" frame={{ maxWidth: 'infinity' }}>
+          <LazyHStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            <Chip title="LazyHStack" />
+            <Chip title="Horizontal" />
+            <Chip title="Scrollable" />
+            <Chip title="Token Friendly" />
+          </LazyHStack>
+        </ScrollView>
+      </FormSection>
+    </VStack>
+  )
+}
+
+const ContainerComponentDemo: FC = () => {
+  const sheetPresented = useBinding(false)
+
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="ScrollView">
+        <ScrollView frame={{ height: 180, maxWidth: 'infinity' }}>
+          <VStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            {Array.from({ length: 10 }).map((_, index) => (
+              <GalleryRow key={String(index)} title={`scroll row ${String(index + 1)}`} meta="vertical scroll content" />
+            ))}
+          </VStack>
+        </ScrollView>
+      </FormSection>
+
+      <FormSection title="Sheet / ContextMenu">
+        <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <Button title="打开 Sheet" buttonStyle="borderedProminent" onPress={() => sheetPresented.setValue(true)} />
+          <ContextMenu
+            items={[
+              { title: '置顶' },
+              { title: '清空聊天' },
+              { title: '删除' },
+            ]}
+          >
+            <Button title="contextMenu trigger" buttonStyle="bordered" />
+          </ContextMenu>
+        </VStack>
+        <Sheet isPresented={sheetPresented}>
+          <VStack
+            spacing={12}
+            padding={20}
+            frame={{ width: 360, height: 220 }}
+            background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 20 } }}
+          >
+            <Text font="headline">Sheet 内容</Text>
+            <Text foregroundStyle="secondary">这里展示 modal 容器、按钮区、层级关系。</Text>
+            <HStack>
+              <Spacer />
+              <Button title="关闭" buttonStyle="borderedProminent" onPress={() => sheetPresented.setValue(false)} />
+            </HStack>
+          </VStack>
+        </Sheet>
+      </FormSection>
+    </VStack>
+  )
+}
+
+const ShapeTokenComponentDemo: FC = () => {
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="Tokens">
+        <VStack spacing={10} alignment="leading">
+          <Text foregroundStyle="primary">primary</Text>
+          <Text foregroundStyle="secondary">secondary</Text>
+          <Text foregroundStyle="tertiary">tertiary</Text>
+          <Text foregroundStyle="red">red</Text>
+          <Text foregroundStyle="green">green</Text>
+          <Text foregroundStyle="accentColor">accentColor</Text>
+        </VStack>
+      </FormSection>
+
+      <FormSection title="Shapes / Material">
         <HStack spacing={12}>
-          <Image systemName="iphone" />
-          <Image systemName="laptopcomputer" />
-          <Image systemName="pin.fill" />
-          <Image systemName="photo" />
-          <Image systemName="doc" />
-          <Image systemName="xmark" />
+          <SwatchCard title="Rounded" tone="blue" />
+          <SwatchCard title="Capsule" tone="green" capsule />
+          <SwatchCard title="Rect" tone="red" rectangle />
         </HStack>
       </FormSection>
 
-      <FormSection title="Mixed Text Blocks">
-        <VStack spacing={12} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-          <Text font="headline.semibold">消息卡片</Text>
-          <Text>
-            这套 demo 不是普通 React 页面，而是为 SwiftUI 转换准备的受限 JSX 语义层。
-          </Text>
-          <Text foregroundStyle="secondary">
-            所有组件都尽量贴 SwiftUI 的 view / modifier / state 形状。
-          </Text>
-          <HStack spacing={10}>
-            <Image systemName="photo" />
-            <VStack
-              spacing={6}
-              padding={12}
-              background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
-              alignment="leading"
-            >
-              <Text font="headline">图片预览卡</Text>
-              <Text font="caption" foregroundStyle="secondary">
-                image + caption + meta
+      <FormSection title="Row Cards">
+        <VStack spacing={8}>
+          <GalleryRow title="MessageBubble" meta="thinMaterial + padding + caption" />
+          <GalleryRow title="SidebarRow" meta="HStack + Spacer + secondary text" />
+          <GalleryRow title="InspectorRow" meta="leading align + divider stack" />
+        </VStack>
+      </FormSection>
+    </VStack>
+  )
+}
+
+const NativeMockComponentDemo: FC = () => {
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="GeometryReader">
+        <GeometryReader
+          padding={12}
+          background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+          frame={{ maxWidth: 'infinity' }}
+        >
+          {proxy => (
+            <VStack spacing={8} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+              <Text font="headline">GeometryReader</Text>
+              <Text font="caption2.monospaced">
+                width: {String(proxy.size.width)} height: {String(proxy.size.height)}
               </Text>
             </VStack>
-          </HStack>
+          )}
+        </GeometryReader>
+      </FormSection>
+
+      <FormSection title="ScrollViewReader">
+        <ScrollViewReader
+          padding={12}
+          background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+          frame={{ maxWidth: 'infinity' }}
+        >
+          {proxy => (
+            <HStack>
+              <Text>ScrollViewReader mock</Text>
+              <Spacer />
+              <Button title="scrollTo(bottom)" buttonStyle="bordered" onPress={() => proxy.scrollTo('bottom', { anchor: 'bottom' })} />
+            </HStack>
+          )}
+        </ScrollViewReader>
+      </FormSection>
+
+      <FormSection title="DropArea / WindowAccessor">
+        <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <DropArea
+            padding={12}
+            background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+            frame={{ maxWidth: 'infinity' }}
+            onDrop={() => {}}
+          >
+            <Text>DropArea mock，对应 SwiftUI `onDrop` 语义。</Text>
+          </DropArea>
+
+          <VStack
+            spacing={8}
+            padding={12}
+            background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+            frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+          >
+            <Text font="headline">WindowAccessor</Text>
+            <Text foregroundStyle="secondary">对应 `NSViewRepresentable` bridge 的最小 mock。</Text>
+            <WindowAccessor onResolve={window => void window.title} />
+          </VStack>
         </VStack>
       </FormSection>
     </VStack>
