@@ -13,8 +13,31 @@ import {
   useMemo,
   useState,
 } from 'react'
-import {Button} from "./Button";
-import {VStack} from "./VStack";
+import { Button } from './Button/Button'
+import { DisclosureGroup } from './DisclosureGroup/DisclosureGroup'
+import { Divider } from './Divider/Divider'
+import { GeometryReader } from './GeometryReader/GeometryReader'
+import { HStack } from './HStack/HStack'
+import { Image } from './Image/Image'
+import { Label } from './Label/Label'
+import { LazyHStack } from './LazyHStack/LazyHStack'
+import { LazyVGrid } from './LazyVGrid/LazyVGrid'
+import { List } from './List/List'
+import { NavigationLink } from './NavigationLink/NavigationLink'
+import { Picker } from './Picker/Picker'
+import { RoundedRectangle } from './RoundedRectangle/RoundedRectangle'
+import { ScrollView } from './ScrollView/ScrollView'
+import { ScrollViewReader } from './ScrollViewReader/ScrollViewReader'
+import { Section } from './Section/Section'
+import { Slider } from './Slider/Slider'
+import { Spacer } from './Spacer/Spacer'
+import { Stepper } from './Stepper/Stepper'
+import { Table } from './Table/Table'
+import { Text } from './Text/Text'
+import { TextEditor } from './TextEditor/TextEditor'
+import { TextField } from './TextField/TextField'
+import { VStack } from './VStack/VStack'
+import { WindowAccessor } from './WindowAccessor/WindowAccessor'
 
 type Axis = 'horizontal' | 'vertical'
 type HorizontalAlignment = 'leading' | 'center' | 'trailing'
@@ -475,21 +498,6 @@ export const useBinding = <T,>(initialValue: T): Binding<T> => {
   return useMemo(() => ({ value, setValue }), [value])
 }
 
-export const HStack: FC<StackProps> = ({ spacing = 0, alignment = 'center', children, ...rest }) => {
-  return (
-    <View
-      {...rest}
-      stack={{
-        axis: 'horizontal',
-        gap: spacing,
-        align: mapStackAlignment('horizontal', alignment),
-      }}
-    >
-      {children}
-    </View>
-  )
-}
-
 export const ZStack: FC<StackProps> = ({ alignment = 'center', children, ...rest }) => {
   return (
     <View
@@ -549,26 +557,6 @@ export const View: FC<
       </parentStackAxisContext.Provider>
     </disabledContext.Provider>
   )
-}
-
-export const Text: FC<TextProps> = ({
-  children,
-  font = 'body',
-  italic,
-  monospaced,
-  textSelection,
-  multilineTextAlignment,
-  ...rest
-}) => {
-  const style: CSSProperties = {
-    ...viewStyle(rest),
-    ...fontStyles[font],
-    fontStyle: italic ? 'italic' : undefined,
-    fontFamily: monospaced ? '"SF Mono", Monaco, Consolas, monospace' : fontStyles[font].fontFamily,
-    userSelect: textSelection === 'enabled' ? 'text' : undefined,
-    textAlign: mapTextAlign(multilineTextAlignment),
-  }
-  return <div style={style}>{children}</div>
 }
 
 export const Toggle: FC<ToggleProps> = ({ isOn, title, children, ...rest }) => {
@@ -646,402 +634,12 @@ export const ProgressView: FC<ProgressViewProps> = ({
   )
 }
 
-export const List: FC<ListProps> = ({ children, ...rest }) => {
-  const items = normalizeChildren(children)
-  return (
-    <VStack
-      spacing={0}
-      frame={{ maxWidth: 'infinity', alignment: 'leading' }}
-      background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
-      {...rest}
-    >
-      {items.map((item, index) => (
-        <VStack key={`list-item-${String(index)}`} spacing={0} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-          {item}
-          {index < items.length - 1 ? <Divider /> : null}
-        </VStack>
-      ))}
-    </VStack>
-  )
-}
-
-export const Section: FC<SectionProps> = ({ title, header, footer, children, ...rest }) => {
-  return (
-    <VStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }} {...rest}>
-      {header ?? title ? (
-        <Text font="caption.semibold" foregroundStyle="secondary">
-          {header ?? title}
-        </Text>
-      ) : null}
-      <VStack spacing={0} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-        {children}
-      </VStack>
-      {footer ? (
-        typeof footer === 'string' ? (
-          <Text font="caption" foregroundStyle="secondary">
-            {footer}
-          </Text>
-        ) : (
-          footer
-        )
-      ) : null}
-    </VStack>
-  )
-}
-
-export const ScrollView: FC<ScrollViewProps> = ({ axes = 'vertical', children, ...rest }) => {
-  const normalized = Array.isArray(axes) ? axes : [axes]
-  const style: CSSProperties = {
-    ...viewStyle(rest),
-    overflowX: normalized.includes('horizontal') ? 'auto' : 'hidden',
-    overflowY: normalized.includes('vertical') ? 'auto' : 'hidden',
-  }
-  return <div style={style}>{children}</div>
-}
-
-export const GeometryReader: FC<GeometryReaderProps> = ({ children, ...rest }) => {
-  return (
-    <View {...rest}>
-      {children({
-        size: {
-          width: 1280,
-          height: 800,
-        },
-      })}
-    </View>
-  )
-}
-
-export const ScrollViewReader: FC<ScrollViewReaderProps> = ({ children, ...rest }) => {
-  return (
-    <View {...rest}>
-      {children({
-        scrollTo: () => {},
-      })}
-    </View>
-  )
-}
-
 export const LazyVStack: FC<StackProps> = props => {
   return <VStack {...props} />
 }
 
-export const LazyHStack: FC<StackProps> = props => {
-  return <HStack {...props} />
-}
-
-export const LazyVGrid: FC<LazyVGridProps> = ({ columns, spacing = 8, children, ...rest }) => {
-  return (
-    <div
-      style={{
-        ...viewStyle(rest, undefined),
-        display: 'grid',
-        gridTemplateColumns: gridTemplateColumns(columns),
-        gap: spacing,
-      }}
-    >
-      {children}
-    </div>
-  )
-}
-
-export const Spacer: FC<SpacerProps> = ({ minLength = 0 }) => {
-  const parentStackAxis = useContext(parentStackAxisContext)
-  return (
-    <div
-      style={
-        parentStackAxis === 'vertical'
-          ? { flex: 1, minHeight: minLength, minWidth: 0, alignSelf: 'stretch' }
-          : { flex: 1, minWidth: minLength, minHeight: 0 }
-      }
-    />
-  )
-}
-
-export const Divider: FC<DividerProps> = ({ axis = 'horizontal' }) => {
-  return (
-    <div
-      style={
-        axis === 'horizontal'
-          ? { height: 1, width: '100%', background: surfaceColors.border, flexShrink: 0 }
-          : { width: 1, alignSelf: 'stretch', background: surfaceColors.border, flexShrink: 0 }
-      }
-    />
-  )
-}
-
-export const TextField: FC<TextFieldProps> = ({ text, placeholder, textFieldStyle = 'roundedBorder', ...rest }) => {
-  return (
-    <input
-      value={text.value}
-      placeholder={placeholder}
-      onChange={event => text.setValue(event.target.value)}
-      style={{
-        ...inputChrome(textFieldStyle),
-        ...viewStyle(rest),
-      }}
-    />
-  )
-}
-
-export const TextEditor: FC<TextEditorProps> = ({ text, ...rest }) => {
-  return (
-    <textarea
-      value={text.value}
-      onChange={event => text.setValue(event.target.value)}
-      style={{
-        ...inputChrome('roundedBorder'),
-        ...viewStyle(rest),
-        resize: 'none',
-        minHeight: 120,
-      }}
-    />
-  )
-}
-
-export const Slider: FC<SliderProps> = ({ value, in: range = [0, 1], step = 0.01, ...rest }) => {
-  const [min, max] = range
-  return (
-    <input
-      type="range"
-      min={min}
-      max={max}
-      step={step}
-      value={value.value}
-      onChange={event => value.setValue(Number(event.target.value))}
-      style={{
-        width: '100%',
-        accentColor: surfaceColors.accent,
-        ...viewStyle(rest),
-      }}
-    />
-  )
-}
-
-export const Stepper: FC<StepperProps> = ({
-  value,
-  in: range = [-Infinity, Infinity],
-  step = 1,
-  title,
-  children,
-  ...rest
-}) => {
-  const [min, max] = range
-  const decrease = () => value.setValue(Math.max(min, value.value - step))
-  const increase = () => value.setValue(Math.min(max, value.value + step))
-  return (
-    <HStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }} {...rest}>
-      <VStack spacing={2} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-        <Text>{children ?? title ?? 'Stepper'}</Text>
-        <Text font="caption" foregroundStyle="secondary">
-          {String(value.value)}
-        </Text>
-      </VStack>
-      <HStack spacing={6}>
-        <Button title="−" buttonStyle="bordered" controlSize="small" onPress={decrease} disabled={value.value <= min} />
-        <Button title="+" buttonStyle="bordered" controlSize="small" onPress={increase} disabled={value.value >= max} />
-      </HStack>
-    </HStack>
-  )
-}
-
-export const Table = <T,>({
-  columns,
-  dataSource,
-  rowKey,
-  emptyText = 'No Data',
-  ...rest
-}: TableProps<T>) => {
-  return (
-    <VStack
-      spacing={0}
-      frame={{ maxWidth: 'infinity', alignment: 'leading' }}
-      background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
-      {...rest}
-    >
-      <HStack
-        spacing={12}
-        padding={{ horizontal: 12, vertical: 10 }}
-        frame={{ maxWidth: 'infinity', alignment: 'leading' }}
-        background={{ fill: 'ultraThinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
-      >
-        {columns.map(column => (
-          <Text
-            key={column.key}
-            font="caption.semibold"
-            frame={{
-              width: column.width,
-              maxWidth: column.width ? undefined : 'infinity',
-              alignment: 'leading',
-            }}
-          >
-            {column.title}
-          </Text>
-        ))}
-      </HStack>
-      <Divider />
-      {dataSource.length === 0 ? (
-        <Text padding={12} foregroundStyle="secondary">
-          {emptyText}
-        </Text>
-      ) : (
-        dataSource.map((record, index) => (
-          <VStack key={rowKey(record, index)} spacing={0} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-            <HStack spacing={12} padding={{ horizontal: 12, vertical: 10 }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-              {columns.map(column => {
-                const cell =
-                  column.render?.(record, index) ??
-                  (column.dataIndex ? String(record[column.dataIndex] ?? '') : '')
-                return (
-                  <VStack
-                    key={`${rowKey(record, index)}-${column.key}`}
-                    frame={{
-                      width: column.width,
-                      maxWidth: column.width ? undefined : 'infinity',
-                      alignment: 'leading',
-                    }}
-                  >
-                    {typeof cell === 'string' || typeof cell === 'number' ? <Text>{String(cell)}</Text> : cell}
-                  </VStack>
-                )
-              })}
-            </HStack>
-            {index < dataSource.length - 1 ? <Divider /> : null}
-          </VStack>
-        ))
-      )}
-    </VStack>
-  )
-}
-
-export const Picker = <T extends string | number>({
-  selection,
-  options,
-  pickerStyle = 'segmented',
-  ...rest
-}: PickerProps<T>) => {
-  if (pickerStyle !== 'segmented') {
-    throw new Error(`Unsupported pickerStyle: ${pickerStyle}`)
-  }
-
-  return (
-    <HStack
-      spacing={4}
-      padding={4}
-      background={{ fill: 'tertiary', in: { kind: 'roundedRectangle', cornerRadius: 10 } }}
-      {...rest}
-    >
-      {options.map(option => {
-        const selected = selection.value === option.value
-        return (
-          <Button
-            key={String(option.value)}
-            title={option.label}
-            buttonStyle={selected ? 'borderedProminent' : 'plain'}
-            controlSize="small"
-            onPress={() => selection.setValue(option.value)}
-            frame={{ maxWidth: 'infinity' }}
-          />
-        )
-      })}
-    </HStack>
-  )
-}
-
-export const Image: FC<ImageProps> = ({
-  systemName,
-  src,
-  alt = '',
-  scaledToFit,
-  resizable,
-  children,
-  ...rest
-}) => {
-  const style: CSSProperties = {
-    ...viewStyle(rest),
-    objectFit: scaledToFit || resizable ? 'contain' : undefined,
-    display: 'block',
-  }
-
-  if (src) {
-    return <img src={src} alt={alt} style={style} />
-  }
-
-  return (
-    <Text
-      {...rest}
-      font="caption"
-      padding={{ horizontal: 8, vertical: 4 }}
-      background={{ fill: 'tertiary', in: { kind: 'capsule' } }}
-    >
-      {children ?? symbolMap[systemName ?? ''] ?? systemName ?? 'image'}
-    </Text>
-  )
-}
-
-export const Label: FC<LabelProps> = ({ title, systemImage, ...rest }) => {
-  return (
-    <HStack spacing={8} {...rest}>
-      {systemImage ? <Image systemName={systemImage} /> : null}
-      <Text>{title}</Text>
-    </HStack>
-  )
-}
-
-export const NavigationLink: FC<NavigationLinkProps> = ({ title, onNavigate, children, ...rest }) => {
-  return (
-    <Button buttonStyle="plain" onPress={onNavigate} frame={{ maxWidth: 'infinity', alignment: 'leading' }} {...rest}>
-      <HStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-        <VStack spacing={0} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-          {children ?? <Text>{title ?? 'NavigationLink'}</Text>}
-        </VStack>
-        <Text font="caption2.monospaced" foregroundStyle="tertiary">
-          ›
-        </Text>
-      </HStack>
-    </Button>
-  )
-}
-
-export const DisclosureGroup: FC<DisclosureGroupProps> = ({ title, isExpanded, children, ...rest }) => {
-  const [localExpanded, setLocalExpanded] = useState(false)
-  const expanded = isExpanded ? isExpanded.value : localExpanded
-  const setExpanded = isExpanded ? isExpanded.setValue : setLocalExpanded
-
-  return (
-    <VStack spacing={8} alignment="leading" {...rest}>
-      <Button buttonStyle="plain" onPress={() => setExpanded(!expanded)} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-        <HStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-          <Text font="caption2.monospaced">{expanded ? '▾' : '▸'}</Text>
-          <Text>{title ?? 'DisclosureGroup'}</Text>
-        </HStack>
-      </Button>
-      {expanded ? (
-        <VStack
-          spacing={8}
-          padding={{ leading: 20 }}
-          frame={{ maxWidth: 'infinity', alignment: 'leading' }}
-        >
-          {children}
-        </VStack>
-      ) : null}
-    </VStack>
-  )
-}
-
 export const Color: FC<ViewBaseProps & { tone?: ForegroundStyleToken }> = ({ tone = 'primary', ...rest }) => {
   return <View background={tone} {...rest} />
-}
-
-export const RoundedRectangle: FC<ShapeProps> = ({ cornerRadius = 16, fill, stroke, ...rest }) => {
-  return (
-    <ShapeView
-      {...rest}
-      shape={{ kind: 'roundedRectangle', cornerRadius }}
-      fill={fill}
-      stroke={stroke}
-    />
-  )
 }
 
 export const Capsule: FC<ShapeProps> = ({ fill, stroke, ...rest }) => {
@@ -1361,13 +959,6 @@ export const DropArea: FC<DropAreaProps> = ({ children, isTargeted, onDrop, ...r
       {children}
     </View>
   )
-}
-
-export const WindowAccessor: FC<WindowAccessorProps> = ({ onResolve }) => {
-  if (onResolve) {
-    onResolve({ title: 'Mock Window' })
-  }
-  return null
 }
 
 export const WindowGroup: FC<PropsWithChildren<WindowStyleProps>> = ({
@@ -1764,8 +1355,44 @@ export const _internal = {
 export {
   buttonChrome,
   disabledContext,
+  fontStyles,
+  gridTemplateColumns,
+  inputChrome,
+  mapTextAlign,
   mapStackAlignment,
+  normalizeChildren,
+  parentStackAxisContext,
+  stopClick,
+  surfaceColors,
+  symbolMap,
+  textColorMap,
   viewStyle,
+}
+
+export {
+  DisclosureGroup,
+  Divider,
+  GeometryReader,
+  HStack,
+  Image,
+  Label,
+  LazyHStack,
+  LazyVGrid,
+  List,
+  NavigationLink,
+  Picker,
+  RoundedRectangle,
+  ScrollView,
+  ScrollViewReader,
+  Section,
+  Slider,
+  Spacer,
+  Stepper,
+  Table,
+  Text,
+  TextEditor,
+  TextField,
+  WindowAccessor,
 }
 
 export type {
@@ -1777,16 +1404,24 @@ export type {
   FontToken,
   ForegroundStyleToken,
   FrameSpec,
+  GeometryReaderProps,
   GridItemSpec,
   GridItemSize,
+  ImageProps,
+  LabelProps,
   ListProps,
+  ShapeProps,
   NavigationLinkProps,
   PopconfirmProps,
+  PickerProps,
   PickerOption,
   PopoverProps,
+  ScrollViewProps,
+  ScrollViewReaderProps,
   ShapeSpec,
   SectionProps,
   SliderProps,
+  SpacerProps,
   StackProps,
   StepperProps,
   TableColumn,
@@ -1798,7 +1433,12 @@ export type {
   TabProps,
   TabViewProps,
   TextAlign,
+  TextEditorProps,
+  TextFieldProps,
+  TextProps,
   TextFieldStyleToken,
   ToggleProps,
   ViewBaseProps,
+  DividerProps,
+  WindowAccessorProps,
 }
