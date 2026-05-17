@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { Stepper, useBinding } from '../runtime'
+import { Stepper, Text, useBinding } from '../runtime'
 import { PlaygroundSection } from '../../demo-playground'
 import { ComponentPropsTable } from '../../props-table'
 import {VStack} from "../VStack";
@@ -11,7 +11,13 @@ export const StepperDemo: FC = () => {
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <FormSection title="基础步进器">
-        <Stepper value={count} in={[0, 10]} step={1} title="Concurrent Uploads" />
+        <Stepper
+          value={count}
+          in={[0, 10]}
+          step={1}
+          label={<Text>Concurrent Uploads</Text>}
+          valueLabel={<Text font="caption" foregroundStyle="secondary">{String(count.value)} jobs</Text>}
+        />
       </FormSection>
       <PlaygroundSection
         title="批量操作参数"

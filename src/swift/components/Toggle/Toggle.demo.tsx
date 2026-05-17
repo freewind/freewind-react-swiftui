@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { Toggle, useBinding } from '../runtime'
+import { Text, Toggle, useBinding } from '../runtime'
 import { PlaygroundSection } from '../../demo-playground'
 import { ComponentPropsTable } from '../../props-table'
 import {VStack} from "../VStack";
@@ -14,7 +14,17 @@ export const ToggleDemo: FC = () => {
       <FormSection title="基础开关">
         <VStack spacing={10} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
           <Toggle isOn={wifi} title="Wi-Fi" />
-          <Toggle isOn={notifications} title="通知提醒" />
+          <Toggle
+            isOn={notifications}
+            label={
+              <VStack spacing={2} alignment="leading">
+                <Text>通知提醒</Text>
+                <Text font="caption" foregroundStyle="secondary">
+                  preview banners
+                </Text>
+              </VStack>
+            }
+          />
         </VStack>
       </FormSection>
       <PlaygroundSection

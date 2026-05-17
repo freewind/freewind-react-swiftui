@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import type { FC, ReactNode } from 'react'
 import { Button } from '../Button'
 import { HStack } from '../HStack'
 import type { Binding } from '../runtime'
@@ -11,6 +11,8 @@ export type StepperProps = ViewBaseProps & {
   in?: [number, number]
   step?: number
   title?: string
+  label?: ReactNode
+  valueLabel?: ReactNode
 }
 
 
@@ -19,6 +21,8 @@ export const Stepper: FC<StepperProps> = ({
   in: range = [-Infinity, Infinity],
   step = 1,
   title,
+  label,
+  valueLabel,
   children,
   ...rest
 }) => {
@@ -29,10 +33,12 @@ export const Stepper: FC<StepperProps> = ({
   return (
     <HStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }} {...rest}>
       <VStack spacing={2} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-        <Text>{children ?? title ?? 'Stepper'}</Text>
-        <Text font="caption" foregroundStyle="secondary">
-          {String(value.value)}
-        </Text>
+        {label ?? <Text>{children ?? title ?? 'Stepper'}</Text>}
+        {valueLabel ?? (
+          <Text font="caption" foregroundStyle="secondary">
+            {String(value.value)}
+          </Text>
+        )}
       </VStack>
       <HStack spacing={6}>
         <Button title="−" buttonStyle="bordered" controlSize="small" onPress={decrease} disabled={value.value <= min} />

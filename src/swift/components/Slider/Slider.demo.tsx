@@ -12,7 +12,14 @@ export const SliderDemo: FC = () => {
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <FormSection title="基础滑杆">
         <VStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-          <Slider value={zoom} in={[10, 200]} step={5} />
+          <Slider
+            value={zoom}
+            in={[10, 200]}
+            step={5}
+            label={<Text font="caption">Zoom</Text>}
+            minimumValueLabel={<Text font="caption2">10%</Text>}
+            maximumValueLabel={<Text font="caption2">200%</Text>}
+          />
           <Text font="caption" foregroundStyle="secondary">zoom: {String(zoom.value)}%</Text>
         </VStack>
       </FormSection>
@@ -21,11 +28,15 @@ export const SliderDemo: FC = () => {
         summary="常用于缩放、音量、透明度、阈值控制。"
         preview={
           <VStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-            <HStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-              <Text font="caption">10%</Text>
-              <Slider value={zoom} in={[10, 200]} step={10} frame={{ maxWidth: 'infinity' }} />
-              <Text font="caption">200%</Text>
-            </HStack>
+            <Slider
+              value={zoom}
+              in={[10, 200]}
+              step={10}
+              label={<Text font="caption">Scale</Text>}
+              minimumValueLabel={<Text font="caption">10%</Text>}
+              maximumValueLabel={<Text font="caption">200%</Text>}
+              frame={{ maxWidth: 'infinity' }}
+            />
             <Text font="caption" foregroundStyle="secondary">current: {String(zoom.value)}%</Text>
           </VStack>
         }
