@@ -14,6 +14,7 @@ export const PickerDemo: FC = () => {
         <Picker
           selection={selection}
           pickerStyle="segmented"
+          tint="green"
           label={
             <Text font="caption" foregroundStyle="secondary">
               peer filter
@@ -34,6 +35,8 @@ export const PickerDemo: FC = () => {
             <Picker
               selection={selection}
               pickerStyle="segmented"
+              labelsHidden
+              controlSize="mini"
               options={[
                 { label: '全部', value: 'all' },
                 { label: '在线', value: 'online' },

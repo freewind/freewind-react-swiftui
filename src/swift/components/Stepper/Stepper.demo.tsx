@@ -17,6 +17,7 @@ export const StepperDemo: FC = () => {
           step={1}
           label={<Text>Concurrent Uploads</Text>}
           valueLabel={<Text font="caption" foregroundStyle="secondary">{String(count.value)} jobs</Text>}
+          tint="blue"
         />
       </FormSection>
       <PlaygroundSection
@@ -24,8 +25,8 @@ export const StepperDemo: FC = () => {
         summary="适合整数配置、份数、并发数、重试次数。"
         preview={
           <VStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-            <Stepper value={count} in={[1, 8]} step={1} title="Retry Count" />
-            <Stepper value={count} in={[0, 20]} step={2} title="Max Peers" />
+            <Stepper value={count} in={[1, 8]} step={1} title="Retry Count" controlSize="mini" />
+            <Stepper value={count} in={[0, 20]} step={2} title="Max Peers" labelsHidden />
           </VStack>
         }
       />

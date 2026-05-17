@@ -64,15 +64,18 @@ export const TranslatorSpecDemo: FC = () => {
         </VStack>
       </FormSection>
       <ForEach
-        data={sections}
-        render={section => (
-          <FormSection key={section.title} title={section.title}>
+        each={sections}
+        keyBy={section => section.title}
+      >
+        {section => (
+          <FormSection title={section.title}>
             <VStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
               <ForEach
-                data={section.rows}
-                render={row => (
+                each={section.rows}
+                keyBy={row => row.name}
+              >
+                {row => (
                   <HStack
-                    key={row.name}
                     spacing={12}
                     padding={12}
                     frame={{ maxWidth: 'infinity', alignment: 'leading' }}
@@ -89,11 +92,11 @@ export const TranslatorSpecDemo: FC = () => {
                     </Text>
                   </HStack>
                 )}
-              />
+              </ForEach>
             </VStack>
           </FormSection>
         )}
-      />
+      </ForEach>
     </VStack>
   )
 }

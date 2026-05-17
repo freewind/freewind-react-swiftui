@@ -29,11 +29,16 @@ export const TextDemo: FC = () => {
             <Text foregroundStyle="accentColor">accentColor foreground</Text>
             <Text foregroundStyle="red">red foreground</Text>
             <Text foregroundStyle="green">green foreground</Text>
+            <Text tint="blue">tint blue text</Text>
             <Text italic>italic text</Text>
             <Text monospaced>monospaced text</Text>
             <Text textSelection="enabled">selectable text</Text>
+            <Text controlSize="large">controlSize large text</Text>
             <Text multilineTextAlignment="center" frame={{ maxWidth: 'infinity' }}>
               centered multiline text centered multiline text
+            </Text>
+            <Text lineLimit={2} frame={{ width: 180 }}>
+              lineLimit two lines lineLimit two lines lineLimit two lines lineLimit two lines
             </Text>
             <HStack spacing={12}>
               <Text font="caption" foregroundStyle="secondary">secondary</Text>

@@ -56,13 +56,15 @@ export const Text: FC<TextProps> = ({
   multilineTextAlignment,
   ...rest
 }) => {
+  const baseStyle = viewStyle(rest)
   const style: CSSProperties = {
-    ...viewStyle(rest),
+    ...baseStyle,
     ...fontStyles[font],
     fontStyle: italic ? 'italic' : undefined,
     fontFamily: monospaced ? '"SF Mono", Monaco, Consolas, monospace' : fontStyles[font].fontFamily,
     userSelect: textSelection === 'enabled' ? 'text' : undefined,
     textAlign: mapTextAlign(multilineTextAlignment),
+    fontSize: baseStyle.fontSize ?? fontStyles[font].fontSize,
   }
 
   return <div style={style}>{children}</div>

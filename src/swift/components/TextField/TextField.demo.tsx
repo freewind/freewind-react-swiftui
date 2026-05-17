@@ -30,6 +30,8 @@ export const TextFieldDemo: FC = () => {
               equals="action"
               onSubmit={() => focus.setValue('deviceName')}
               submitLabel="done"
+              tint="green"
+              controlSize="small"
               frame={{ maxWidth: 'infinity' }}
             />
             <FocusedValueText />
@@ -41,7 +43,14 @@ export const TextFieldDemo: FC = () => {
           preview={
             <VStack spacing={10} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
               <TextField text={useBinding('')} placeholder="Search" textFieldStyle="roundedBorder" submitLabel="search" frame={{ width: 240 }} />
-              <TextField text={useBinding('Selected File')} placeholder="Choose File" textFieldStyle="roundedBorder" frame={{ maxWidth: 'infinity' }} />
+              <TextField
+                text={useBinding('Selected File')}
+                placeholder="Choose File"
+                textFieldStyle="roundedBorder"
+                controlSize="large"
+                tint="accentColor"
+                frame={{ maxWidth: 'infinity' }}
+              />
               <Button title="Focus deviceName" buttonStyle="bordered" onPress={() => focus.setValue('deviceName')} />
             </VStack>
           }

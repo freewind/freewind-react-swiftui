@@ -1,10 +1,11 @@
 import type { CSSProperties, FC } from 'react'
+import type { ControlSizeToken } from '../../types'
 import { useContext } from 'react'
 import { disabledContext, surfaceColors, textColorMap, viewStyle } from '../runtime'
 import type { ViewBaseProps } from '../View'
 
 export type ButtonStyleToken = 'plain' | 'bordered' | 'borderedProminent' | 'borderless' | 'link'
-export type ControlSizeToken = 'mini' | 'small' | 'regular' | 'large'
+export type { ControlSizeToken } from '../../types'
 
 type ButtonProps = ViewBaseProps & {
   title?: string
@@ -39,7 +40,7 @@ const buttonChrome = (
     case 'bordered':
       return { ...common, borderColor: surfaceColors.border, background: surfaceColors.panelBg }
     case 'borderedProminent':
-      return { ...common, background: surfaceColors.accent, color: '#fff' }
+      return { ...common, background: 'currentColor', color: '#fff' }
     case 'borderless':
       return { ...common, padding: 0 }
     case 'link':
@@ -59,9 +60,17 @@ export const Button: FC<ButtonProps> = ({
   ...rest
 }) => {
   const disabled = useContext(disabledContext) || Boolean(rest.disabled)
+  const tintColor =
+    typeof rest.tint === 'string' && rest.tint.startsWith('#')
+      ? rest.tint
+      : rest.tint === 'red' || rest.tint === 'blue' || rest.tint === 'green' || rest.tint === 'accentColor'
+        ? textColorMap[rest.tint]
+        : surfaceColors.accent
   const style = {
     ...buttonChrome(buttonStyle, controlSize, disabled),
     ...viewStyle(rest),
+    ...(buttonStyle === 'borderedProminent' ? { background: tintColor } : null),
+    ...(buttonStyle === 'link' ? { color: tintColor } : null),
   }
 
   return (

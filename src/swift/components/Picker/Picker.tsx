@@ -32,7 +32,7 @@ export const Picker = <T extends string | number>({
 
   return (
     <VStack spacing={6} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-      {label ?? (
+      {rest.labelsHidden ? null : label ?? (
         <Text font="caption" foregroundStyle="secondary">
           {String(selection.value)}
         </Text>
@@ -51,7 +51,8 @@ export const Picker = <T extends string | number>({
               key={String(option.value)}
               title={option.label}
               buttonStyle={selected ? 'borderedProminent' : 'plain'}
-              controlSize="small"
+              controlSize={rest.controlSize ?? 'small'}
+              tint={rest.tint}
               onPress={() => selection.setValue(option.value)}
               frame={{ maxWidth: 'infinity' }}
             />

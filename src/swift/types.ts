@@ -58,6 +58,10 @@ export type TextFieldStyleToken = 'roundedBorder'
 
 export type TextAlign = 'leading' | 'center' | 'trailing'
 
+export type ControlSizeToken = 'mini' | 'small' | 'regular' | 'large'
+
+export type TintValue = ForegroundStyleToken | string
+
 export type EdgeInsets = {
   top?: number
   bottom?: number

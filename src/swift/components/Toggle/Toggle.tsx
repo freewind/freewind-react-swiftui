@@ -15,6 +15,8 @@ export type ToggleProps = ViewBaseProps & {
 
 
 export const Toggle: FC<ToggleProps> = ({ isOn, title, label, children, ...rest }) => {
+  const toggleLabel = label ?? <Text>{children ?? title ?? 'Toggle'}</Text>
+
   return (
     <Button buttonStyle="plain" onPress={() => isOn.setValue(!isOn.value)} {...rest}>
       <HStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
@@ -36,7 +38,7 @@ export const Toggle: FC<ToggleProps> = ({ isOn, title, label, children, ...rest 
             }
           />
         </HStack>
-        {label ?? <Text>{children ?? title ?? 'Toggle'}</Text>}
+        {rest.labelsHidden ? null : toggleLabel}
       </HStack>
     </Button>
   )

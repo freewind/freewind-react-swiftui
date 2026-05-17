@@ -1,10 +1,23 @@
 import type { CSSProperties } from 'react'
-import type { BackgroundSpec, EdgeInsets, ForegroundStyleToken, FrameSpec, FrameValue, ShapeSpec } from '../../types'
+import type { BackgroundSpec, ControlSizeToken, EdgeInsets, ForegroundStyleToken, FrameSpec, FrameValue, ShapeSpec, TintValue } from '../../types'
 import type { ViewBaseProps } from '../View/View'
 import { mapFrameAlignment } from '../ZStack/mapFrameAlignment'
 import { surfaceColors } from './surfaceColors'
 import { textColorMap } from './textColorMap'
 import { isForegroundToken, materialValue } from './colorTokens'
+
+const controlSizeFontMap: Record<ControlSizeToken, number> = {
+  mini: 11,
+  small: 12,
+  regular: 13,
+  large: 15,
+}
+
+const tintTokens: readonly ForegroundStyleToken[] = ['primary', 'secondary', 'tertiary', 'red', 'blue', 'green', 'accentColor']
+
+const isTintToken = (value: TintValue): value is ForegroundStyleToken => {
+  return (tintTokens as readonly string[]).includes(value)
+}
 
 const applyPadding = (style: CSSProperties, padding?: number | EdgeInsets) => {
   if (padding === undefined) {
@@ -159,6 +172,36 @@ const applyForeground = (
   }
 }
 
+const applyTint = (style: CSSProperties, tint?: TintValue) => {
+  if (!tint) {
+    return
+  }
+  style.accentColor = isTintToken(tint) ? textColorMap[tint] : tint
+}
+
+const applyLineLimit = (style: CSSProperties, lineLimit?: number) => {
+  if (lineLimit === undefined) {
+    return
+  }
+  if (lineLimit <= 1) {
+    style.whiteSpace = 'nowrap'
+    style.overflow = 'hidden'
+    style.textOverflow = 'ellipsis'
+    return
+  }
+  style.display = '-webkit-box'
+  style.WebkitBoxOrient = 'vertical'
+  style.WebkitLineClamp = String(lineLimit)
+  style.overflow = 'hidden'
+}
+
+const applyControlSize = (style: CSSProperties, controlSize?: ControlSizeToken) => {
+  if (!controlSize) {
+    return
+  }
+  style.fontSize = controlSizeFontMap[controlSize]
+}
+
 const applyShape = (style: CSSProperties, shape: ShapeSpec) => {
   if (shape.kind === 'capsule') {
     style.borderRadius = 9999
@@ -187,6 +230,9 @@ export const viewStyle = (
   applyFrame(style, props.frame, parentStackAxis)
   applyBackground(style, props.background)
   applyForeground(style, props.foregroundStyle, props.foregroundColor)
+  applyTint(style, props.tint)
+  applyLineLimit(style, props.lineLimit)
+  applyControlSize(style, props.controlSize)
 
   if (props.opacity !== undefined) {
     style.opacity = props.opacity

@@ -11,6 +11,8 @@ export const SecureField: FC<TextFieldProps> = ({
   equals,
   onSubmit,
   submitLabel,
+  controlSize = 'regular',
+  tint,
   ...rest
 }) => {
   const ref = useRef<HTMLInputElement | null>(null)
@@ -52,7 +54,7 @@ export const SecureField: FC<TextFieldProps> = ({
       }}
       enterKeyHint={submitLabel}
       style={{
-        ...inputChrome(textFieldStyle),
+        ...inputChrome(textFieldStyle, controlSize, tint),
         ...viewStyle(rest),
       }}
     />

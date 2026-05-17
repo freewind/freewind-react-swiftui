@@ -1,5 +1,5 @@
 import {type CSSProperties, type FC, type PropsWithChildren, type ReactNode, useContext, useRef} from 'react'
-import type { BackgroundSpec, ForegroundStyleToken, FrameSpec, ShapeSpec } from '../runtime'
+import type { BackgroundSpec, ControlSizeToken, ForegroundStyleToken, FrameSpec, ShapeSpec, TintValue } from '../runtime'
 import {disabledContext, parentStackAxisContext, viewStyle} from '../runtime'
 
 export type ViewBaseProps = PropsWithChildren<{
@@ -15,7 +15,11 @@ export type ViewBaseProps = PropsWithChildren<{
   background?: BackgroundSpec
   foregroundStyle?: ForegroundStyleToken
   foregroundColor?: string
+  tint?: TintValue
   opacity?: number
+  lineLimit?: number
+  labelsHidden?: boolean
+  controlSize?: ControlSizeToken
   clipShape?: ShapeSpec
   overlay?: ReactNode
   disabled?: boolean

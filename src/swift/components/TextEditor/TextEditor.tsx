@@ -10,7 +10,7 @@ export type TextEditorProps = ViewBaseProps & {
 }
 
 
-export const TextEditor: FC<TextEditorProps> = ({ text, focused, equals, ...rest }) => {
+export const TextEditor: FC<TextEditorProps> = ({ text, focused, equals, controlSize = 'regular', tint, ...rest }) => {
   const ref = useRef<HTMLTextAreaElement | null>(null)
   const isFocused = focused ? focused.value === (equals ?? null) : false
 
@@ -42,7 +42,7 @@ export const TextEditor: FC<TextEditorProps> = ({ text, focused, equals, ...rest
         focused.setValue(null)
       }}
       style={{
-        ...inputChrome('roundedBorder'),
+        ...inputChrome('roundedBorder', controlSize, tint),
         ...viewStyle(rest),
         resize: 'none',
         minHeight: 120,

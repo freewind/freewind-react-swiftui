@@ -32,8 +32,8 @@ export const ToggleDemo: FC = () => {
         summary="展示多条设置项与 binding 联动结果。"
         preview={
           <VStack spacing={10} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-            <Toggle isOn={wifi} title="局域网发现" />
-            <Toggle isOn={notifications} title="消息横幅" />
+            <Toggle isOn={wifi} title="局域网发现" tint="green" />
+            <Toggle isOn={notifications} title="消息横幅" labelsHidden />
           </VStack>
         }
       />

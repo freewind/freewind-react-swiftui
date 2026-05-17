@@ -19,6 +19,7 @@ export const SliderDemo: FC = () => {
             label={<Text font="caption">Zoom</Text>}
             minimumValueLabel={<Text font="caption2">10%</Text>}
             maximumValueLabel={<Text font="caption2">200%</Text>}
+            tint="green"
           />
           <Text font="caption" foregroundStyle="secondary">zoom: {String(zoom.value)}%</Text>
         </VStack>
@@ -35,6 +36,7 @@ export const SliderDemo: FC = () => {
               label={<Text font="caption">Scale</Text>}
               minimumValueLabel={<Text font="caption">10%</Text>}
               maximumValueLabel={<Text font="caption">200%</Text>}
+              labelsHidden
               frame={{ maxWidth: 'infinity' }}
             />
             <Text font="caption" foregroundStyle="secondary">current: {String(zoom.value)}%</Text>
