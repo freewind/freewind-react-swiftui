@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { HStack, RoundedRectangle, Text, VStack } from './runtime'
 import { FormSection } from './controls'
 import { PlaygroundSection } from './demo-playground'
+import { ComponentPropsTable } from './props-table'
 
 export const RoundedRectangleDemo: FC = () => {
   return (
@@ -28,6 +29,7 @@ export const RoundedRectangleDemo: FC = () => {
           </HStack>
         }
       />
+      <ComponentPropsTable component="RoundedRectangle" />
     </VStack>
   )
 }

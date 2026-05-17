@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { Button, ContextMenu, HStack, VStack } from './runtime'
 import { FormSection } from './controls'
 import { PlaygroundSection } from './demo-playground'
+import { ComponentPropsTable } from './props-table'
 
 export const ContextMenuDemo: FC = () => {
   return (
@@ -25,6 +26,7 @@ export const ContextMenuDemo: FC = () => {
           </HStack>
         }
       />
+      <ComponentPropsTable component="ContextMenu" />
     </VStack>
   )
 }

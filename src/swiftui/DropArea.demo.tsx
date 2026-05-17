@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { DropArea, HStack, Text, VStack } from './runtime'
 import { FormSection } from './controls'
 import { PlaygroundSection } from './demo-playground'
+import { ComponentPropsTable } from './props-table'
 
 export const DropAreaDemo: FC = () => {
   return (
@@ -38,6 +39,7 @@ export const DropAreaDemo: FC = () => {
           </HStack>
         }
       />
+      <ComponentPropsTable component="DropArea" />
     </VStack>
   )
 }

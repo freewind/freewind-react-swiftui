@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { HStack, ScrollView, VStack } from './runtime'
 import { FormSection } from './controls'
 import { PlaygroundSection } from './demo-playground'
+import { ComponentPropsTable } from './props-table'
 import { Chip, GalleryRow } from './demo-shared'
 
 export const ScrollViewDemo: FC = () => {
@@ -38,6 +39,7 @@ export const ScrollViewDemo: FC = () => {
           </VStack>
         }
       />
+      <ComponentPropsTable component="ScrollView" />
     </VStack>
   )
 }

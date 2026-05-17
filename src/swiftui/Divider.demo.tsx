@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { Divider, HStack, Text, VStack } from './runtime'
 import { FormSection } from './controls'
 import { PlaygroundSection } from './demo-playground'
+import { ComponentPropsTable } from './props-table'
 
 export const DividerDemo: FC = () => {
   return (
@@ -31,6 +32,7 @@ export const DividerDemo: FC = () => {
           </HStack>
         }
       />
+      <ComponentPropsTable component="Divider" />
     </VStack>
   )
 }

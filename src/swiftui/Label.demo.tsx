@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { Label, VStack } from './runtime'
 import { FormSection } from './controls'
 import { PlaygroundSection } from './demo-playground'
+import { ComponentPropsTable } from './props-table'
 
 export const LabelDemo: FC = () => {
   return (
@@ -24,6 +25,7 @@ export const LabelDemo: FC = () => {
           </VStack>
         }
       />
+      <ComponentPropsTable component="Label" />
     </VStack>
   )
 }

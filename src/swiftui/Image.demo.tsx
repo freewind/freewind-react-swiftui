@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { HStack, Image, VStack } from './runtime'
 import { FormSection } from './controls'
 import { PlaygroundSection } from './demo-playground'
+import { ComponentPropsTable } from './props-table'
 
 export const ImageDemo: FC = () => {
   return (
@@ -26,6 +27,7 @@ export const ImageDemo: FC = () => {
           </HStack>
         }
       />
+      <ComponentPropsTable component="Image" />
     </VStack>
   )
 }

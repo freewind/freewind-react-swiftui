@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { Picker, Text, useBinding, VStack } from './runtime'
 import { FormSection } from './controls'
 import { PlaygroundSection } from './demo-playground'
+import { ComponentPropsTable } from './props-table'
 
 export const PickerDemo: FC = () => {
   const selection = useBinding<'all' | 'online' | 'offline'>('all')
@@ -37,6 +38,7 @@ export const PickerDemo: FC = () => {
           </VStack>
         }
       />
+      <ComponentPropsTable component="Picker" />
     </VStack>
   )
 }

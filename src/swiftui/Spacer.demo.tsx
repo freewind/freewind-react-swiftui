@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { HStack, Spacer, Text, VStack } from './runtime'
 import { FormSection } from './controls'
 import { PlaygroundSection } from './demo-playground'
+import { ComponentPropsTable } from './props-table'
 
 export const SpacerDemo: FC = () => {
   return (
@@ -31,6 +32,7 @@ export const SpacerDemo: FC = () => {
           </VStack>
         }
       />
+      <ComponentPropsTable component="Spacer" />
     </VStack>
   )
 }

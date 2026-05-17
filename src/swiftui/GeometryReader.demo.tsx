@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { GeometryReader, HStack, Text, VStack } from './runtime'
 import { FormSection } from './controls'
 import { PlaygroundSection } from './demo-playground'
+import { ComponentPropsTable } from './props-table'
 
 export const GeometryReaderDemo: FC = () => {
   return (
@@ -37,6 +38,7 @@ export const GeometryReaderDemo: FC = () => {
           </HStack>
         }
       />
+      <ComponentPropsTable component="GeometryReader" />
     </VStack>
   )
 }

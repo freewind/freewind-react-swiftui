@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { Button, HStack, VStack } from './runtime'
 import { FormSection } from './controls'
 import { PlaygroundSection } from './demo-playground'
+import { ComponentPropsTable } from './props-table'
 
 export const ButtonDemo: FC = () => {
   return (
@@ -34,6 +35,7 @@ export const ButtonDemo: FC = () => {
           </VStack>
         }
       />
+      <ComponentPropsTable component="Button" />
     </VStack>
   )
 }

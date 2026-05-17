@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { Button, HStack, Sheet, Spacer, Text, useBinding, VStack } from './runtime'
 import { FormSection } from './controls'
 import { PlaygroundSection } from './demo-playground'
+import { ComponentPropsTable } from './props-table'
 
 export const SheetDemo: FC = () => {
   const presented = useBinding(false)
@@ -53,6 +54,7 @@ export const SheetDemo: FC = () => {
           </HStack>
         </VStack>
       </Sheet>
+      <ComponentPropsTable component="Sheet" />
     </VStack>
   )
 }

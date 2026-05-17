@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { HStack, Text, VStack } from './runtime'
 import { FormSection } from './controls'
 import { PlaygroundSection } from './demo-playground'
+import { ComponentPropsTable } from './props-table'
 import { foregroundOptions } from './demo-shared'
 
 export const TokenColorDemo: FC = () => {
@@ -37,6 +38,7 @@ export const TokenColorDemo: FC = () => {
           </VStack>
         }
       />
+      <ComponentPropsTable component="TokenColor" />
     </VStack>
   )
 }

@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { HStack, LazyHStack, ScrollView, VStack } from './runtime'
 import { FormSection } from './controls'
 import { PlaygroundSection } from './demo-playground'
+import { ComponentPropsTable } from './props-table'
 import { Chip } from './demo-shared'
 
 export const LazyHStackDemo: FC = () => {
@@ -40,6 +41,7 @@ export const LazyHStackDemo: FC = () => {
           </VStack>
         }
       />
+      <ComponentPropsTable component="LazyHStack" />
     </VStack>
   )
 }

@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { Button, HStack, ScrollViewReader, Spacer, Text, VStack } from './runtime'
 import { FormSection } from './controls'
 import { PlaygroundSection } from './demo-playground'
+import { ComponentPropsTable } from './props-table'
 
 export const ScrollViewReaderDemo: FC = () => {
   return (
@@ -41,6 +42,7 @@ export const ScrollViewReaderDemo: FC = () => {
           </ScrollViewReader>
         }
       />
+      <ComponentPropsTable component="ScrollViewReader" />
     </VStack>
   )
 }

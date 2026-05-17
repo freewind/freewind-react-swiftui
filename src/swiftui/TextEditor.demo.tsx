@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { TextEditor, VStack } from './runtime'
 import { FormSection } from './controls'
 import { PlaygroundSection } from './demo-playground'
+import { ComponentPropsTable } from './props-table'
 
 export const TextEditorDemo: FC = () => {
   return (
@@ -19,6 +20,7 @@ export const TextEditorDemo: FC = () => {
           </VStack>
         }
       />
+      <ComponentPropsTable component="TextEditor" />
     </VStack>
   )
 }

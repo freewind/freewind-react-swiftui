@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { Text, useBinding, VStack, WindowAccessor } from './runtime'
 import { FormSection } from './controls'
 import { PlaygroundSection } from './demo-playground'
+import { ComponentPropsTable } from './props-table'
 
 export const WindowAccessorDemo: FC = () => {
   const resolved = useBinding('Mock Window')
@@ -28,6 +29,7 @@ export const WindowAccessorDemo: FC = () => {
           </VStack>
         }
       />
+      <ComponentPropsTable component="WindowAccessor" />
     </VStack>
   )
 }
