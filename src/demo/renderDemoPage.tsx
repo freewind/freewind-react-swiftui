@@ -1,54 +1,52 @@
 import type { FC } from 'react'
-import {
-  ButtonComponentDemo,
-  ContextMenuComponentDemo,
-  DividerComponentDemo,
-  DropAreaComponentDemo,
-  GeometryReaderComponentDemo,
-  HStackComponentDemo,
-  ImageComponentDemo,
-  LabelComponentDemo,
-  LazyHStackComponentDemo,
-  PickerComponentDemo,
-  RoundedRectangleComponentDemo,
-  ScrollViewComponentDemo,
-  ScrollViewReaderComponentDemo,
-  SheetComponentDemo,
-  SpacerComponentDemo,
-  TextComponentDemo,
-  TextEditorComponentDemo,
-  TextFieldComponentDemo,
-  TokenColorComponentDemo,
-  VStackComponentDemo,
-  WindowAccessorComponentDemo,
-} from './componentsPages'
+import { ButtonDemo } from '../swiftui/Button.demo'
+import { ContextMenuDemo } from '../swiftui/ContextMenu.demo'
+import { DividerDemo } from '../swiftui/Divider.demo'
+import { DropAreaDemo } from '../swiftui/DropArea.demo'
+import { GeometryReaderDemo } from '../swiftui/GeometryReader.demo'
+import { HStackDemo } from '../swiftui/HStack.demo'
+import { ImageDemo } from '../swiftui/Image.demo'
+import { LabelDemo } from '../swiftui/Label.demo'
+import { LazyHStackDemo } from '../swiftui/LazyHStack.demo'
+import { PickerDemo } from '../swiftui/Picker.demo'
+import { RoundedRectangleDemo } from '../swiftui/RoundedRectangle.demo'
+import { ScrollViewDemo } from '../swiftui/ScrollView.demo'
+import { ScrollViewReaderDemo } from '../swiftui/ScrollViewReader.demo'
+import { SheetDemo } from '../swiftui/Sheet.demo'
+import { SpacerDemo } from '../swiftui/Spacer.demo'
+import { TextDemo } from '../swiftui/Text.demo'
+import { TextEditorDemo } from '../swiftui/TextEditor.demo'
+import { TextFieldDemo } from '../swiftui/TextField.demo'
+import { TokenColorDemo } from '../swiftui/TokenColor.demo'
+import { VStackDemo } from '../swiftui/VStack.demo'
+import { WindowAccessorDemo } from '../swiftui/WindowAccessor.demo'
 import { DashboardLayouts, FormAndSheetLayouts, SplitViewLayouts } from './layoutPages'
 import { EmojiDemo, FileBrowserDemo, ImageBrowserDemo, QQDemo, SystemApiMockDemo, TodoDemo } from './appPages'
 import { NativeSwiftSourceDemo, TranslatorSpecDemo } from './translatorPages'
 
 export const renderDemoPage = (pageId: string) => {
   const pages: Record<string, FC> = {
-    'component-text': TextComponentDemo,
-    'component-button': ButtonComponentDemo,
-    'component-image': ImageComponentDemo,
-    'component-label': LabelComponentDemo,
-    'component-picker': PickerComponentDemo,
-    'component-text-field': TextFieldComponentDemo,
-    'component-text-editor': TextEditorComponentDemo,
-    'component-vstack': VStackComponentDemo,
-    'component-hstack': HStackComponentDemo,
-    'component-spacer': SpacerComponentDemo,
-    'component-divider': DividerComponentDemo,
-    'component-scroll-view': ScrollViewComponentDemo,
-    'component-lazy-hstack': LazyHStackComponentDemo,
-    'component-sheet': SheetComponentDemo,
-    'component-context-menu': ContextMenuComponentDemo,
-    'component-rounded-rectangle': RoundedRectangleComponentDemo,
-    'component-token-color': TokenColorComponentDemo,
-    'component-geometry-reader': GeometryReaderComponentDemo,
-    'component-scroll-view-reader': ScrollViewReaderComponentDemo,
-    'component-drop-area': DropAreaComponentDemo,
-    'component-window-accessor': WindowAccessorComponentDemo,
+    'component-text': TextDemo,
+    'component-button': ButtonDemo,
+    'component-image': ImageDemo,
+    'component-label': LabelDemo,
+    'component-picker': PickerDemo,
+    'component-text-field': TextFieldDemo,
+    'component-text-editor': TextEditorDemo,
+    'component-vstack': VStackDemo,
+    'component-hstack': HStackDemo,
+    'component-spacer': SpacerDemo,
+    'component-divider': DividerDemo,
+    'component-scroll-view': ScrollViewDemo,
+    'component-lazy-hstack': LazyHStackDemo,
+    'component-sheet': SheetDemo,
+    'component-context-menu': ContextMenuDemo,
+    'component-rounded-rectangle': RoundedRectangleDemo,
+    'component-token-color': TokenColorDemo,
+    'component-geometry-reader': GeometryReaderDemo,
+    'component-scroll-view-reader': ScrollViewReaderDemo,
+    'component-drop-area': DropAreaDemo,
+    'component-window-accessor': WindowAccessorDemo,
     translator: TranslatorSpecDemo,
     'native-swift': NativeSwiftSourceDemo,
     'split-view': SplitViewLayouts,
@@ -62,6 +60,6 @@ export const renderDemoPage = (pageId: string) => {
     'system-api': SystemApiMockDemo,
   }
 
-  const Page = pages[pageId] ?? TextComponentDemo
+  const Page = pages[pageId] ?? TextDemo
   return <Page />
 }

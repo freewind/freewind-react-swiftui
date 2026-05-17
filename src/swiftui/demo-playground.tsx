@@ -1,5 +1,6 @@
 import type { FC, ReactNode } from 'react'
-import { FormSection, HStack, Picker, Text, TextField, useBinding, VStack, type Binding } from '../swiftui'
+import { HStack, Picker, Text, TextField, useBinding, VStack, type Binding } from './runtime'
+import { FormSection } from './controls'
 
 export const PlaygroundSection: FC<{
   title: string
@@ -71,9 +72,7 @@ export const NumberField: FC<{
   label: string
   binding: Binding<string>
   placeholder?: string
-}> = ({ label, binding, placeholder }) => {
-  return <StringField label={label} binding={binding} placeholder={placeholder} />
-}
+}> = ({ label, binding, placeholder }) => <StringField label={label} binding={binding} placeholder={placeholder} />
 
 export const EnumField = <T extends string | number>({
   label,

@@ -1,4 +1,6 @@
 export * from './runtime'
 export * from './controls'
+export * from './demo-playground'
+export * from './demo-shared'
 export * from '../mock-system'
 export * from '../translator'
