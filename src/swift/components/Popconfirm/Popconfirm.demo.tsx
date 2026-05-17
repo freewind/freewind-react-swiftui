@@ -1,10 +1,10 @@
 import type { FC } from 'react'
 import { Popconfirm, Text, useBinding } from '../runtime'
-import { FormSection } from '../../controls'
 import { PlaygroundSection } from '../../demo-playground'
 import { ComponentPropsTable } from '../../props-table'
 import { Button } from '../../components/Button'
 import { VStack } from '../../components/VStack'
+import {FormSection} from "../../components";
 
 export const PopconfirmDemo: FC = () => {
   const result = useBinding('waiting')

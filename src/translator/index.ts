@@ -1,3 +1,3 @@
-export * from './spec'
-export * from './exporter'
 export * from './codegen'
+export * from './exporter'
+export * from './spec'
