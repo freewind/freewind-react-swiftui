@@ -15,9 +15,17 @@ type ComponentDocKey =
   | 'Button'
   | 'Image'
   | 'Label'
+  | 'List'
+  | 'Section'
+  | 'NavigationLink'
+  | 'Popover'
+  | 'Popconfirm'
   | 'Picker'
   | 'Toggle'
   | 'ProgressView'
+  | 'Slider'
+  | 'Stepper'
+  | 'Table'
   | 'TextField'
   | 'TextEditor'
   | 'VStack'
@@ -288,6 +296,160 @@ const docs: Record<ComponentDocKey, { title: string; rows: PropDoc[] }> = {
       },
     ],
   },
+  List: {
+    title: 'List Props',
+    rows: [
+      ...viewBaseProps,
+      {
+        prop: 'children',
+        type: 'ReactNode',
+        defaultValue: '-',
+        values: 'row / Section / 任意 JSX',
+        description: '列表内容。当前以 mock grouped list 语义渲染。',
+      },
+    ],
+  },
+  Section: {
+    title: 'Section Props',
+    rows: [
+      ...viewBaseProps,
+      {
+        prop: 'title',
+        type: 'string',
+        defaultValue: '-',
+        values: '任意字符串',
+        description: '简写 header。',
+      },
+      {
+        prop: 'header',
+        type: 'ReactNode',
+        defaultValue: '-',
+        values: '任意 JSX',
+        description: '自定义 header。',
+      },
+      {
+        prop: 'footer',
+        type: 'ReactNode',
+        defaultValue: '-',
+        values: '任意 JSX',
+        description: '自定义 footer / 注释。',
+      },
+      {
+        prop: 'children',
+        type: 'ReactNode',
+        defaultValue: '-',
+        values: 'row / 任意 JSX',
+        description: 'section 内容。',
+      },
+    ],
+  },
+  NavigationLink: {
+    title: 'NavigationLink Props',
+    rows: [
+      ...viewBaseProps,
+      {
+        prop: 'title',
+        type: 'string',
+        defaultValue: '-',
+        values: '任意字符串',
+        description: '简写 label。',
+      },
+      {
+        prop: 'onNavigate',
+        type: '() => void',
+        defaultValue: '-',
+        values: '函数',
+        description: '点击后的导航回调。当前 mock 不含完整 NavigationStack。',
+      },
+      {
+        prop: 'children',
+        type: 'ReactNode',
+        defaultValue: '-',
+        values: '任意 JSX',
+        description: '自定义 link label。',
+      },
+    ],
+  },
+  Popover: {
+    title: 'Popover Props',
+    rows: [
+      {
+        prop: 'isPresented',
+        type: 'Binding<boolean>',
+        defaultValue: '-',
+        values: '{ value, setValue }',
+        description: '控制 popover 展开/关闭。',
+      },
+      {
+        prop: 'content',
+        type: 'ReactNode',
+        defaultValue: '-',
+        values: '任意 JSX',
+        description: '浮层内容。',
+      },
+      {
+        prop: 'children',
+        type: 'ReactElement',
+        defaultValue: '-',
+        values: '单个 JSX 元素',
+        description: '触发 popover 的 anchor 视图。',
+      },
+    ],
+  },
+  Popconfirm: {
+    title: 'Popconfirm Props',
+    rows: [
+      {
+        prop: 'title',
+        type: 'string',
+        defaultValue: '-',
+        values: '任意字符串',
+        description: '确认标题。',
+      },
+      {
+        prop: 'description',
+        type: 'string',
+        defaultValue: '-',
+        values: '任意字符串',
+        description: '补充说明。',
+      },
+      {
+        prop: 'onConfirm',
+        type: '() => void',
+        defaultValue: '-',
+        values: '函数',
+        description: '确认回调。',
+      },
+      {
+        prop: 'onCancel',
+        type: '() => void',
+        defaultValue: '-',
+        values: '函数',
+        description: '取消回调。',
+      },
+      {
+        prop: 'confirmText',
+        type: 'string',
+        defaultValue: '确定',
+        values: '任意字符串',
+        description: '确认按钮文案。',
+      },
+      {
+        prop: 'cancelText',
+        type: 'string',
+        defaultValue: '取消',
+        values: '任意字符串',
+        description: '取消按钮文案。',
+      },
+      {
+        prop: 'children',
+        type: 'ReactElement',
+        defaultValue: '-',
+        values: '单个 JSX 元素',
+        description: '触发确认浮层的 anchor。',
+      },
+    ],
+  },
   Picker: {
     title: 'Picker Props',
     rows: [
@@ -373,6 +535,108 @@ const docs: Record<ComponentDocKey, { title: string; rows: PropDoc[] }> = {
         defaultValue: '-',
         values: '任意字符串',
         description: '底部当前值文案。',
+      },
+    ],
+  },
+  Slider: {
+    title: 'Slider Props',
+    rows: [
+      ...viewBaseProps,
+      {
+        prop: 'value',
+        type: 'Binding<number>',
+        defaultValue: '-',
+        values: '{ value, setValue }',
+        description: '当前值 binding。',
+      },
+      {
+        prop: 'in',
+        type: '[number, number]',
+        defaultValue: '[0, 1]',
+        values: '[min, max]',
+        description: '范围。',
+      },
+      {
+        prop: 'step',
+        type: 'number',
+        defaultValue: '0.01',
+        values: '正数',
+        description: '步长。',
+      },
+    ],
+  },
+  Stepper: {
+    title: 'Stepper Props',
+    rows: [
+      ...viewBaseProps,
+      {
+        prop: 'value',
+        type: 'Binding<number>',
+        defaultValue: '-',
+        values: '{ value, setValue }',
+        description: '当前值 binding。',
+      },
+      {
+        prop: 'in',
+        type: '[number, number]',
+        defaultValue: '[-Infinity, Infinity]',
+        values: '[min, max]',
+        description: '上下界。',
+      },
+      {
+        prop: 'step',
+        type: 'number',
+        defaultValue: '1',
+        values: '正数',
+        description: '增减步长。',
+      },
+      {
+        prop: 'title',
+        type: 'string',
+        defaultValue: '-',
+        values: '任意字符串',
+        description: '简写 label。',
+      },
+      {
+        prop: 'children',
+        type: 'ReactNode',
+        defaultValue: '-',
+        values: '任意 JSX',
+        description: '自定义 label。',
+      },
+    ],
+  },
+  Table: {
+    title: 'Table Props',
+    rows: [
+      ...viewBaseProps,
+      {
+        prop: 'columns',
+        type: 'TableColumn<T>[]',
+        defaultValue: '-',
+        values: "[{ key, title, dataIndex?, width?, render? }]",
+        description: '列定义。',
+      },
+      {
+        prop: 'dataSource',
+        type: 'T[]',
+        defaultValue: '-',
+        values: '数组',
+        description: '数据源。',
+      },
+      {
+        prop: 'rowKey',
+        type: '(record, index) => string',
+        defaultValue: '-',
+        values: '函数',
+        description: '行 key 生成器。',
+      },
+      {
+        prop: 'emptyText',
+        type: 'string',
+        defaultValue: 'No Data',
+        values: '任意字符串',
+        description: '空态文案。',
       },
     ],
   },

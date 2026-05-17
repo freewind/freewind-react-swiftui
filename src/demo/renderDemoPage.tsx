@@ -7,17 +7,25 @@ import { GeometryReaderDemo } from '../swiftui/GeometryReader.demo'
 import { HStackDemo } from '../swiftui/HStack.demo'
 import { ImageDemo } from '../swiftui/Image.demo'
 import { LabelDemo } from '../swiftui/Label.demo'
+import { ListDemo } from '../swiftui/List.demo'
 import { LazyVGridDemo } from '../swiftui/LazyVGrid.demo'
 import { LazyHStackDemo } from '../swiftui/LazyHStack.demo'
 import { DisclosureGroupDemo } from '../swiftui/DisclosureGroup.demo'
 import { MenuDemo } from '../swiftui/Menu.demo'
+import { NavigationLinkDemo } from '../swiftui/NavigationLink.demo'
+import { PopconfirmDemo } from '../swiftui/Popconfirm.demo'
 import { PickerDemo } from '../swiftui/Picker.demo'
+import { PopoverDemo } from '../swiftui/Popover.demo'
 import { ProgressViewDemo } from '../swiftui/ProgressView.demo'
 import { RoundedRectangleDemo } from '../swiftui/RoundedRectangle.demo'
 import { ScrollViewDemo } from '../swiftui/ScrollView.demo'
 import { ScrollViewReaderDemo } from '../swiftui/ScrollViewReader.demo'
+import { SectionDemo } from '../swiftui/Section.demo'
 import { SheetDemo } from '../swiftui/Sheet.demo'
+import { SliderDemo } from '../swiftui/Slider.demo'
 import { SpacerDemo } from '../swiftui/Spacer.demo'
+import { StepperDemo } from '../swiftui/Stepper.demo'
+import { TableDemo } from '../swiftui/Table.demo'
 import { TabViewDemo } from '../swiftui/TabView.demo'
 import { TextDemo } from '../swiftui/Text.demo'
 import { TextEditorDemo } from '../swiftui/TextEditor.demo'
@@ -44,9 +52,17 @@ export const renderDemoPage = (pageId: string) => {
     'component-button': ButtonDemo,
     'component-image': ImageDemo,
     'component-label': LabelDemo,
+    'component-list': ListDemo,
+    'component-section': SectionDemo,
+    'component-navigation-link': NavigationLinkDemo,
+    'component-popover': PopoverDemo,
+    'component-popconfirm': PopconfirmDemo,
     'component-picker': PickerDemo,
     'component-toggle': ToggleDemo,
     'component-progress-view': ProgressViewDemo,
+    'component-slider': SliderDemo,
+    'component-stepper': StepperDemo,
+    'component-table': TableDemo,
     'component-text-field': TextFieldDemo,
     'component-text-editor': TextEditorDemo,
     'component-vstack': VStackDemo,

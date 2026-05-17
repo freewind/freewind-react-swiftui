@@ -153,6 +153,16 @@ type ScrollViewReaderProps = Omit<ViewBaseProps, 'children'> & {
   }) => ReactNode
 }
 
+type ListProps = ViewBaseProps & {
+  children: ReactNode
+}
+
+type SectionProps = ViewBaseProps & {
+  title?: string
+  header?: ReactNode
+  footer?: ReactNode
+}
+
 type ToggleProps = ViewBaseProps & {
   isOn: Binding<boolean>
   title?: string
@@ -185,6 +195,34 @@ type TextFieldProps = ViewBaseProps & {
 
 type TextEditorProps = ViewBaseProps & {
   text: Binding<string>
+}
+
+type SliderProps = ViewBaseProps & {
+  value: Binding<number>
+  in?: [number, number]
+  step?: number
+}
+
+type StepperProps = ViewBaseProps & {
+  value: Binding<number>
+  in?: [number, number]
+  step?: number
+  title?: string
+}
+
+type TableColumn<T> = {
+  key: string
+  title: string
+  dataIndex?: keyof T
+  width?: number
+  render?: (record: T, index: number) => ReactNode
+}
+
+type TableProps<T> = ViewBaseProps & {
+  columns: TableColumn<T>[]
+  dataSource: T[]
+  rowKey: (record: T, index: number) => string
+  emptyText?: string
 }
 
 type PickerOption<T extends string | number> = {
@@ -262,6 +300,11 @@ type ShapeProps = ViewBaseProps & {
   cornerRadius?: number
 }
 
+type NavigationLinkProps = ViewBaseProps & {
+  title?: string
+  onNavigate?: () => void
+}
+
 type ContextMenuItem = {
   title: string
   onPress?: () => void
@@ -275,6 +318,22 @@ type ContextMenuProps = {
 
 type MenuProps = {
   items: ContextMenuItem[]
+  children: ReactElement
+}
+
+type PopoverProps = {
+  isPresented: Binding<boolean>
+  content: ReactNode
+  children: ReactElement
+}
+
+type PopconfirmProps = {
+  title: string
+  description?: string
+  onConfirm?: () => void
+  onCancel?: () => void
+  confirmText?: string
+  cancelText?: string
   children: ReactElement
 }
 
@@ -628,6 +687,49 @@ export const ProgressView: FC<ProgressViewProps> = ({
   )
 }
 
+export const List: FC<ListProps> = ({ children, ...rest }) => {
+  const items = normalizeChildren(children)
+  return (
+    <VStack
+      spacing={0}
+      frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+      background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
+      {...rest}
+    >
+      {items.map((item, index) => (
+        <VStack key={`list-item-${String(index)}`} spacing={0} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          {item}
+          {index < items.length - 1 ? <Divider /> : null}
+        </VStack>
+      ))}
+    </VStack>
+  )
+}
+
+export const Section: FC<SectionProps> = ({ title, header, footer, children, ...rest }) => {
+  return (
+    <VStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }} {...rest}>
+      {header ?? title ? (
+        <Text font="caption.semibold" foregroundStyle="secondary">
+          {header ?? title}
+        </Text>
+      ) : null}
+      <VStack spacing={0} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        {children}
+      </VStack>
+      {footer ? (
+        typeof footer === 'string' ? (
+          <Text font="caption" foregroundStyle="secondary">
+            {footer}
+          </Text>
+        ) : (
+          footer
+        )
+      ) : null}
+    </VStack>
+  )
+}
+
 export const ScrollView: FC<ScrollViewProps> = ({ axes = 'vertical', children, ...rest }) => {
   const normalized = Array.isArray(axes) ? axes : [axes]
   const style: CSSProperties = {
@@ -738,6 +840,121 @@ export const TextEditor: FC<TextEditorProps> = ({ text, ...rest }) => {
   )
 }
 
+export const Slider: FC<SliderProps> = ({ value, in: range = [0, 1], step = 0.01, ...rest }) => {
+  const [min, max] = range
+  return (
+    <input
+      type="range"
+      min={min}
+      max={max}
+      step={step}
+      value={value.value}
+      onChange={event => value.setValue(Number(event.target.value))}
+      style={{
+        width: '100%',
+        accentColor: surfaceColors.accent,
+        ...viewStyle(rest),
+      }}
+    />
+  )
+}
+
+export const Stepper: FC<StepperProps> = ({
+  value,
+  in: range = [-Infinity, Infinity],
+  step = 1,
+  title,
+  children,
+  ...rest
+}) => {
+  const [min, max] = range
+  const decrease = () => value.setValue(Math.max(min, value.value - step))
+  const increase = () => value.setValue(Math.min(max, value.value + step))
+  return (
+    <HStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }} {...rest}>
+      <VStack spacing={2} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        <Text>{children ?? title ?? 'Stepper'}</Text>
+        <Text font="caption" foregroundStyle="secondary">
+          {String(value.value)}
+        </Text>
+      </VStack>
+      <HStack spacing={6}>
+        <Button title="−" buttonStyle="bordered" controlSize="small" onPress={decrease} disabled={value.value <= min} />
+        <Button title="+" buttonStyle="bordered" controlSize="small" onPress={increase} disabled={value.value >= max} />
+      </HStack>
+    </HStack>
+  )
+}
+
+export const Table = <T,>({
+  columns,
+  dataSource,
+  rowKey,
+  emptyText = 'No Data',
+  ...rest
+}: TableProps<T>) => {
+  return (
+    <VStack
+      spacing={0}
+      frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+      background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
+      {...rest}
+    >
+      <HStack
+        spacing={12}
+        padding={{ horizontal: 12, vertical: 10 }}
+        frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+        background={{ fill: 'ultraThinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
+      >
+        {columns.map(column => (
+          <Text
+            key={column.key}
+            font="caption.semibold"
+            frame={{
+              width: column.width,
+              maxWidth: column.width ? undefined : 'infinity',
+              alignment: 'leading',
+            }}
+          >
+            {column.title}
+          </Text>
+        ))}
+      </HStack>
+      <Divider />
+      {dataSource.length === 0 ? (
+        <Text padding={12} foregroundStyle="secondary">
+          {emptyText}
+        </Text>
+      ) : (
+        dataSource.map((record, index) => (
+          <VStack key={rowKey(record, index)} spacing={0} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            <HStack spacing={12} padding={{ horizontal: 12, vertical: 10 }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+              {columns.map(column => {
+                const cell =
+                  column.render?.(record, index) ??
+                  (column.dataIndex ? String(record[column.dataIndex] ?? '') : '')
+                return (
+                  <VStack
+                    key={`${rowKey(record, index)}-${column.key}`}
+                    frame={{
+                      width: column.width,
+                      maxWidth: column.width ? undefined : 'infinity',
+                      alignment: 'leading',
+                    }}
+                  >
+                    {typeof cell === 'string' || typeof cell === 'number' ? <Text>{String(cell)}</Text> : cell}
+                  </VStack>
+                )
+              })}
+            </HStack>
+            {index < dataSource.length - 1 ? <Divider /> : null}
+          </VStack>
+        ))
+      )}
+    </VStack>
+  )
+}
+
 export const Picker = <T extends string | number>({
   selection,
   options,
@@ -809,6 +1026,21 @@ export const Label: FC<LabelProps> = ({ title, systemImage, ...rest }) => {
       {systemImage ? <Image systemName={systemImage} /> : null}
       <Text>{title}</Text>
     </HStack>
+  )
+}
+
+export const NavigationLink: FC<NavigationLinkProps> = ({ title, onNavigate, children, ...rest }) => {
+  return (
+    <Button buttonStyle="plain" onPress={onNavigate} frame={{ maxWidth: 'infinity', alignment: 'leading' }} {...rest}>
+      <HStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        <VStack spacing={0} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          {children ?? <Text>{title ?? 'NavigationLink'}</Text>}
+        </VStack>
+        <Text font="caption2.monospaced" foregroundStyle="tertiary">
+          ›
+        </Text>
+      </HStack>
+    </Button>
   )
 }
 
@@ -1002,6 +1234,89 @@ export const Menu: FC<MenuProps> = ({ items, children }) => {
   )
 }
 
+export const Popover: FC<PopoverProps> = ({ isPresented, content, children }) => {
+  return (
+    <div style={{ position: 'relative', display: 'inline-flex' }}>
+      {cloneElement(children, {
+        onClick: (event: MouseEvent) => {
+          event.preventDefault()
+          event.stopPropagation()
+          isPresented.setValue(!isPresented.value)
+        },
+      })}
+      {isPresented.value ? (
+        <div
+          style={{
+            position: 'absolute',
+            top: '100%',
+            left: 0,
+            marginTop: 8,
+            zIndex: 20,
+            minWidth: 220,
+          }}
+        >
+          <VStack
+            spacing={10}
+            padding={14}
+            background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+            frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+          >
+            {content}
+          </VStack>
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+export const Popconfirm: FC<PopconfirmProps> = ({
+  title,
+  description,
+  onConfirm,
+  onCancel,
+  confirmText = '确定',
+  cancelText = '取消',
+  children,
+}) => {
+  const shown = useBinding(false)
+  return (
+    <Popover
+      isPresented={shown}
+      content={
+        <VStack spacing={10} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <Text font="headline">{title}</Text>
+          {description ? (
+            <Text font="caption" foregroundStyle="secondary">
+              {description}
+            </Text>
+          ) : null}
+          <HStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'trailing' }}>
+            <Spacer />
+            <Button
+              title={cancelText}
+              buttonStyle="bordered"
+              onPress={() => {
+                shown.setValue(false)
+                onCancel?.()
+              }}
+            />
+            <Button
+              title={confirmText}
+              buttonStyle="borderedProminent"
+              onPress={() => {
+                shown.setValue(false)
+                onConfirm?.()
+              }}
+            />
+          </HStack>
+        </VStack>
+      }
+    >
+      {children}
+    </Popover>
+  )
+}
+
 export const Tab = <T extends string | number>({ children }: TabProps<T>) => {
   return <>{children}</>
 }
@@ -1140,6 +1455,13 @@ const gridTemplateColumns = (columns: GridItemSpec[]) => {
       }
     })
     .join(' ')
+}
+
+const normalizeChildren = (children: ReactNode) => {
+  if (Array.isArray(children)) {
+    return children.filter(child => child !== null && child !== undefined && child !== false)
+  }
+  return children === null || children === undefined || children === false ? [] : [children]
 }
 
 const inputChrome = (_style: TextFieldStyleToken): CSSProperties => {
@@ -1485,22 +1807,31 @@ export type {
   BackgroundSpec,
   ButtonStyleToken,
   ControlSizeToken,
+  DisclosureGroupProps,
   FontToken,
   ForegroundStyleToken,
   FrameSpec,
   GridItemSpec,
   GridItemSize,
+  ListProps,
+  NavigationLinkProps,
+  PopconfirmProps,
   PickerOption,
+  PopoverProps,
   ShapeSpec,
+  SectionProps,
+  SliderProps,
+  StepperProps,
+  TableColumn,
+  TableProps,
   ThemeMode,
-  ToggleProps,
   ProgressViewProps,
-  DisclosureGroupProps,
   LazyVGridProps,
   MenuProps,
   TabProps,
   TabViewProps,
   TextAlign,
   TextFieldStyleToken,
+  ToggleProps,
   ViewBaseProps,
 }
