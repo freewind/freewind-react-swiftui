@@ -1139,6 +1139,7 @@ export type {
   PickerOption,
   ShapeSpec,
   ThemeMode,
+  TextAlign,
   TextFieldStyleToken,
   ViewBaseProps,
 }
