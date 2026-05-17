@@ -7,7 +7,7 @@ export const WebViewDemo: FC = () => {
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <FormSection title="WebView">
-        <WebView src="https://developer.apple.com/xcode/swiftui/" frame={{ height: 320, maxWidth: 'infinity' }} />
+        <WebView title="Apple Developer" src="https://developer.apple.com/xcode/swiftui/" frame={{ height: 320, maxWidth: 'infinity' }} />
       </FormSection>
     </VStack>
   )

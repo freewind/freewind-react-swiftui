@@ -328,6 +328,7 @@ type NavigationLinkProps = ViewBaseProps & {
   title?: string
   onNavigate?: () => void
   destination?: ReactNode
+  destinationTitle?: string
 }
 
 type ContextMenuItem = {
@@ -387,6 +388,8 @@ type WindowStyleProps = {
   minWidth?: number
   minHeight?: number
   theme?: ThemeMode
+  title?: string
+  subtitle?: string
 }
 
 const surfaceColors = {
@@ -1024,6 +1027,8 @@ export const WindowGroup: FC<PropsWithChildren<WindowStyleProps>> = ({
   minWidth,
   minHeight,
   theme = 'light',
+  title = 'SwiftUI Preview',
+  subtitle,
 }) => {
   const vars = themePalettes[theme] as CSSProperties
   return (
@@ -1038,9 +1043,73 @@ export const WindowGroup: FC<PropsWithChildren<WindowStyleProps>> = ({
         color: textColorMap.primary,
         fontFamily:
           '"SF Pro Text", "SF Pro Display", ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+        display: 'flex',
+        alignItems: 'stretch',
+        justifyContent: 'center',
+        padding: 16,
+        boxSizing: 'border-box',
       }}
     >
-      {children}
+      <div
+        style={{
+          width: `min(calc(100vw - 32px), ${String(Math.max(minWidth ?? 980, 360))}px)`,
+          height: `min(calc(100vh - 32px), ${String(Math.max(minHeight ?? 720, 240))}px)`,
+          maxWidth: '100%',
+          maxHeight: '100%',
+          borderRadius: 18,
+          overflow: 'hidden',
+          border: `1px solid ${surfaceColors.border}`,
+          background: surfaceColors.panelBg,
+          boxShadow:
+            theme === 'dark'
+              ? '0 20px 60px rgba(0, 0, 0, 0.45)'
+              : '0 24px 70px rgba(15, 23, 42, 0.16)',
+          display: 'grid',
+          gridTemplateRows: '44px minmax(0, 1fr)',
+          backdropFilter: 'blur(24px)',
+        }}
+      >
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '96px minmax(0, 1fr) 96px',
+            alignItems: 'center',
+            gap: 8,
+            padding: '0 14px',
+            borderBottom: `1px solid ${surfaceColors.border}`,
+            background:
+              theme === 'dark'
+                ? 'linear-gradient(180deg, rgba(58,58,60,0.94), rgba(44,44,46,0.92))'
+                : 'linear-gradient(180deg, rgba(255,255,255,0.94), rgba(248,248,250,0.9))',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ width: 12, height: 12, borderRadius: 999, background: '#ff5f57', boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.08)' }} />
+            <span style={{ width: 12, height: 12, borderRadius: 999, background: '#febc2e', boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.08)' }} />
+            <span style={{ width: 12, height: 12, borderRadius: 999, background: '#28c840', boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.08)' }} />
+          </div>
+          <div style={{ textAlign: 'center', overflow: 'hidden' }}>
+            <div style={{ fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {title}
+            </div>
+            {subtitle ? (
+              <div
+                style={{
+                  fontSize: 11,
+                  color: textColorMap.secondary,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {subtitle}
+              </div>
+            ) : null}
+          </div>
+          <div />
+        </div>
+        <div style={{ minHeight: 0, overflow: 'hidden' }}>{children}</div>
+      </div>
     </div>
   )
 }

@@ -27,7 +27,7 @@ export const OutlineGroupDemo: FC = () => {
             label={item => <Text>{item.title}</Text>}
             childrenOf={item => item.children}
           />
-          <TimelineView intervalMs={1000}>
+          <TimelineView schedule="everySecond">
             {({ date }) => <Text font="caption2.monospaced" foregroundStyle="secondary">{date.toLocaleTimeString()}</Text>}
           </TimelineView>
         </VStack>

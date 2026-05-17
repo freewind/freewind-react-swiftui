@@ -21,10 +21,10 @@ const DetailPane: FC = () => {
 
 export const NavigationStackDemo: FC = () => {
   return (
-    <NavigationStack rootTitle="Inbox">
+    <NavigationStack rootTitle="Inbox" rootSubtitle="2 unread">
       <VStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-        <NavigationLink title="Open first message" destination={<DetailPane />} />
-        <NavigationLink title="Open second message" destination={<DetailPane />} />
+        <NavigationLink title="Open first message" destinationTitle="Message A" destination={<DetailPane />} />
+        <NavigationLink title="Open second message" destinationTitle="Message B" destination={<DetailPane />} />
       </VStack>
     </NavigationStack>
   )

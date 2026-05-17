@@ -8,8 +8,8 @@ export const TimelineViewDemo: FC = () => {
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <FormSection title="TimelineView">
-        <TimelineView intervalMs={1000}>
-          {({ date }) => <Text font="title3.semibold">{date.toLocaleTimeString()}</Text>}
+        <TimelineView schedule="animation">
+          {({ date, cadence }) => <Text font="title3.semibold">{`${date.toLocaleTimeString()} · ${cadence}`}</Text>}
         </TimelineView>
       </FormSection>
     </VStack>

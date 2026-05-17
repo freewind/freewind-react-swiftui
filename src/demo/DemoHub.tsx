@@ -36,7 +36,13 @@ export const DemoHub: FC = () => {
 
   return (
     <MockEnvironmentProvider>
-      <WindowGroup minWidth={1100} minHeight={760} theme={theme.value}>
+      <WindowGroup
+        minWidth={1100}
+        minHeight={760}
+        theme={theme.value}
+        title={activePage?.title ?? activeSection?.title ?? 'Demo Home'}
+        subtitle="SwiftUI Preview Window"
+      >
         <VStack spacing={0} padding={16} frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }}>
           <AppHeader
             title={section.value === 'home' ? 'Demo Home' : activePage?.title ?? activeSection?.title ?? 'Demo'}

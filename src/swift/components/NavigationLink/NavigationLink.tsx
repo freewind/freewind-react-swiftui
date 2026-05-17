@@ -7,7 +7,14 @@ import type { NavigationLinkProps } from '../runtime'
 import { Text } from '../Text'
 import { VStack } from '../VStack'
 
-export const NavigationLink: FC<NavigationLinkProps> = ({ title, onNavigate, destination, children, ...rest }) => {
+export const NavigationLink: FC<NavigationLinkProps> = ({
+  title,
+  onNavigate,
+  destination,
+  destinationTitle,
+  children,
+  ...rest
+}) => {
   const navigation = useContext(navigationStackContext)
   return (
     <Button
@@ -15,7 +22,7 @@ export const NavigationLink: FC<NavigationLinkProps> = ({ title, onNavigate, des
       onPress={() => {
         onNavigate?.()
         if (destination && navigation) {
-          navigation.push(destination)
+          navigation.push(destination, { title: destinationTitle ?? title })
         }
       }}
       frame={{ maxWidth: 'infinity', alignment: 'leading' }}
