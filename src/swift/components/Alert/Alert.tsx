@@ -4,16 +4,34 @@ import { HStack } from '../HStack'
 import { Sheet, Spacer, Text, type Binding } from '../runtime'
 import { VStack } from '../VStack'
 
+type AlertAction = {
+  title: string
+  role?: 'default' | 'cancel' | 'destructive'
+  onPress?: () => void
+}
+
 export type AlertProps = {
   isPresented: Binding<boolean>
   title: string
   message?: ReactNode
   dismissTitle?: string
+  primaryButton?: AlertAction
+  secondaryButton?: AlertAction
 }
 
-export const Alert: FC<AlertProps> = ({ isPresented, title, message, dismissTitle = '确定' }) => {
+export const Alert: FC<AlertProps> = ({
+  isPresented,
+  title,
+  message,
+  dismissTitle = '确定',
+  primaryButton,
+  secondaryButton,
+}) => {
+  const fallbackAction: AlertAction = { title: dismissTitle }
+  const actions = [secondaryButton, primaryButton ?? fallbackAction].filter(Boolean) as AlertAction[]
+
   return (
-    <Sheet isPresented={isPresented}>
+    <Sheet isPresented={isPresented} title="Alert" detents={['medium']}>
       <VStack
         spacing={12}
         padding={18}
@@ -24,7 +42,18 @@ export const Alert: FC<AlertProps> = ({ isPresented, title, message, dismissTitl
         {typeof message === 'string' ? <Text foregroundStyle="secondary">{message}</Text> : message}
         <HStack>
           <Spacer />
-          <Button title={dismissTitle} buttonStyle="borderedProminent" onPress={() => isPresented.setValue(false)} />
+          {actions.map(action => (
+            <Button
+              key={action.title}
+              title={action.title}
+              buttonStyle={action.role === 'destructive' || action === primaryButton ? 'borderedProminent' : 'bordered'}
+              tint={action.role === 'destructive' ? 'red' : undefined}
+              onPress={() => {
+                isPresented.setValue(false)
+                action.onPress?.()
+              }}
+            />
+          ))}
         </HStack>
       </VStack>
     </Sheet>

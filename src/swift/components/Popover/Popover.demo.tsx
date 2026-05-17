@@ -14,9 +14,9 @@ export const PopoverDemo: FC = () => {
       <FormSection title="基础浮层">
         <Popover
           isPresented={shown}
+          title="Quick Preview"
           content={
             <VStack spacing={6} alignment="leading">
-              <Text font="headline">Quick Preview</Text>
               <Text font="caption" foregroundStyle="secondary">popover content</Text>
             </VStack>
           }
@@ -30,6 +30,8 @@ export const PopoverDemo: FC = () => {
         preview={
           <Popover
             isPresented={shown}
+            title="Peer Info"
+            arrowEdge="trailing"
             content={
               <VStack spacing={8} alignment="leading">
                 <Text>LAN peer: freewind-mac</Text>

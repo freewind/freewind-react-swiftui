@@ -1,8 +1,14 @@
 import type { FC, MouseEvent, ReactNode } from 'react'
 import type { Binding } from '../runtime'
+import { VStack } from '../VStack'
+import { Text } from '../Text'
 
 export type SheetProps = {
   isPresented: Binding<boolean>
+  title?: string
+  detents?: Array<'medium' | 'large'>
+  interactiveDismissDisabled?: boolean
+  onDismiss?: () => void
   children: ReactNode
 }
 
@@ -11,14 +17,31 @@ const stopClick = (event: MouseEvent<HTMLDivElement>) => {
 }
 
 
-export const Sheet: FC<SheetProps> = ({isPresented, children}) => {
+export const Sheet: FC<SheetProps> = ({
+  isPresented,
+  title,
+  detents = ['large'],
+  interactiveDismissDisabled = false,
+  onDismiss,
+  children,
+}) => {
   if (!isPresented.value) {
     return null
   }
 
+  const dismiss = () => {
+    if (interactiveDismissDisabled) {
+      return
+    }
+    isPresented.setValue(false)
+    onDismiss?.()
+  }
+
+  const maxWidth = detents.includes('medium') && !detents.includes('large') ? 520 : 720
+
   return (
     <div
-      onClick={() => isPresented.setValue(false)}
+      onClick={dismiss}
       style={{
         position: 'fixed',
         inset: 0,
@@ -30,8 +53,15 @@ export const Sheet: FC<SheetProps> = ({isPresented, children}) => {
         zIndex: 999,
       }}
     >
-      <div onClick={stopClick} style={{maxWidth: '100%', maxHeight: '100%'}}>
-        {children}
+      <div onClick={stopClick} style={{maxWidth: '100%', maxHeight: '100%', width: '100%'}}>
+        <VStack frame={{ width: maxWidth, maxWidth: 'infinity', alignment: 'leading' }}>
+          {title ? (
+            <Text font="headline.semibold" padding={{ bottom: 8 }}>
+              {title}
+            </Text>
+          ) : null}
+          {children}
+        </VStack>
       </div>
     </div>
   )

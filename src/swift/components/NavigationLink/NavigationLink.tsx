@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from 'react'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { Button } from '../Button'
 import { HStack } from '../HStack'
 import { navigationStackContext } from '../NavigationStack/NavigationStack'
@@ -28,11 +28,23 @@ export const NavigationLink: FC<NavigationLinkProps> = ({
   ...rest
 }) => {
   const navigation = useContext(navigationStackContext)
+
+  useEffect(() => {
+    if (!value || !destination || !navigation) {
+      return
+    }
+    navigation.register(value, destination, { title: destinationTitle ?? title ?? value })
+  }, [destination, destinationTitle, navigation, title, value])
+
   return (
     <Button
       buttonStyle="plain"
       onPress={() => {
         onNavigate?.()
+        if (value && navigation) {
+          navigation.pushValue(value, { title: destinationTitle ?? title ?? value })
+          return
+        }
         if (destination && navigation) {
           navigation.push(destination, { title: destinationTitle ?? title ?? value })
         }

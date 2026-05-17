@@ -14,6 +14,7 @@ export const ConfirmationDialogDemo: FC = () => {
         <ConfirmationDialog
           isPresented={presented}
           title="选择操作"
+          message="这些操作会立即影响当前会话。"
           actions={[
             { title: '置顶' },
             { title: '删除', role: 'destructive' },

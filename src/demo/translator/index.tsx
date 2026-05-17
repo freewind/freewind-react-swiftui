@@ -1,5 +1,8 @@
 import type { FC } from 'react'
 import { ForEach, FormSection, HStack, Text, VStack } from '../../swift'
+import { GroupBox } from '../../swift/components/GroupBox'
+import { ScrollView } from '../../swift/components/ScrollView'
+import { buildSwiftUiDraft, buildTranslatorExportPacket } from '../../translator'
 
 type CapabilitySection = {
   title: string
@@ -53,6 +56,9 @@ const statusStyle: Record<CapabilitySection['rows'][number]['status'], 'green' |
 }
 
 export const TranslatorSpecDemo: FC = () => {
+  const packet = buildTranslatorExportPacket('translator')
+  const swiftUiDraft = buildSwiftUiDraft(packet)
+
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <FormSection title="转换规约">
@@ -97,6 +103,22 @@ export const TranslatorSpecDemo: FC = () => {
           </FormSection>
         )}
       </ForEach>
+      <HStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        <GroupBox title="Export Packet" frame={{ maxWidth: 'infinity', minHeight: 320, alignment: 'leading' }}>
+          <ScrollView axes={['horizontal', 'vertical']} frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }}>
+            <Text monospaced textSelection="enabled" font="caption2.monospaced">
+              {JSON.stringify(packet, null, 2)}
+            </Text>
+          </ScrollView>
+        </GroupBox>
+        <GroupBox title="SwiftUI Draft" frame={{ maxWidth: 'infinity', minHeight: 320, alignment: 'leading' }}>
+          <ScrollView axes={['horizontal', 'vertical']} frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }}>
+            <Text monospaced textSelection="enabled" font="caption2.monospaced">
+              {swiftUiDraft}
+            </Text>
+          </ScrollView>
+        </GroupBox>
+      </HStack>
     </VStack>
   )
 }

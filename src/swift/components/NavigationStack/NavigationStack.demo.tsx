@@ -27,6 +27,7 @@ export const NavigationStackDemo: FC = () => {
       <VStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
         <NavigationLink title="Open first message" destinationTitle="Message A" destination={<DetailPane />} />
         <NavigationLink title="Open second message" destinationTitle="Message B" destination={<DetailPane />} />
+        <NavigationLink title="Value route" value="message-c" destinationTitle="Message C" destination={<DetailPane />} />
         <Text font="caption2.monospaced" foregroundStyle="secondary">
           path depth: {String(path.value.items.length)}
         </Text>

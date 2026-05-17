@@ -11,10 +11,13 @@ type NavigationRoute = {
   id: string
   title?: string
   content: ReactNode
+  value?: string
 }
 
 export const navigationStackContext = createContext<{
   push: (destination: ReactNode, options?: { title?: string }) => void
+  register: (value: string, destination: ReactNode, options?: { title?: string }) => void
+  pushValue: (value: string, options?: { title?: string }) => void
   pop: () => void
   popToRoot: () => void
   path: NavigationPath
@@ -28,6 +31,7 @@ export type NavigationStackProps = ViewBaseProps & {
 
 export const NavigationStack: FC<NavigationStackProps> = ({ rootTitle, rootSubtitle, path, children, ...rest }) => {
   const [stack, setStack] = useState<NavigationRoute[]>([])
+  const [registeredRoutes, setRegisteredRoutes] = useState<Record<string, NavigationRoute>>({})
   const current = stack[stack.length - 1]
   const canPop = stack.length > 0
   const currentTitle = current?.title ?? rootTitle
@@ -60,6 +64,33 @@ export const NavigationStack: FC<NavigationStackProps> = ({ rootTitle, rootSubti
           syncPath(nextStack)
           return nextStack
         }),
+      register: (value: string, destination: ReactNode, options?: { title?: string }) =>
+        setRegisteredRoutes(prev => ({
+          ...prev,
+          [value]: {
+            id: value,
+            value,
+            title: options?.title,
+            content: destination,
+          },
+        })),
+      pushValue: (value: string, options?: { title?: string }) => {
+        const route = registeredRoutes[value]
+        if (!route) {
+          return
+        }
+        setStack(prev => {
+          const nextStack = [
+            ...prev,
+            {
+              ...route,
+              title: options?.title ?? route.title,
+            },
+          ]
+          syncPath(nextStack)
+          return nextStack
+        })
+      },
       pop: () =>
         setStack(prev => {
           const nextStack = prev.slice(0, -1)
@@ -72,7 +103,7 @@ export const NavigationStack: FC<NavigationStackProps> = ({ rootTitle, rootSubti
       },
       path: path?.value ?? { items: [] },
     }),
-    [path],
+    [path, registeredRoutes],
   )
 
   return (

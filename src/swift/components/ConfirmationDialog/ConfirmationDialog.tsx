@@ -6,19 +6,34 @@ import { VStack } from '../VStack'
 export type ConfirmationDialogProps = {
   isPresented: Binding<boolean>
   title: string
+  message?: string
+  titleVisibility?: 'visible' | 'hidden'
+  cancelTitle?: string
   actions: Array<{ title: string; role?: 'default' | 'destructive'; onPress?: () => void }>
 }
 
-export const ConfirmationDialog: FC<ConfirmationDialogProps> = ({ isPresented, title, actions }) => {
+export const ConfirmationDialog: FC<ConfirmationDialogProps> = ({
+  isPresented,
+  title,
+  message,
+  titleVisibility = 'visible',
+  cancelTitle = '取消',
+  actions,
+}) => {
   return (
-    <Sheet isPresented={isPresented}>
+    <Sheet isPresented={isPresented} title="ConfirmationDialog" detents={['medium']}>
       <VStack
         spacing={8}
         padding={14}
         frame={{ width: 320, maxWidth: 'infinity' }}
         background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 20 } }}
       >
-        <Text font="headline.semibold">{title}</Text>
+        {titleVisibility === 'visible' ? <Text font="headline.semibold">{title}</Text> : null}
+        {message ? (
+          <Text font="caption" foregroundStyle="secondary">
+            {message}
+          </Text>
+        ) : null}
         {actions.map(action => (
           <Button
             key={action.title}
@@ -31,6 +46,7 @@ export const ConfirmationDialog: FC<ConfirmationDialogProps> = ({ isPresented, t
             frame={{ maxWidth: 'infinity', alignment: 'leading' }}
           />
         ))}
+        <Button title={cancelTitle} buttonStyle="plain" onPress={() => isPresented.setValue(false)} frame={{ maxWidth: 'infinity', alignment: 'leading' }} />
       </VStack>
     </Sheet>
   )

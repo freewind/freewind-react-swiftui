@@ -25,7 +25,7 @@ export const SheetDemo: FC = () => {
           </HStack>
         }
       />
-      <Sheet isPresented={presented}>
+      <Sheet isPresented={presented} title="Standard Sheet" detents={['large']} onDismiss={() => presented.setValue(false)}>
         <VStack
           spacing={12}
           padding={20}
@@ -40,7 +40,7 @@ export const SheetDemo: FC = () => {
           </HStack>
         </VStack>
       </Sheet>
-      <Sheet isPresented={compactPresented}>
+      <Sheet isPresented={compactPresented} title="Compact Sheet" detents={['medium']} interactiveDismissDisabled>
         <VStack
           spacing={12}
           padding={20}

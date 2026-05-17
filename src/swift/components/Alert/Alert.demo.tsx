@@ -27,10 +27,17 @@ export const AlertDemo: FC = () => {
         summary="对应 SwiftUI `.alert` `.confirmationDialog` `.fullScreenCover`。"
         preview={<Text foregroundStyle="secondary">点击上方按钮即可触发。</Text>}
       />
-      <Alert isPresented={alertPresented} title="删除会话？" message="此操作无法撤销。" />
+      <Alert
+        isPresented={alertPresented}
+        title="删除会话？"
+        message="此操作无法撤销。"
+        secondaryButton={{ title: '取消', role: 'cancel' }}
+        primaryButton={{ title: '删除', role: 'destructive' }}
+      />
       <ConfirmationDialog
         isPresented={dialogPresented}
         title="更多操作"
+        message="选择一个轻量动作继续。"
         actions={[
           { title: '标记未读' },
           { title: '删除', role: 'destructive' },
