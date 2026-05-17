@@ -16,6 +16,8 @@ type ComponentDocKey =
   | 'Image'
   | 'Label'
   | 'Picker'
+  | 'Toggle'
+  | 'ProgressView'
   | 'TextField'
   | 'TextEditor'
   | 'VStack'
@@ -24,8 +26,12 @@ type ComponentDocKey =
   | 'Divider'
   | 'ScrollView'
   | 'LazyHStack'
+  | 'LazyVGrid'
   | 'Sheet'
   | 'ContextMenu'
+  | 'Menu'
+  | 'TabView'
+  | 'DisclosureGroup'
   | 'RoundedRectangle'
   | 'TokenColor'
   | 'GeometryReader'
@@ -309,6 +315,67 @@ const docs: Record<ComponentDocKey, { title: string; rows: PropDoc[] }> = {
       },
     ],
   },
+  Toggle: {
+    title: 'Toggle Props',
+    rows: [
+      ...viewBaseProps,
+      {
+        prop: 'isOn',
+        type: 'Binding<boolean>',
+        defaultValue: '-',
+        values: '{ value, setValue }',
+        description: '开关状态 binding。',
+      },
+      {
+        prop: 'title',
+        type: 'string',
+        defaultValue: '-',
+        values: '任意字符串',
+        description: '标题。未传 children 时显示它。',
+      },
+      {
+        prop: 'children',
+        type: 'ReactNode',
+        defaultValue: '-',
+        values: '任意 JSX',
+        description: '自定义 label。',
+      },
+    ],
+  },
+  ProgressView: {
+    title: 'ProgressView Props',
+    rows: [
+      ...viewBaseProps,
+      {
+        prop: 'value',
+        type: 'number',
+        defaultValue: '-',
+        values: '0..total',
+        description: '当前进度值。不传时视为 indeterminate mock。',
+      },
+      {
+        prop: 'total',
+        type: 'number',
+        defaultValue: '1',
+        values: '正数',
+        description: '总量。',
+      },
+      {
+        prop: 'label',
+        type: 'string',
+        defaultValue: '-',
+        values: '任意字符串',
+        description: '顶部说明文案。',
+      },
+      {
+        prop: 'currentValueLabel',
+        type: 'string',
+        defaultValue: '-',
+        values: '任意字符串',
+        description: '底部当前值文案。',
+      },
+    ],
+  },
   TextField: {
     title: 'TextField Props',
     rows: [
@@ -405,6 +472,34 @@ const docs: Record<ComponentDocKey, { title: string; rows: PropDoc[] }> = {
     title: 'LazyHStack Props',
     rows: [...viewBaseProps, ...stackProps],
   },
+  LazyVGrid: {
+    title: 'LazyVGrid Props',
+    rows: [
+      ...viewBaseProps,
+      {
+        prop: 'columns',
+        type: 'GridItemSpec[]',
+        defaultValue: '-',
+        values:
+          "[{ size: { kind: 'fixed', width } | { kind: 'flexible', minimum?, maximum? } | { kind: 'adaptive', minimum, maximum? }, spacing? }]",
+        description: '列定义。当前最稳的是 repeated flexible/fixed。',
+      },
+      {
+        prop: 'spacing',
+        type: 'number',
+        defaultValue: '8',
+        values: '任意数字',
+        description: '网格项间距。',
+      },
+      {
+        prop: 'children',
+        type: 'ReactNode',
+        defaultValue: '-',
+        values: '任意 JSX',
+        description: '网格项内容。',
+      },
+    ],
+  },
   Sheet: {
     title: 'Sheet Props',
     rows: [
@@ -440,6 +535,72 @@ const docs: Record<ComponentDocKey, { title: string; rows: PropDoc[] }> = {
         defaultValue: '-',
         values: '单个 JSX 元素',
         description: '触发右键菜单的元素。',
+      },
+    ],
+  },
+  Menu: {
+    title: 'Menu Props',
+    rows: [
+      {
+        prop: 'items',
+        type: 'Array<{ title; onPress?; disabled? }>',
+        defaultValue: '-',
+        values: '数组',
+        description: '菜单项。',
+      },
+      {
+        prop: 'children',
+        type: 'ReactElement',
+        defaultValue: '-',
+        values: '单个 JSX 元素',
+        description: '点击后打开菜单的 label 视图。',
+      },
+    ],
+  },
+  TabView: {
+    title: 'TabView Props',
+    rows: [
+      ...viewBaseProps,
+      {
+        prop: 'selection',
+        type: 'Binding<T>',
+        defaultValue: '-',
+        values: 'T 为 string | number',
+        description: '当前选中 tab。可不传，默认首项。',
+      },
+      {
+        prop: 'children',
+        type: 'Tab[]',
+        defaultValue: '-',
+        values: '<Tab tag=... title=... systemImage? />',
+        description: 'tab 内容列表。',
+      },
+    ],
+  },
+  DisclosureGroup: {
+    title: 'DisclosureGroup Props',
+    rows: [
+      ...viewBaseProps,
+      {
+        prop: 'title',
+        type: 'string',
+        defaultValue: '-',
+        values: '任意字符串',
+        description: '标题文案。',
+      },
+      {
+        prop: 'isExpanded',
+        type: 'Binding<boolean>',
+        defaultValue: '-',
+        values: '{ value, setValue }',
+        description: '展开态 binding。不传则内部自管。',
+      },
+      {
+        prop: 'children',
+        type: 'ReactNode',
+        defaultValue: '-',
+        values: '任意 JSX',
+        description: '折叠内容。',
       },
     ],
   },

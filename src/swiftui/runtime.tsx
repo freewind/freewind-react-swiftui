@@ -153,11 +153,23 @@ type ScrollViewReaderProps = Omit<ViewBaseProps, 'children'> & {
   }) => ReactNode
 }
 
+type ToggleProps = ViewBaseProps & {
+  isOn: Binding<boolean>
+  title?: string
+}
+
 type ButtonProps = ViewBaseProps & {
   title?: string
   onPress?: () => void
   buttonStyle?: ButtonStyleToken
   controlSize?: ControlSizeToken
+}
+
+type ProgressViewProps = ViewBaseProps & {
+  value?: number
+  total?: number
+  label?: string
+  currentValueLabel?: string
 }
 
 type SheetProps = {
@@ -207,6 +219,37 @@ type DividerProps = {
   axis?: Axis
 }
 
+type GridItemSize =
+  | {
+      kind: 'fixed'
+      width: number
+    }
+  | {
+      kind: 'flexible'
+      minimum?: number
+      maximum?: number
+    }
+  | {
+      kind: 'adaptive'
+      minimum: number
+      maximum?: number
+    }
+
+type GridItemSpec = {
+  size: GridItemSize
+  spacing?: number
+}
+
+type LazyVGridProps = ViewBaseProps & {
+  columns: GridItemSpec[]
+  spacing?: number
+}
+
+type DisclosureGroupProps = ViewBaseProps & {
+  title?: string
+  isExpanded?: Binding<boolean>
+}
+
 type ForEachProps<T> = {
   each: T[]
   keyBy: (item: T, index: number) => string | number
@@ -230,9 +273,26 @@ type ContextMenuProps = {
   children: ReactElement
 }
 
+type MenuProps = {
+  items: ContextMenuItem[]
+  children: ReactElement
+}
+
 type DropAreaProps = ViewBaseProps & {
   isTargeted?: Binding<boolean>
   onDrop?: () => void
+}
+
+type TabProps<T extends string | number> = {
+  tag: T
+  title: string
+  systemImage?: string
+  children: ReactNode
+}
+
+type TabViewProps<T extends string | number> = ViewBaseProps & {
+  selection?: Binding<T>
+  children: ReactNode
 }
 
 type WindowAccessorProps = {
@@ -354,6 +414,7 @@ const symbolMap: Record<string, string> = {
 }
 
 const disabledContext = createContext(false)
+const parentStackAxisContext = createContext<'horizontal' | 'vertical' | 'z' | undefined>(undefined)
 
 export const useBinding = <T,>(initialValue: T): Binding<T> => {
   const [value, setValue] = useState(initialValue)
@@ -414,8 +475,9 @@ export const View: FC<
   }
 > = ({ children, stack, overlay, disabled, ...rest }) => {
   const inheritedDisabled = useContext(disabledContext)
+  const parentStackAxis = useContext(parentStackAxisContext)
   const finalDisabled = inheritedDisabled || Boolean(disabled)
-  const baseStyle = viewStyle(rest)
+  const baseStyle = viewStyle(rest, parentStackAxis)
   const stackStyle = stackStyleFrom(stack)
   const containerStyle: CSSProperties = {
     ...baseStyle,
@@ -427,23 +489,25 @@ export const View: FC<
 
   return (
     <disabledContext.Provider value={finalDisabled}>
-      <div style={containerStyle}>
-        {children}
-        {overlay ? (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              pointerEvents: 'none',
-            }}
-          >
-            {overlay}
-          </div>
-        ) : null}
-      </div>
+      <parentStackAxisContext.Provider value={stack?.axis ?? parentStackAxis}>
+        <div style={containerStyle}>
+          {children}
+          {overlay ? (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                pointerEvents: 'none',
+              }}
+            >
+              {overlay}
+            </div>
+          ) : null}
+        </div>
+      </parentStackAxisContext.Provider>
     </disabledContext.Provider>
   )
 }
@@ -468,6 +532,34 @@ export const Text: FC<TextProps> = ({
   return <div style={style}>{children}</div>
 }
 
+export const Toggle: FC<ToggleProps> = ({ isOn, title, children, ...rest }) => {
+  return (
+    <Button buttonStyle="plain" onPress={() => isOn.setValue(!isOn.value)} {...rest}>
+      <HStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        <HStack
+          spacing={0}
+          padding={3}
+          frame={{ width: 42, height: 24 }}
+          background={{ fill: isOn.value ? 'accentColor' : 'tertiary', in: { kind: 'capsule' } }}
+        >
+          {isOn.value ? <Spacer minLength={0} /> : null}
+          <View
+            frame={{ width: 18, height: 18 }}
+            background={{ fill: 'primary', in: { kind: 'capsule' } }}
+            foregroundColor="#ffffff"
+            overlay={
+              <Text font="caption2.monospaced" foregroundColor={isOn.value ? '#0a84ff' : '#8e8e93'}>
+                {isOn.value ? '1' : '0'}
+              </Text>
+            }
+          />
+        </HStack>
+        <Text>{children ?? title ?? 'Toggle'}</Text>
+      </HStack>
+    </Button>
+  )
+}
+
 export const Button: FC<ButtonProps> = ({
   title,
   children,
@@ -486,6 +578,53 @@ export const Button: FC<ButtonProps> = ({
     <button type="button" style={style} onClick={onPress} disabled={disabled}>
       {children ?? title}
     </button>
+  )
+}
+
+export const ProgressView: FC<ProgressViewProps> = ({
+  value,
+  total = 1,
+  label,
+  currentValueLabel,
+  ...rest
+}) => {
+  const normalized = value === undefined ? 0.36 : Math.max(0, Math.min(1, total <= 0 ? 0 : value / total))
+  return (
+    <VStack spacing={8} alignment="leading" {...rest}>
+      {label ? <Text>{label}</Text> : null}
+      <div
+        style={{
+          width: '100%',
+          height: 8,
+          borderRadius: 9999,
+          background: surfaceColors.tertiaryFill,
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            width: `${String(normalized * 100)}%`,
+            height: '100%',
+            borderRadius: 9999,
+            background: surfaceColors.accent,
+            transition: 'width 160ms ease-out',
+          }}
+        />
+      </div>
+      {currentValueLabel ? (
+        <Text font="caption" foregroundStyle="secondary">
+          {currentValueLabel}
+        </Text>
+      ) : value !== undefined ? (
+        <Text font="caption" foregroundStyle="secondary">
+          {`${Math.round(normalized * 100)}%`}
+        </Text>
+      ) : (
+        <Text font="caption" foregroundStyle="secondary">
+          Loading…
+        </Text>
+      )}
+    </VStack>
   )
 }
 
@@ -530,8 +669,32 @@ export const LazyHStack: FC<StackProps> = props => {
   return <HStack {...props} />
 }
 
+export const LazyVGrid: FC<LazyVGridProps> = ({ columns, spacing = 8, children, ...rest }) => {
+  return (
+    <div
+      style={{
+        ...viewStyle(rest, undefined),
+        display: 'grid',
+        gridTemplateColumns: gridTemplateColumns(columns),
+        gap: spacing,
+      }}
+    >
+      {children}
+    </div>
+  )
+}
+
 export const Spacer: FC<SpacerProps> = ({ minLength = 0 }) => {
-  return <div style={{ flex: 1, minWidth: minLength, minHeight: minLength }} />
+  const parentStackAxis = useContext(parentStackAxisContext)
+  return (
+    <div
+      style={
+        parentStackAxis === 'vertical'
+          ? { flex: 1, minHeight: minLength, minWidth: 0, alignSelf: 'stretch' }
+          : { flex: 1, minWidth: minLength, minHeight: 0 }
+      }
+    />
+  )
 }
 
 export const Divider: FC<DividerProps> = ({ axis = 'horizontal' }) => {
@@ -646,6 +809,32 @@ export const Label: FC<LabelProps> = ({ title, systemImage, ...rest }) => {
       {systemImage ? <Image systemName={systemImage} /> : null}
       <Text>{title}</Text>
     </HStack>
+  )
+}
+
+export const DisclosureGroup: FC<DisclosureGroupProps> = ({ title, isExpanded, children, ...rest }) => {
+  const [localExpanded, setLocalExpanded] = useState(false)
+  const expanded = isExpanded ? isExpanded.value : localExpanded
+  const setExpanded = isExpanded ? isExpanded.setValue : setLocalExpanded
+
+  return (
+    <VStack spacing={8} alignment="leading" {...rest}>
+      <Button buttonStyle="plain" onPress={() => setExpanded(!expanded)} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        <HStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <Text font="caption2.monospaced">{expanded ? '▾' : '▸'}</Text>
+          <Text>{title ?? 'DisclosureGroup'}</Text>
+        </HStack>
+      </Button>
+      {expanded ? (
+        <VStack
+          spacing={8}
+          padding={{ leading: 20 }}
+          frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+        >
+          {children}
+        </VStack>
+      ) : null}
+    </VStack>
   )
 }
 
@@ -772,6 +961,102 @@ export const ContextMenu: FC<ContextMenuProps> = ({ items, children }) => {
   )
 }
 
+export const Menu: FC<MenuProps> = ({ items, children }) => {
+  const [open, setOpen] = useState(false)
+  const id = useId()
+  const menu = open ? (
+    <VStack
+      spacing={4}
+      padding={6}
+      background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 12 } }}
+      frame={{ width: 180 }}
+    >
+      {items.map(item => (
+        <Button
+          key={`${id}-${item.title}`}
+          title={item.title}
+          onPress={() => {
+            setOpen(false)
+            item.onPress?.()
+          }}
+          disabled={item.disabled}
+          buttonStyle="plain"
+          padding={{ horizontal: 8, vertical: 6 }}
+          frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+        />
+      ))}
+    </VStack>
+  ) : null
+
+  return (
+    <div style={{ position: 'relative' }}>
+      {cloneElement(children, {
+        onClick: (event: MouseEvent) => {
+          event.preventDefault()
+          event.stopPropagation()
+          setOpen(prev => !prev)
+        },
+      })}
+      {open ? <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: 8, zIndex: 20 }}>{menu}</div> : null}
+    </div>
+  )
+}
+
+export const Tab = <T extends string | number>({ children }: TabProps<T>) => {
+  return <>{children}</>
+}
+
+export const TabView = <T extends string | number>({
+  selection,
+  children,
+  ...rest
+}: TabViewProps<T>) => {
+  const tabs = (Array.isArray(children) ? children : [children]).filter(isValidElement) as Array<ReactElement<TabProps<T>>>
+  const firstTag = tabs[0]?.props.tag
+  const [localSelection, setLocalSelection] = useState<T | undefined>(firstTag)
+  const currentTag = selection ? selection.value : localSelection
+  const setCurrentTag = (next: T) => {
+    if (selection) {
+      selection.setValue(next)
+      return
+    }
+    setLocalSelection(next)
+  }
+  const currentTab = tabs.find(tab => tab.props.tag === currentTag) ?? tabs[0]
+
+  return (
+    <VStack spacing={12} alignment="leading" {...rest}>
+      <HStack
+        spacing={6}
+        padding={4}
+        background={{ fill: 'tertiary', in: { kind: 'roundedRectangle', cornerRadius: 12 } }}
+      >
+        {tabs.map(tab => (
+          <Button
+            key={String(tab.props.tag)}
+            buttonStyle={tab.props.tag === currentTag ? 'borderedProminent' : 'plain'}
+            controlSize="small"
+            onPress={() => setCurrentTag(tab.props.tag)}
+          >
+            <HStack spacing={6}>
+              {tab.props.systemImage ? <Image systemName={tab.props.systemImage} /> : null}
+              <Text>{tab.props.title}</Text>
+            </HStack>
+          </Button>
+        ))}
+      </HStack>
+      <VStack
+        spacing={10}
+        padding={14}
+        frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+        background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
+      >
+        {currentTab?.props.children}
+      </VStack>
+    </VStack>
+  )
+}
+
 export const DropArea: FC<DropAreaProps> = ({ children, isTargeted, onDrop, ...rest }) => {
   const targeted = Boolean(isTargeted?.value)
   return (
@@ -839,6 +1124,22 @@ export const WindowGroup: FC<PropsWithChildren<WindowStyleProps>> = ({
 
 const stopClick = (event: MouseEvent<HTMLDivElement>) => {
   event.stopPropagation()
+}
+
+const gridTemplateColumns = (columns: GridItemSpec[]) => {
+  return columns
+    .map(column => {
+      switch (column.size.kind) {
+        case 'fixed':
+          return `${String(column.size.width)}px`
+        case 'adaptive':
+          return `minmax(${String(column.size.minimum)}px, 1fr)`
+        case 'flexible':
+        default:
+          return `minmax(${String(column.size.minimum ?? 0)}px, ${column.size.maximum ? `${String(column.size.maximum)}px` : '1fr'})`
+      }
+    })
+    .join(' ')
 }
 
 const inputChrome = (_style: TextFieldStyleToken): CSSProperties => {
@@ -977,13 +1278,18 @@ const stackStyleFrom = (
   }
 }
 
-const viewStyle = (props: Omit<ViewBaseProps, 'children'>): CSSProperties => {
+const viewStyle = (
+  props: Omit<ViewBaseProps, 'children'>,
+  parentStackAxis?: 'horizontal' | 'vertical' | 'z',
+): CSSProperties => {
   const style: CSSProperties = {
     boxSizing: 'border-box',
+    minWidth: 0,
+    minHeight: 0,
   }
 
   applyPadding(style, props.padding)
-  applyFrame(style, props.frame)
+  applyFrame(style, props.frame, parentStackAxis)
   applyBackground(style, props.background)
   applyForeground(style, props.foregroundStyle, props.foregroundColor)
 
@@ -1029,9 +1335,33 @@ const applyPadding = (style: CSSProperties, padding?: number | EdgeInsets) => {
   style.paddingRight = padding.trailing ?? padding.horizontal ?? 0
 }
 
-const applyFrame = (style: CSSProperties, frame?: FrameSpec) => {
+const applyFrame = (
+  style: CSSProperties,
+  frame?: FrameSpec,
+  parentStackAxis?: 'horizontal' | 'vertical' | 'z',
+) => {
   if (!frame) {
     return
+  }
+
+  const expandAlongParentAxis = (axis: 'horizontal' | 'vertical') => {
+    style.flexGrow = 1
+    style.flexShrink = 1
+    style.flexBasis = 0
+    if (axis === 'horizontal') {
+      style.minWidth = style.minWidth ?? 0
+    } else {
+      style.minHeight = style.minHeight ?? 0
+    }
+  }
+
+  const stretchCrossAxis = (axis: 'horizontal' | 'vertical') => {
+    style.alignSelf = 'stretch'
+    if (axis === 'horizontal') {
+      style.height = style.height ?? '100%'
+    } else {
+      style.width = style.width ?? '100%'
+    }
   }
 
   const setLength = (key: keyof FrameSpec, value?: FrameValue | number) => {
@@ -1069,6 +1399,28 @@ const applyFrame = (style: CSSProperties, frame?: FrameSpec) => {
   setLength('minHeight', frame.minHeight)
   setLength('maxWidth', frame.maxWidth)
   setLength('maxHeight', frame.maxHeight)
+
+  if (frame.maxWidth === 'infinity') {
+    style.maxWidth = '100%'
+    if (parentStackAxis === 'horizontal') {
+      expandAlongParentAxis('horizontal')
+    } else if (parentStackAxis === 'vertical') {
+      stretchCrossAxis('vertical')
+    } else {
+      style.width = style.width ?? '100%'
+    }
+  }
+
+  if (frame.maxHeight === 'infinity') {
+    style.maxHeight = '100%'
+    if (parentStackAxis === 'vertical') {
+      expandAlongParentAxis('vertical')
+    } else if (parentStackAxis === 'horizontal') {
+      stretchCrossAxis('horizontal')
+    } else {
+      style.height = style.height ?? '100%'
+    }
+  }
 
   const alignment = mapFrameAlignment(frame.alignment)
   if (alignment) {
@@ -1136,9 +1488,18 @@ export type {
   FontToken,
   ForegroundStyleToken,
   FrameSpec,
+  GridItemSpec,
+  GridItemSize,
   PickerOption,
   ShapeSpec,
   ThemeMode,
+  ToggleProps,
+  ProgressViewProps,
+  DisclosureGroupProps,
+  LazyVGridProps,
+  MenuProps,
+  TabProps,
+  TabViewProps,
   TextAlign,
   TextFieldStyleToken,
   ViewBaseProps,

@@ -7,17 +7,23 @@ import { GeometryReaderDemo } from '../swiftui/GeometryReader.demo'
 import { HStackDemo } from '../swiftui/HStack.demo'
 import { ImageDemo } from '../swiftui/Image.demo'
 import { LabelDemo } from '../swiftui/Label.demo'
+import { LazyVGridDemo } from '../swiftui/LazyVGrid.demo'
 import { LazyHStackDemo } from '../swiftui/LazyHStack.demo'
+import { DisclosureGroupDemo } from '../swiftui/DisclosureGroup.demo'
+import { MenuDemo } from '../swiftui/Menu.demo'
 import { PickerDemo } from '../swiftui/Picker.demo'
+import { ProgressViewDemo } from '../swiftui/ProgressView.demo'
 import { RoundedRectangleDemo } from '../swiftui/RoundedRectangle.demo'
 import { ScrollViewDemo } from '../swiftui/ScrollView.demo'
 import { ScrollViewReaderDemo } from '../swiftui/ScrollViewReader.demo'
 import { SheetDemo } from '../swiftui/Sheet.demo'
 import { SpacerDemo } from '../swiftui/Spacer.demo'
+import { TabViewDemo } from '../swiftui/TabView.demo'
 import { TextDemo } from '../swiftui/Text.demo'
 import { TextEditorDemo } from '../swiftui/TextEditor.demo'
 import { TextFieldDemo } from '../swiftui/TextField.demo'
 import { TokenColorDemo } from '../swiftui/TokenColor.demo'
+import { ToggleDemo } from '../swiftui/Toggle.demo'
 import { VStackDemo } from '../swiftui/VStack.demo'
 import { WindowAccessorDemo } from '../swiftui/WindowAccessor.demo'
 import { DashboardDemo } from './Dashboard.demo'
@@ -39,6 +45,8 @@ export const renderDemoPage = (pageId: string) => {
     'component-image': ImageDemo,
     'component-label': LabelDemo,
     'component-picker': PickerDemo,
+    'component-toggle': ToggleDemo,
+    'component-progress-view': ProgressViewDemo,
     'component-text-field': TextFieldDemo,
     'component-text-editor': TextEditorDemo,
     'component-vstack': VStackDemo,
@@ -47,8 +55,12 @@ export const renderDemoPage = (pageId: string) => {
     'component-divider': DividerDemo,
     'component-scroll-view': ScrollViewDemo,
     'component-lazy-hstack': LazyHStackDemo,
+    'component-lazy-vgrid': LazyVGridDemo,
     'component-sheet': SheetDemo,
+    'component-tab-view': TabViewDemo,
     'component-context-menu': ContextMenuDemo,
+    'component-menu': MenuDemo,
+    'component-disclosure-group': DisclosureGroupDemo,
     'component-rounded-rectangle': RoundedRectangleDemo,
     'component-token-color': TokenColorDemo,
     'component-geometry-reader': GeometryReaderDemo,
