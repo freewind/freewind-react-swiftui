@@ -52,6 +52,7 @@ import { PopoverDemo } from '../../swift/components/Popover'
 import { ProgressViewDemo } from '../../swift/components/ProgressView'
 import { RectangleDemo } from '../../swift/components/Rectangle'
 import { RoundedRectangleDemo } from '../../swift/components/RoundedRectangle'
+import { RuntimeStateDemo } from '../../swift/components/RuntimeState'
 import { ScrollViewDemo } from '../../swift/components/ScrollView'
 import { ScrollViewReaderDemo } from '../../swift/components/ScrollViewReader'
 import { SceneDemo } from '../../swift/components/Scene'
@@ -152,6 +153,7 @@ export const renderDemoPage = (pageId: string) => {
     'component-commands': CommandsDemo,
     'component-disclosure-group': DisclosureGroupDemo,
     'component-rounded-rectangle': RoundedRectangleDemo,
+    'component-runtime-state': RuntimeStateDemo,
     'component-outline-group': OutlineGroupDemo,
     'component-token-color': TokenColorDemo,
     'component-geometry-reader': GeometryReaderDemo,

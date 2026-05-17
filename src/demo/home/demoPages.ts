@@ -65,6 +65,7 @@ export const demoPages: DemoIdName[] = [
   {id: 'component-commands', title: 'Commands', category: 'components'},
   {id: 'component-disclosure-group', title: 'DisclosureGroup', category: 'components'},
   {id: 'component-rounded-rectangle', title: 'RoundedRectangle', category: 'components'},
+  {id: 'component-runtime-state', title: 'Runtime State', category: 'components'},
   {id: 'component-outline-group', title: 'OutlineGroup', category: 'components'},
   {id: 'component-token-color', title: 'Token Color', category: 'components'},
   {id: 'component-geometry-reader', title: 'GeometryReader', category: 'components'},

@@ -1,5 +1,5 @@
 import type { CSSProperties, FC } from 'react'
-import { Text, textColorMap, viewStyle } from '../runtime'
+import { Text, textColorMap, useOpenURLAction, viewStyle } from '../runtime'
 import type { ViewBaseProps } from '../View'
 
 export type LinkProps = ViewBaseProps & {
@@ -8,6 +8,7 @@ export type LinkProps = ViewBaseProps & {
 }
 
 export const Link: FC<LinkProps> = ({ destination, title, children, ...rest }) => {
+  const openUrl = useOpenURLAction()
   const style: CSSProperties = {
     ...viewStyle(rest),
     color: textColorMap.accentColor,
@@ -15,7 +16,16 @@ export const Link: FC<LinkProps> = ({ destination, title, children, ...rest }) =
   }
 
   return (
-    <a href={destination} target="_blank" rel="noreferrer" style={style}>
+    <a
+      href={destination}
+      target="_blank"
+      rel="noreferrer"
+      style={style}
+      onClick={event => {
+        event.preventDefault()
+        void openUrl.callAsFunction(destination)
+      }}
+    >
       {children ?? <Text foregroundStyle="accentColor">{title ?? destination}</Text>}
     </a>
   )
