@@ -6,6 +6,7 @@ import type {
   FileDocument,
   FocusedValues,
   NavigationPath,
+  ObservableObject,
   OpenURLAction,
   OpenUrlResult,
   ScrollPosition,
@@ -36,6 +37,7 @@ export const _internal = {
 
 const environmentContext = createContext<EnvironmentValues>({})
 const focusedValuesContext = createContext<FocusedValues>({})
+const environmentObjectContext = createContext<Record<string, ObservableObject<object>>>({})
 const openUrlContext = createContext<OpenURLAction>({
   callAsFunction: () => 'systemAction',
 })
@@ -101,6 +103,26 @@ export const FocusedValuesProvider = ({
   return <focusedValuesContext.Provider value={merged}>{children}</focusedValuesContext.Provider>
 }
 
+export const EnvironmentObjectProvider = <T extends object>({
+  object,
+  name = 'default',
+  children,
+}: {
+  object: ObservableObject<T>
+  name?: string
+  children: ReactNode
+}) => {
+  const inherited = useContext(environmentObjectContext)
+  const merged = useMemo(
+    () => ({
+      ...inherited,
+      [name]: object as unknown as ObservableObject<object>,
+    }),
+    [inherited, name, object],
+  )
+  return <environmentObjectContext.Provider value={merged}>{children}</environmentObjectContext.Provider>
+}
+
 export const useOpenURLAction = (): OpenURLAction => {
   return useContext(openUrlContext)
 }
@@ -154,7 +176,22 @@ export const useFocusState = <T extends string | number | boolean | null>(initia
 
 export const useObservedObject = useStateObject
 
-export const useEnvironmentObject = useStateObject
+export const useEnvironmentObjectKey = <T extends object>(name: string, initialValue?: T): ObservableObject<T> => {
+  const localObject = useStateObject((initialValue ?? {}) as T)
+  const objects = useContext(environmentObjectContext)
+  const providedObject = objects[name] as ObservableObject<object> | undefined
+  if (providedObject) {
+    return providedObject as unknown as ObservableObject<T>
+  }
+  if (initialValue === undefined) {
+    throw new Error(`Missing EnvironmentObject: ${name}`)
+  }
+  return localObject
+}
+
+export const useEnvironmentObject = <T extends object>(initialValue?: T): ObservableObject<T> => {
+  return useEnvironmentObjectKey<T>('default', initialValue)
+}
 
 export const useScenePhase = () => {
   return useEnvironment<'active' | 'inactive' | 'background'>('scenePhase', 'active')
