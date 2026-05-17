@@ -1,6 +1,15 @@
 import type { FC } from 'react'
-import { createNativePlaceholder, type NativePlaceholderProps } from '../_internal/createNativePlaceholder'
+import { HStack, type StackProps } from '../runtime'
 
-export type ControlGroupProps = NativePlaceholderProps
-
-export const ControlGroup: FC<ControlGroupProps> = createNativePlaceholder('ControlGroup', 'Placeholder for SwiftUI ControlGroup.')
+export const ControlGroup: FC<StackProps> = ({ spacing = 8, children, ...rest }) => {
+  return (
+    <HStack
+      spacing={spacing}
+      padding={6}
+      background={{ fill: 'tertiary', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+      {...rest}
+    >
+      {children}
+    </HStack>
+  )
+}

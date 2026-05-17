@@ -1,6 +1,7 @@
 import type { FC } from 'react'
-import { createNativePlaceholder, type NativePlaceholderProps } from '../_internal/createNativePlaceholder'
+import { Link } from '../Link/Link'
+import type { LinkProps } from '../Link/Link'
 
-export type HelpLinkProps = NativePlaceholderProps
-
-export const HelpLink: FC<HelpLinkProps> = createNativePlaceholder('HelpLink', 'Placeholder for SwiftUI HelpLink.')
+export const HelpLink: FC<LinkProps> = props => {
+  return <Link title={props.title ?? '帮助'} {...props} />
+}

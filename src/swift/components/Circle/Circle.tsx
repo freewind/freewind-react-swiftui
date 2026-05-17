@@ -1,6 +1,21 @@
 import type { FC } from 'react'
-import { createNativePlaceholder, type NativePlaceholderProps } from '../_internal/createNativePlaceholder'
+import { surfaceColors, type ShapeProps, viewStyle } from '../runtime'
 
-export type CircleProps = NativePlaceholderProps
-
-export const Circle: FC<CircleProps> = createNativePlaceholder('Circle', 'Placeholder for SwiftUI Circle.')
+export const Circle: FC<ShapeProps> = ({ fill = 'accentColor', stroke, ...rest }) => {
+  return (
+    <div
+      style={{
+        ...viewStyle({
+          ...rest,
+          background: fill,
+        }),
+        borderRadius: '9999px',
+        border: stroke
+          ? `${stroke.lineWidth ?? 1}px ${stroke.dash?.length ? 'dashed' : 'solid'} ${stroke.color ?? surfaceColors.border}`
+          : undefined,
+      }}
+    >
+      {rest.children}
+    </div>
+  )
+}

@@ -11,6 +11,7 @@ import {
   useContext,
   useId,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import { Button } from './components/Button/Button'
@@ -141,6 +142,11 @@ type ViewBaseProps = PropsWithChildren<{
   clipShape?: ShapeSpec
   overlay?: ReactNode
   disabled?: boolean
+  onTapGesture?: () => void
+  onLongPressGesture?: () => void
+  onDragGesture?: (value: { translation: { x: number; y: number } }) => void
+  onMagnificationGesture?: (scale: number) => void
+  onRotationGesture?: (angle: number) => void
 }>
 
 type TextProps = ViewBaseProps & {
@@ -321,6 +327,7 @@ type ShapeProps = ViewBaseProps & {
 type NavigationLinkProps = ViewBaseProps & {
   title?: string
   onNavigate?: () => void
+  destination?: ReactNode
 }
 
 type ContextMenuItem = {
@@ -524,6 +531,8 @@ export const View: FC<
   const inheritedDisabled = useContext(disabledContext)
   const parentStackAxis = useContext(parentStackAxisContext)
   const finalDisabled = inheritedDisabled || Boolean(disabled)
+  const longPressTimerRef = useRef<number | null>(null)
+  const dragStartRef = useRef<{ x: number; y: number } | null>(null)
   const baseStyle = viewStyle(rest, parentStackAxis)
   const stackStyle = stackStyleFrom(stack)
   const containerStyle: CSSProperties = {
@@ -538,7 +547,56 @@ export const View: FC<
     <disabledContext.Provider value={finalDisabled}>
       <parentStackAxisContext.Provider value={stack?.axis ?? parentStackAxis}>
         <div style={containerStyle}>
+          <div
+            style={{ display: stack ? undefined : 'contents' }}
+            onClick={() => rest.onTapGesture?.()}
+            onMouseDown={event => {
+              if (rest.onLongPressGesture) {
+                longPressTimerRef.current = window.setTimeout(() => {
+                  rest.onLongPressGesture?.()
+                  longPressTimerRef.current = null
+                }, 450)
+              }
+              if (rest.onDragGesture) {
+                dragStartRef.current = { x: event.clientX, y: event.clientY }
+              }
+            }}
+            onMouseMove={event => {
+              if (!dragStartRef.current || !rest.onDragGesture) {
+                return
+              }
+              rest.onDragGesture({
+                translation: {
+                  x: event.clientX - dragStartRef.current.x,
+                  y: event.clientY - dragStartRef.current.y,
+                },
+              })
+            }}
+            onMouseUp={() => {
+              if (longPressTimerRef.current != null) {
+                window.clearTimeout(longPressTimerRef.current)
+                longPressTimerRef.current = null
+              }
+              dragStartRef.current = null
+            }}
+            onMouseLeave={() => {
+              if (longPressTimerRef.current != null) {
+                window.clearTimeout(longPressTimerRef.current)
+                longPressTimerRef.current = null
+              }
+              dragStartRef.current = null
+            }}
+            onWheel={event => {
+              if (rest.onMagnificationGesture) {
+                rest.onMagnificationGesture(Number((1 - event.deltaY / 1000).toFixed(3)))
+              }
+              if (rest.onRotationGesture) {
+                rest.onRotationGesture(Number((-event.deltaY / 6).toFixed(2)))
+              }
+            }}
+          >
           {children}
+          </div>
           {overlay ? (
             <div
               style={{

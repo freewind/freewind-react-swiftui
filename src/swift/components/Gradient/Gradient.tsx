@@ -1,6 +1,20 @@
 import type { FC } from 'react'
-import { createNativePlaceholder, type NativePlaceholderProps } from '../_internal/createNativePlaceholder'
+import { type ViewBaseProps, viewStyle } from '../runtime'
 
-export type GradientProps = NativePlaceholderProps
+export type GradientProps = ViewBaseProps & {
+  colors: string[]
+  direction?: string
+}
 
-export const Gradient: FC<GradientProps> = createNativePlaceholder('Gradient', 'Placeholder for SwiftUI Gradient.')
+export const Gradient: FC<GradientProps> = ({ colors, direction = '135deg', ...rest }) => {
+  return (
+    <div
+      style={{
+        ...viewStyle(rest),
+        background: `linear-gradient(${direction}, ${colors.join(', ')})`,
+      }}
+    >
+      {rest.children}
+    </div>
+  )
+}

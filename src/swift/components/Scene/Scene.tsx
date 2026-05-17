@@ -1,6 +1,6 @@
 import type { FC } from 'react'
-import { createNativePlaceholder, type NativePlaceholderProps } from '../_internal/createNativePlaceholder'
+import type { ViewBaseProps } from '../runtime'
 
-export type SceneProps = NativePlaceholderProps
-
-export const Scene: FC<SceneProps> = createNativePlaceholder('Scene', 'Placeholder for SwiftUI Scene.')
+export const Scene: FC<ViewBaseProps> = ({ children }) => {
+  return <>{children}</>
+}

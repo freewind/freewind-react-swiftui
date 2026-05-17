@@ -1,6 +1,6 @@
 import type { FC } from 'react'
-import { createNativePlaceholder, type NativePlaceholderProps } from '../_internal/createNativePlaceholder'
+import type { ViewBaseProps } from '../runtime'
 
-export type GridRowProps = NativePlaceholderProps
-
-export const GridRow: FC<GridRowProps> = createNativePlaceholder('GridRow', 'Placeholder for SwiftUI GridRow.')
+export const GridRow: FC<ViewBaseProps> = ({ children }) => {
+  return <div style={{ display: 'contents' }}>{children}</div>
+}

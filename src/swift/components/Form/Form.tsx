@@ -1,6 +1,17 @@
 import type { FC } from 'react'
-import { createNativePlaceholder, type NativePlaceholderProps } from '../_internal/createNativePlaceholder'
+import type { StackProps } from '../runtime'
+import { VStack } from '../VStack'
 
-export type FormProps = NativePlaceholderProps
-
-export const Form: FC<FormProps> = createNativePlaceholder('Form', 'Placeholder for SwiftUI Form.')
+export const Form: FC<StackProps> = ({ spacing = 12, padding = 16, children, ...rest }) => {
+  return (
+    <VStack
+      spacing={spacing}
+      padding={padding}
+      frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+      background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 18 } }}
+      {...rest}
+    >
+      {children}
+    </VStack>
+  )
+}

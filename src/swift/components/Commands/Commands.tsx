@@ -1,6 +1,11 @@
 import type { FC } from 'react'
-import { createNativePlaceholder, type NativePlaceholderProps } from '../_internal/createNativePlaceholder'
+import type { StackProps } from '../runtime'
+import { VStack } from '../VStack'
 
-export type CommandsProps = NativePlaceholderProps
-
-export const Commands: FC<CommandsProps> = createNativePlaceholder('Commands', 'Placeholder for SwiftUI Commands.')
+export const Commands: FC<StackProps> = ({ spacing = 6, children, ...rest }) => {
+  return (
+    <VStack spacing={spacing} padding={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }} {...rest}>
+      {children}
+    </VStack>
+  )
+}

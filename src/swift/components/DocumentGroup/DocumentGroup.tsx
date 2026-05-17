@@ -1,6 +1,21 @@
 import type { FC } from 'react'
-import { createNativePlaceholder, type NativePlaceholderProps } from '../_internal/createNativePlaceholder'
+import { Text, type ViewBaseProps } from '../runtime'
+import { VStack } from '../VStack'
 
-export type DocumentGroupProps = NativePlaceholderProps
+export type DocumentGroupProps = ViewBaseProps & {
+  documentName?: string
+}
 
-export const DocumentGroup: FC<DocumentGroupProps> = createNativePlaceholder('DocumentGroup', 'Placeholder for SwiftUI DocumentGroup.')
+export const DocumentGroup: FC<DocumentGroupProps> = ({ documentName = 'document', children, ...rest }) => {
+  return (
+    <VStack
+      spacing={10}
+      padding={14}
+      background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 18 } }}
+      {...rest}
+    >
+      <Text font="caption.semibold">DocumentGroup · {documentName}</Text>
+      {children}
+    </VStack>
+  )
+}

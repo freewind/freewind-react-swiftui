@@ -1,6 +1,6 @@
 import type { FC } from 'react'
-import { createNativePlaceholder, type NativePlaceholderProps } from '../_internal/createNativePlaceholder'
+import type { ViewBaseProps } from '../runtime'
 
-export type AnyViewProps = NativePlaceholderProps
-
-export const AnyView: FC<AnyViewProps> = createNativePlaceholder('AnyView', 'Placeholder for SwiftUI AnyView.')
+export const AnyView: FC<ViewBaseProps> = ({ children }) => {
+  return <>{children}</>
+}

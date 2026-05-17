@@ -1,6 +1,26 @@
 import type { FC } from 'react'
-import { createNativePlaceholder, type NativePlaceholderProps } from '../_internal/createNativePlaceholder'
+import { Button } from '../Button'
+import type { Binding, ViewBaseProps } from '../runtime'
 
-export type PasteButtonProps = NativePlaceholderProps
+export type PasteButtonProps = ViewBaseProps & {
+  text?: Binding<string>
+  title?: string
+  onPaste?: (value: string) => void
+}
 
-export const PasteButton: FC<PasteButtonProps> = createNativePlaceholder('PasteButton', 'Placeholder for SwiftUI PasteButton.')
+export const PasteButton: FC<PasteButtonProps> = ({ text, title = '粘贴', onPaste, ...rest }) => {
+  return (
+    <Button
+      title={title}
+      buttonStyle="bordered"
+      onPress={async () => {
+        const value = await navigator.clipboard.readText().catch(() => '')
+        if (text) {
+          text.setValue(value)
+        }
+        onPaste?.(value)
+      }}
+      {...rest}
+    />
+  )
+}
