@@ -155,6 +155,7 @@
 ### 合法修改入口
 
 - UI/布局/样式语义：改 `src/swiftui/runtime.tsx`
+- 原生组件目录化实现：优先改 `src/swiftui/<Component>/`
 - 高阶控件封装：改 `src/swiftui/controls.tsx`
 - mock 业务/系统/file 行为：改 `src/mock-system/index.tsx`
 - 翻译规则：改 `src/translator/spec.ts`
@@ -191,6 +192,12 @@
 
 - 用户层禁原生 DOM 标签、禁 CSS、禁外部 UI 组件。
 - 新增 demo 或功能，优先复用 DSL 组件，不要在业务层写 `style/className`。
+- `src/swiftui` 下原生组件用目录收敛：
+  - `src/swiftui/<Component>/<Component>.tsx`
+  - `src/swiftui/<Component>/<Component>.demo.tsx`
+  - `src/swiftui/<Component>/index.ts`
+- `Custom Components` 只能组合 `src/swiftui/*` 暴露的原生 DSL 组件。
+- `Custom Components` 禁直接依赖原生 DOM、禁外部 UI 库、禁绕过 DSL 直接吃 runtime 内部 helper。
 - 新增系统能力，优先加 mock facade，再决定 demo 如何消费。
 - 做 SwiftUI 转换相关工作，优先改 translator 层，不要把 prompt 散落在 demo 组件里。
 - 若真实 Swift 源暴露出 DSL 缺口，优先补 runtime/mock，而不是在 demo 里硬绕。

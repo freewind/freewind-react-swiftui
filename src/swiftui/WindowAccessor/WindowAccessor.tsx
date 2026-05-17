@@ -1,0 +1,1 @@
+export { WindowAccessor } from '../runtime'

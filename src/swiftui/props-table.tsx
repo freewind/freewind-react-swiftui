@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 import { FormSection } from './controls'
-import { Divider, HStack, ScrollView, Text, VStack } from './runtime'
+import { Divider, HStack, ScrollView, Text } from './runtime'
+import {VStack} from "./VStack";
 
 type PropDoc = {
   prop: string
