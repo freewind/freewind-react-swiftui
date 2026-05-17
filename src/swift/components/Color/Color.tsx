@@ -1,1 +1,8 @@
-export { Color } from '../runtime'
+import type { FC } from 'react'
+import type { ForegroundStyleToken } from '../../types'
+import { View } from '../View'
+import type { ViewBaseProps } from '../View'
+
+export const Color: FC<ViewBaseProps & { tone?: ForegroundStyleToken }> = ({ tone = 'primary', ...rest }) => {
+  return <View background={tone} {...rest} />
+}

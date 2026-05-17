@@ -1,9 +1,9 @@
 import type { FC } from 'react'
 import { LazyVGrid, Text, type GridItemSpec } from '../runtime'
-import { FormSection } from '../../controls'
 import { PlaygroundSection } from '../../demo-playground'
 import { ComponentPropsTable } from '../../props-table'
 import {VStack} from "../VStack";
+import {FormSection} from "../FormSection";
 
 const columns: GridItemSpec[] = Array.from({ length: 4 }).map(() => ({
   size: { kind: 'flexible', minimum: 120 },

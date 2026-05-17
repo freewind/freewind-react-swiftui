@@ -1,5 +1,6 @@
 import type { FC } from 'react'
-import { HStack, type StackProps } from '../runtime'
+import { HStack } from '../runtime'
+import type { StackProps } from '../VStack'
 
 export const Toolbar: FC<StackProps> = ({ spacing = 10, children, ...rest }) => {
   return (

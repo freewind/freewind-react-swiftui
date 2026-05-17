@@ -1,9 +1,9 @@
 import type { FC } from 'react'
 import { Tab, TabView, Text, useBinding } from '../runtime'
-import { FormSection } from '../../controls'
 import { PlaygroundSection } from '../../demo-playground'
 import { ComponentPropsTable } from '../../props-table'
 import {VStack} from "../VStack";
+import {FormSection} from "../FormSection";
 
 export const TabViewDemo: FC = () => {
   const selection = useBinding<'contacts' | 'images' | 'files'>('contacts')

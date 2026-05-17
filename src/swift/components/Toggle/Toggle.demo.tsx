@@ -1,9 +1,9 @@
 import type { FC } from 'react'
 import { Toggle, useBinding } from '../runtime'
-import { FormSection } from '../../controls'
 import { PlaygroundSection } from '../../demo-playground'
 import { ComponentPropsTable } from '../../props-table'
 import {VStack} from "../VStack";
+import {FormSection} from "../FormSection";
 
 export const ToggleDemo: FC = () => {
   const wifi = useBinding(true)

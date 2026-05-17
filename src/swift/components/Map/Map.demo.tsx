@@ -1,8 +1,8 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { Map } from './Map'
 import { WebView } from '../WebView/WebView'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const MapDemo: FC = () => {
   return (

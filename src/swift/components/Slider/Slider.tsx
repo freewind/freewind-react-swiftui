@@ -1,5 +1,14 @@
 import type { FC } from 'react'
-import { type SliderProps, surfaceColors, viewStyle } from '../runtime'
+import { surfaceColors, viewStyle } from '../runtime'
+import type { Binding } from '../runtime'
+import type { ViewBaseProps } from '../View'
+
+export type SliderProps = ViewBaseProps & {
+  value: Binding<number>
+  in?: [number, number]
+  step?: number
+}
+
 
 export const Slider: FC<SliderProps> = ({ value, in: range = [0, 1], step = 0.01, ...rest }) => {
   const [min, max] = range

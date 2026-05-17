@@ -1,0 +1,16 @@
+export const surfaceColors = {
+  appBg: 'var(--swui-app-bg)',
+  panelBg: 'var(--swui-panel-bg)',
+  border: 'var(--swui-border)',
+  primaryText: 'var(--swui-primary-text)',
+  secondaryText: 'var(--swui-secondary-text)',
+  tertiaryText: 'var(--swui-tertiary-text)',
+  accent: 'var(--swui-accent)',
+  red: 'var(--swui-red)',
+  green: 'var(--swui-green)',
+  blue: 'var(--swui-blue)',
+  material: 'var(--swui-material)',
+  ultraThinMaterial: 'var(--swui-ultra-thin-material)',
+  tertiaryFill: 'var(--swui-tertiary-fill)',
+  inputBg: 'var(--swui-input-bg)',
+} as const;

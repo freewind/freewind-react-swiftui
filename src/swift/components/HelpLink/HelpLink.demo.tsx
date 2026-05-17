@@ -1,7 +1,7 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { HelpLink } from './HelpLink'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const HelpLinkDemo: FC = () => {
   return (

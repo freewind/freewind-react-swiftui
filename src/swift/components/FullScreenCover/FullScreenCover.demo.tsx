@@ -1,10 +1,10 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { FullScreenCover } from './FullScreenCover'
 import { Button } from '../Button'
 import { Text } from '../runtime'
 import { useBinding } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const FullScreenCoverDemo: FC = () => {
   const shown = useBinding(false)

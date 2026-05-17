@@ -1,8 +1,8 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { Rectangle } from './Rectangle'
 import { Text } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const RectangleDemo: FC = () => {
   return (

@@ -1,7 +1,7 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { ForEach, RoundedRectangle, Text } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 const tags = ['SwiftUI', 'Binding', 'Sheet', 'Popover']
 

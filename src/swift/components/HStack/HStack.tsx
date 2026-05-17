@@ -1,5 +1,6 @@
 import type { FC } from 'react'
-import { mapStackAlignment, type StackProps, View } from '../runtime'
+import { mapStackAlignment, View } from '../runtime'
+import type { StackProps } from '../VStack'
 
 export const HStack: FC<StackProps> = ({ spacing = 0, alignment = 'center', children, ...rest }) => {
   return (

@@ -1,5 +1,19 @@
-import type { FC } from 'react'
-import { type GeometryReaderProps, View } from '../runtime'
+import type { FC, ReactNode } from 'react'
+import { View } from '../runtime'
+import type { ViewBaseProps } from '../View'
+
+
+export type GeometryProxy = {
+  size: {
+    width: number
+    height: number
+  }
+}
+
+export type GeometryReaderProps = Omit<ViewBaseProps, 'children'> & {
+  children: (proxy: GeometryProxy) => ReactNode
+}
+
 
 export const GeometryReader: FC<GeometryReaderProps> = ({ children, ...rest }) => {
   return (

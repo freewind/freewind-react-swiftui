@@ -1,8 +1,26 @@
 import { Divider } from '../Divider'
 import { HStack } from '../HStack'
 import { Text } from '../Text'
-import type { TableProps } from '../runtime'
+import type { ViewBaseProps } from '../View'
+import type { ReactNode } from 'react'
+
 import { VStack } from '../VStack'
+
+export type TableColumn<T> = {
+  key: string
+  title: string
+  dataIndex?: keyof T
+  width?: number
+  render?: (record: T, index: number) => ReactNode
+}
+
+export type TableProps<T> = ViewBaseProps & {
+  columns: TableColumn<T>[]
+  dataSource: T[]
+  rowKey: (record: T, index: number) => string
+  emptyText?: string
+}
+
 
 export const Table = <T,>({
   columns,

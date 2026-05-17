@@ -1,8 +1,8 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { ControlGroup } from './ControlGroup'
 import { Button } from '../Button'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const ControlGroupDemo: FC = () => {
   return (

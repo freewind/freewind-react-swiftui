@@ -1,9 +1,9 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { OutlineGroup } from './OutlineGroup'
 import { TimelineView } from '../TimelineView/TimelineView'
 import { Text } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 type TreeNode = {
   id: string

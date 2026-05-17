@@ -1,10 +1,10 @@
 import type { FC } from 'react'
 import { HStack, LazyHStack, ScrollView } from '../runtime'
-import { FormSection } from '../../controls'
 import { PlaygroundSection } from '../../demo-playground'
 import { ComponentPropsTable } from '../../props-table'
 import { Chip } from '../../demo-shared'
 import {VStack} from "../VStack";
+import {FormSection} from "../FormSection";
 
 export const LazyHStackDemo: FC = () => {
   return (

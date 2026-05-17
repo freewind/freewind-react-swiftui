@@ -2,9 +2,16 @@ import type { FC } from 'react'
 import { useState } from 'react'
 import { Button } from '../Button'
 import { HStack } from '../HStack'
-import type { DisclosureGroupProps } from '../runtime'
+import type { Binding } from '../runtime'
 import { Text } from '../Text'
 import { VStack } from '../VStack'
+import type { ViewBaseProps } from '../View'
+
+export type DisclosureGroupProps = ViewBaseProps & {
+  title?: string
+  isExpanded?: Binding<boolean>
+}
+
 
 export const DisclosureGroup: FC<DisclosureGroupProps> = ({ title, isExpanded, children, ...rest }) => {
   const [localExpanded, setLocalExpanded] = useState(false)

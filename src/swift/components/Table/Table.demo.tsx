@@ -1,10 +1,10 @@
 import type { FC } from 'react'
 import { HStack, Table, Text } from '../runtime'
-import { FormSection } from '../../controls'
 import { PlaygroundSection } from '../../demo-playground'
 import { ComponentPropsTable } from '../../props-table'
 import {Button} from "../Button";
 import {VStack} from "../VStack";
+import {FormSection} from "../FormSection";
 
 const peers = [
   { id: 'p1', device: 'freewind-mac', status: 'online', files: 12 },

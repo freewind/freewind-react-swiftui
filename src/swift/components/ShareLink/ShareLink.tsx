@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 import { Button } from '../Button'
-import type { ViewBaseProps } from '../runtime'
+import type { ViewBaseProps } from '../View'
+
 
 export type ShareLinkProps = ViewBaseProps & {
   title?: string

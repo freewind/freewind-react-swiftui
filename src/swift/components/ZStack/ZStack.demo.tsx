@@ -1,9 +1,9 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { ZStack } from './ZStack'
 import { Circle } from '../Circle/Circle'
 import { RoundedRectangle, Text } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const ZStackDemo: FC = () => {
   return (

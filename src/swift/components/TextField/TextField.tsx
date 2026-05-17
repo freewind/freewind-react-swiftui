@@ -1,5 +1,14 @@
 import type { FC } from 'react'
-import { inputChrome, type TextFieldProps, viewStyle } from '../runtime'
+import { inputChrome, viewStyle } from '../runtime'
+import type { Binding, TextFieldStyleToken } from '../runtime'
+import type { ViewBaseProps } from '../View'
+
+export type TextFieldProps = ViewBaseProps & {
+  placeholder?: string
+  text: Binding<string>
+  textFieldStyle?: TextFieldStyleToken
+}
+
 
 export const TextField: FC<TextFieldProps> = ({ text, placeholder, textFieldStyle = 'roundedBorder', ...rest }) => {
   return (

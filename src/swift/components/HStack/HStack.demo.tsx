@@ -1,9 +1,9 @@
 import type { FC } from 'react'
 import { HStack, Spacer, Text } from '../runtime'
-import { FormSection } from '../../controls'
 import { PlaygroundSection } from '../../demo-playground'
 import { ComponentPropsTable } from '../../props-table'
 import {VStack} from "../VStack";
+import {FormSection} from "../FormSection";
 
 export const HStackDemo: FC = () => {
   return (

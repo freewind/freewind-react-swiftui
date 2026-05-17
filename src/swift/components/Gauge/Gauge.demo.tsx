@@ -1,8 +1,8 @@
 import type { FC } from 'react'
 import { Gauge } from './Gauge'
-import { FormSection } from '../../controls'
 import { Slider, Text, useBinding } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const GaugeDemo: FC = () => {
   const value = useBinding(42)

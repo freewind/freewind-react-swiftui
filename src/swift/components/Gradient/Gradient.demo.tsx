@@ -1,8 +1,8 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { Gradient } from './Gradient'
 import { Text } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const GradientDemo: FC = () => {
   return (

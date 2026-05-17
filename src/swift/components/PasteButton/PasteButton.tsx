@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 import { Button } from '../Button'
-import type { Binding, ViewBaseProps } from '../runtime'
+import type { Binding } from '../runtime'
+import type { ViewBaseProps } from '../View'
 
 export type PasteButtonProps = ViewBaseProps & {
   text?: Binding<string>

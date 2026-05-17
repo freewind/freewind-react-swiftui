@@ -1,8 +1,8 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { MenuBarExtra } from './MenuBarExtra'
 import { Button } from '../Button'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const MenuBarExtraDemo: FC = () => {
   return (

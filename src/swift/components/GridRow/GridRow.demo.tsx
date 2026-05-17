@@ -1,9 +1,9 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { Grid } from '../Grid/Grid'
 import { GridRow } from './GridRow'
 import { RoundedRectangle, Text } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 const Cell: FC<{ title: string }> = ({ title }) => (
   <RoundedRectangle fill="thinMaterial" frame={{ height: 64, maxWidth: 'infinity' }} padding={10}>

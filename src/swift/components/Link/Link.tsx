@@ -1,5 +1,6 @@
 import type { CSSProperties, FC } from 'react'
-import { Text, textColorMap, type ViewBaseProps, viewStyle } from '../runtime'
+import { Text, textColorMap, viewStyle } from '../runtime'
+import type { ViewBaseProps } from '../View'
 
 export type LinkProps = ViewBaseProps & {
   destination: string

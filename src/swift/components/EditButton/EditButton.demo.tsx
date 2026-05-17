@@ -1,10 +1,10 @@
 import type { FC } from 'react'
 import { EditButton } from './EditButton'
 import { PasteButton } from '../PasteButton/PasteButton'
-import { FormSection } from '../../controls'
 import { Text, useBinding } from '../runtime'
 import { TextField } from '../TextField'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const EditButtonDemo: FC = () => {
   const isEditing = useBinding(false)

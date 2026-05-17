@@ -1,5 +1,6 @@
 import { type FC, useEffect, useRef } from 'react'
-import { type ViewBaseProps, viewStyle } from '../runtime'
+import { viewStyle } from '../runtime'
+import type { ViewBaseProps } from '../View'
 
 export type CanvasProps = ViewBaseProps & {
   draw?: (context: CanvasRenderingContext2D, size: { width: number; height: number }) => void

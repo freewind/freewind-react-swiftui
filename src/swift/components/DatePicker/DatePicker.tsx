@@ -1,5 +1,6 @@
 import type { FC } from 'react'
-import { inputChrome, type Binding, type ViewBaseProps, viewStyle } from '../runtime'
+import { inputChrome, type Binding, viewStyle } from '../runtime'
+import type { ViewBaseProps } from '../View'
 
 export type DatePickerProps = ViewBaseProps & {
   selection: Binding<string>

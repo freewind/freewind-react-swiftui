@@ -1,8 +1,8 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { SecureField } from './SecureField'
 import { Text, useBinding } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const SecureFieldDemo: FC = () => {
   const password = useBinding('hunter2')

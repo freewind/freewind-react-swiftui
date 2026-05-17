@@ -1,5 +1,6 @@
 import type { CSSProperties, FC } from 'react'
-import { type ViewBaseProps, viewStyle } from '../runtime'
+import { viewStyle } from '../runtime'
+import type { ViewBaseProps } from '../View'
 
 export type LazyHGridProps = ViewBaseProps & {
   rows?: number

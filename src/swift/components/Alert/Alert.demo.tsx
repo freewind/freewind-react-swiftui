@@ -3,10 +3,10 @@ import { Alert } from './Alert'
 import { Button } from '../Button'
 import { ConfirmationDialog } from '../ConfirmationDialog/ConfirmationDialog'
 import { FullScreenCover } from '../FullScreenCover/FullScreenCover'
-import { FormSection } from '../../controls'
 import { PlaygroundSection } from '../../demo-playground'
 import { Text, useBinding } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const AlertDemo: FC = () => {
   const alertPresented = useBinding(false)

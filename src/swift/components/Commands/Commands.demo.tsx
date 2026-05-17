@@ -1,9 +1,9 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { Commands } from './Commands'
 import { Button } from '../Button'
 import { Text } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const CommandsDemo: FC = () => {
   return (

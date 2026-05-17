@@ -1,8 +1,15 @@
 import type { FC } from 'react'
 import { HStack } from '../HStack'
 import { Image } from '../Image'
-import type { LabelProps } from '../runtime'
+import type { ViewBaseProps } from '../View'
+
 import { Text } from '../Text'
+
+export type LabelProps = ViewBaseProps & {
+  title: string
+  systemImage?: string
+}
+
 
 export const Label: FC<LabelProps> = ({ title, systemImage, ...rest }) => {
   return (

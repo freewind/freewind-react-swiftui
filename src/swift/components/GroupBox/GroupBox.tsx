@@ -1,6 +1,7 @@
 import type { FC, ReactNode } from 'react'
-import { Text, type ViewBaseProps } from '../runtime'
+import { Text } from '../runtime'
 import { VStack } from '../VStack'
+import type { ViewBaseProps } from '../View'
 
 export type GroupBoxProps = ViewBaseProps & {
   title?: string

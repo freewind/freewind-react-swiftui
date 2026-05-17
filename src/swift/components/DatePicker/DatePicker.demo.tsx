@@ -1,9 +1,9 @@
 import type { FC } from 'react'
 import { ColorPicker } from '../ColorPicker/ColorPicker'
-import { FormSection } from '../../controls'
 import { DatePicker } from './DatePicker'
 import { Text, useBinding } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const DatePickerDemo: FC = () => {
   const date = useBinding('2026-05-17T20:30')

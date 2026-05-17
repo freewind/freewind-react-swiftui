@@ -1,8 +1,8 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { LazyHGrid } from './LazyHGrid'
 import { RoundedRectangle, Text } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const LazyHGridDemo: FC = () => {
   return (

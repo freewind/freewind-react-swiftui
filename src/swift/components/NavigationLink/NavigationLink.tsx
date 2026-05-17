@@ -1,11 +1,20 @@
-import type { FC } from 'react'
+import type { FC, ReactNode } from 'react'
 import { useContext } from 'react'
 import { Button } from '../Button'
 import { HStack } from '../HStack'
 import { navigationStackContext } from '../NavigationStack/NavigationStack'
-import type { NavigationLinkProps } from '../runtime'
+import type { ViewBaseProps } from '../View'
+
 import { Text } from '../Text'
 import { VStack } from '../VStack'
+
+export type NavigationLinkProps = ViewBaseProps & {
+  title?: string
+  onNavigate?: () => void
+  destination?: ReactNode
+  destinationTitle?: string
+}
+
 
 export const NavigationLink: FC<NavigationLinkProps> = ({
   title,

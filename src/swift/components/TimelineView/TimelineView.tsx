@@ -1,5 +1,6 @@
 import { type FC, type ReactNode, useEffect, useState } from 'react'
-import type { ViewBaseProps } from '../runtime'
+import type { ViewBaseProps } from '../View'
+
 
 type TimelineSchedule = 'animation' | 'everySecond' | 'everyMinute' | { intervalMs: number; paused?: boolean }
 

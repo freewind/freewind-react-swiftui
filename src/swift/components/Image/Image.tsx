@@ -1,6 +1,25 @@
 import type { CSSProperties, FC } from 'react'
-import { symbolMap, type ImageProps, viewStyle } from '../runtime'
+import { viewStyle } from '../runtime'
+import type { ViewBaseProps } from '../View'
+
 import { Text } from '../Text'
+
+export type ImageProps = ViewBaseProps & {
+  systemName?: string
+  src?: string
+  alt?: string
+  resizable?: boolean
+  scaledToFit?: boolean
+}
+
+const symbolMap: Record<string, string> = {
+  xmark: '×',
+  iphone: 'iPhone',
+  laptopcomputer: 'Mac',
+  'pin.fill': '●',
+  photo: '▣',
+  doc: '▤',
+}
 
 export const Image: FC<ImageProps> = ({
   systemName,

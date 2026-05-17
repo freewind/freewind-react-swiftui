@@ -1,11 +1,11 @@
 import type { FC } from 'react'
 import { Circle } from '../Circle/Circle'
-import { FormSection } from '../../controls'
 import { Gradient } from '../Gradient/Gradient'
 import { MeshGradient } from '../MeshGradient/MeshGradient'
 import { Canvas } from './Canvas'
 import { HStack, Text } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const CanvasDemo: FC = () => {
   return (

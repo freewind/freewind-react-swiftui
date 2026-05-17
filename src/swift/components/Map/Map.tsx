@@ -2,8 +2,9 @@ import { type FC, useMemo, useState } from 'react'
 import { Button } from '../Button'
 import { HStack } from '../HStack'
 import { Spacer } from '../Spacer'
-import { Text, type ViewBaseProps } from '../runtime'
+import { Text } from '../runtime'
 import { VStack } from '../VStack'
+import type { ViewBaseProps } from '../View'
 
 export type MapProps = ViewBaseProps & {
   latitude?: number

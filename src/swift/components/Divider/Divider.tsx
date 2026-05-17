@@ -1,5 +1,10 @@
 import type { FC } from 'react'
-import { type DividerProps, surfaceColors } from '../runtime'
+import { surfaceColors } from '../runtime'
+
+export type DividerProps = {
+  axis?: 'horizontal' | 'vertical'
+}
+
 
 export const Divider: FC<DividerProps> = ({ axis = 'horizontal' }) => {
   return (

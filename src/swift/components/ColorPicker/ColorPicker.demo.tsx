@@ -1,8 +1,8 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { ColorPicker } from './ColorPicker'
 import { Text, useBinding } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const ColorPickerDemo: FC = () => {
   const picked = useBinding('#34c759')

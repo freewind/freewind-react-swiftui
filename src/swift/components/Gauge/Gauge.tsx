@@ -1,5 +1,6 @@
 import type { FC } from 'react'
-import { HStack, ProgressView, Text, type ProgressViewProps } from '../runtime'
+import { HStack, ProgressView, Text } from '../runtime'
+import type { ProgressViewProps } from '../ProgressView'
 
 export const Gauge: FC<ProgressViewProps> = ({ value = 0, total = 1, label, currentValueLabel, ...rest }) => {
   const normalized = total <= 0 ? 0 : Math.max(0, Math.min(1, value / total))

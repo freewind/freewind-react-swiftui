@@ -90,6 +90,9 @@ export const MockEnvironmentProvider: FC<MockEnvironmentProviderProps & { childr
       makeDownloadRoot,
       pickFiles: () => pickedFiles,
       clipboardImage: () => (clipboardPath ? findNode(files, clipboardPath) ?? null : null),
+      openUrl: url => {
+        pushEvent({ kind: 'url', url })
+      },
     }),
     [clipboardPath, files, identity, pickedFiles],
   )
@@ -115,6 +118,13 @@ export const MockEnvironmentProvider: FC<MockEnvironmentProviderProps & { childr
           mimeType: node.mimeType,
           data: node.data,
         }
+      },
+      documentByPath: path => {
+        const node = findNode(files, path)
+        if (!node || node.kind === 'folder') {
+          return null
+        }
+        return node
       },
       saveIncomingFile: (peerDeviceId, kind, fileName, data) => {
         const folderPath = `/Downloads/${peerDeviceId}/${kind === 'image' ? 'images' : 'files'}`

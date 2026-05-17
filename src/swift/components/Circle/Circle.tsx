@@ -1,5 +1,6 @@
 import type { FC } from 'react'
-import { surfaceColors, type ShapeProps, viewStyle } from '../runtime'
+import { surfaceColors, viewStyle } from '../runtime'
+import type { ShapeProps } from '../Rectangle'
 
 export const Circle: FC<ShapeProps> = ({ fill = 'accentColor', stroke, ...rest }) => {
   return (

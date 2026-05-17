@@ -1,5 +1,6 @@
 import type { FC } from 'react'
-import { inputChrome, type TextFieldProps, viewStyle } from '../runtime'
+import { inputChrome, viewStyle } from '../runtime'
+import type { TextFieldProps } from '../TextField'
 
 export const SecureField: FC<TextFieldProps> = ({ text, placeholder, textFieldStyle = 'roundedBorder', ...rest }) => {
   return (

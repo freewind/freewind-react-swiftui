@@ -1,9 +1,9 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { ConfirmationDialog } from './ConfirmationDialog'
 import { Button } from '../Button'
 import { useBinding } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const ConfirmationDialogDemo: FC = () => {
   const presented = useBinding(false)

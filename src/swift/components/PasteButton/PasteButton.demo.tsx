@@ -1,9 +1,9 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { PasteButton } from './PasteButton'
 import { TextField } from '../TextField'
 import { useBinding } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const PasteButtonDemo: FC = () => {
   const text = useBinding('')

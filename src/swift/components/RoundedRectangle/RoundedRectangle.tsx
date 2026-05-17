@@ -1,5 +1,6 @@
 import type { CSSProperties, FC } from 'react'
-import { surfaceColors, type ShapeProps, viewStyle } from '../runtime'
+import { surfaceColors, viewStyle } from '../runtime'
+import type { ShapeProps } from '../Rectangle'
 
 export const RoundedRectangle: FC<ShapeProps> = ({ cornerRadius = 16, fill, stroke, ...rest }) => {
   const style: CSSProperties = {

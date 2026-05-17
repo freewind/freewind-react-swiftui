@@ -1,1 +1,0 @@
-export { QQDemo } from './appPages'

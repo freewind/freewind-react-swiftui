@@ -1,9 +1,18 @@
 import type { FC } from 'react'
 import { Button } from '../Button'
 import { HStack } from '../HStack'
-import type { StepperProps } from '../runtime'
+import type { Binding } from '../runtime'
 import { Text } from '../Text'
 import { VStack } from '../VStack'
+import type { ViewBaseProps } from '../View'
+
+export type StepperProps = ViewBaseProps & {
+  value: Binding<number>
+  in?: [number, number]
+  step?: number
+  title?: string
+}
+
 
 export const Stepper: FC<StepperProps> = ({
   value,

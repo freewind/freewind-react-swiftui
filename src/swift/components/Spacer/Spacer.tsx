@@ -1,6 +1,11 @@
 import type { FC } from 'react'
 import { useContext } from 'react'
-import { parentStackAxisContext, type SpacerProps } from '../runtime'
+import { parentStackAxisContext } from '../runtime'
+
+export type SpacerProps = {
+  minLength?: number
+}
+
 
 export const Spacer: FC<SpacerProps> = ({ minLength = 0 }) => {
   const parentStackAxis = useContext(parentStackAxisContext)

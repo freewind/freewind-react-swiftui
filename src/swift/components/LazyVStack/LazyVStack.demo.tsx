@@ -1,8 +1,8 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { LazyVStack } from './LazyVStack'
 import { RoundedRectangle, Text } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const LazyVStackDemo: FC = () => {
   return (

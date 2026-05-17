@@ -4,7 +4,8 @@ import { HStack } from '../HStack'
 import { Spacer } from '../Spacer'
 import { Text } from '../Text'
 import { VStack } from '../VStack'
-import { inputChrome, surfaceColors, textColorMap, type ViewBaseProps, viewStyle } from '../runtime'
+import { inputChrome, surfaceColors, textColorMap, viewStyle } from '../runtime'
+import type { ViewBaseProps } from '../View'
 
 export type WebViewProps = ViewBaseProps & {
   src: string

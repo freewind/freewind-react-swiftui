@@ -4,7 +4,8 @@ import { HStack } from '../HStack'
 import { Spacer } from '../Spacer'
 import { Text } from '../Text'
 import { VStack } from '../VStack'
-import type { ViewBaseProps } from '../runtime'
+import type { ViewBaseProps } from '../View'
+import type { Binding, NavigationPath } from '../../types'
 
 type NavigationRoute = {
   id: string
@@ -16,34 +17,62 @@ export const navigationStackContext = createContext<{
   push: (destination: ReactNode, options?: { title?: string }) => void
   pop: () => void
   popToRoot: () => void
+  path: NavigationPath
 } | null>(null)
 
 export type NavigationStackProps = ViewBaseProps & {
   rootTitle?: string
   rootSubtitle?: string
+  path?: Binding<NavigationPath>
 }
 
-export const NavigationStack: FC<NavigationStackProps> = ({ rootTitle, rootSubtitle, children, ...rest }) => {
+export const NavigationStack: FC<NavigationStackProps> = ({ rootTitle, rootSubtitle, path, children, ...rest }) => {
   const [stack, setStack] = useState<NavigationRoute[]>([])
   const current = stack[stack.length - 1]
   const canPop = stack.length > 0
   const currentTitle = current?.title ?? rootTitle
   const previousTitle = stack[stack.length - 2]?.title ?? rootTitle
+
+  const syncPath = (nextStack: NavigationRoute[]) => {
+    if (!path) {
+      return
+    }
+    path.setValue({
+      items: nextStack.map(route => ({
+        id: route.id,
+        title: route.title,
+      })),
+    })
+  }
+
   const contextValue = useMemo(
     () => ({
       push: (destination: ReactNode, options?: { title?: string }) =>
-        setStack(prev => [
-          ...prev,
-          {
-            id: `${String(prev.length + 1)}-${options?.title ?? 'destination'}`,
-            title: options?.title,
-            content: destination,
-          },
-        ]),
-      pop: () => setStack(prev => prev.slice(0, -1)),
-      popToRoot: () => setStack([]),
+        setStack(prev => {
+          const nextStack = [
+            ...prev,
+            {
+              id: `${String(prev.length + 1)}-${options?.title ?? 'destination'}`,
+              title: options?.title,
+              content: destination,
+            },
+          ]
+          syncPath(nextStack)
+          return nextStack
+        }),
+      pop: () =>
+        setStack(prev => {
+          const nextStack = prev.slice(0, -1)
+          syncPath(nextStack)
+          return nextStack
+        }),
+      popToRoot: () => {
+        syncPath([])
+        setStack([])
+      },
+      path: path?.value ?? { items: [] },
     }),
-    [],
+    [path],
   )
 
   return (

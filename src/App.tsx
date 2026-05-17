@@ -1,6 +1,6 @@
 import type { FC } from 'react'
-import { DemoHub } from './demo/DemoHub'
+import { DemoHome } from './demo/home/DemoHome'
 
 export const App: FC = () => {
-  return <DemoHub />
+  return <DemoHome />
 }

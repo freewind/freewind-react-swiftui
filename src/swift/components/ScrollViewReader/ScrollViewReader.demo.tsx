@@ -1,16 +1,19 @@
 import type { FC } from 'react'
-import { HStack, ScrollViewReader, Spacer, Text } from '../runtime'
-import { FormSection } from '../../controls'
+import { HStack, scrollPosition, ScrollViewReader, Spacer, Text, useBinding } from '../runtime'
 import { PlaygroundSection } from '../../demo-playground'
 import { ComponentPropsTable } from '../../props-table'
-import {Button} from "../Button";
-import {VStack} from "../VStack";
+import { Button } from '../Button'
+import { VStack } from '../VStack'
+import { FormSection } from '../FormSection'
 
 export const ScrollViewReaderDemo: FC = () => {
+  const position = useBinding(scrollPosition())
+
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <FormSection title="静态例子">
         <ScrollViewReader
+          position={position}
           padding={12}
           background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
           frame={{ maxWidth: 'infinity' }}
@@ -29,6 +32,7 @@ export const ScrollViewReaderDemo: FC = () => {
         summary="当前 mock 支持 `scrollTo(id, anchor)`，这里展示 top/bottom 两种调用入口。"
         preview={
           <ScrollViewReader
+            position={position}
             padding={12}
             background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
             frame={{ maxWidth: 'infinity' }}
@@ -44,6 +48,9 @@ export const ScrollViewReaderDemo: FC = () => {
           </ScrollViewReader>
         }
       />
+      <Text font="caption2.monospaced" foregroundStyle="secondary">
+        target: {position.value.targetId ?? 'none'}
+      </Text>
       <ComponentPropsTable component="ScrollViewReader" />
     </VStack>
   )

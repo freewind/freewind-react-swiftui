@@ -1,9 +1,9 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { AnyView } from './AnyView'
 import { Button } from '../Button'
 import { Image, Text, useBinding } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const AnyViewDemo: FC = () => {
   const toggled = useBinding(false)

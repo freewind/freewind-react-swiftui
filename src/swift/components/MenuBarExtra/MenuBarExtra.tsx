@@ -1,5 +1,7 @@
 import type { FC, ReactElement } from 'react'
-import { Menu, type MenuProps, type ViewBaseProps } from '../runtime'
+import { Menu } from '../runtime'
+import type { MenuProps } from '../Menu'
+import type { ViewBaseProps } from '../View'
 
 export type MenuBarExtraProps = ViewBaseProps & {
   label: ReactElement

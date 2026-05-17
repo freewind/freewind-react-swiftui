@@ -3,7 +3,7 @@ import { NavigationLink } from '../NavigationLink/NavigationLink'
 import { NavigationStack } from './NavigationStack'
 import { Toolbar } from '../Toolbar/Toolbar'
 import { Button } from '../Button'
-import { Text } from '../runtime'
+import { navigationPath, Text, useBinding } from '../runtime'
 import { VStack } from '../VStack'
 
 const DetailPane: FC = () => {
@@ -20,11 +20,16 @@ const DetailPane: FC = () => {
 }
 
 export const NavigationStackDemo: FC = () => {
+  const path = useBinding(navigationPath())
+
   return (
-    <NavigationStack rootTitle="Inbox" rootSubtitle="2 unread">
+    <NavigationStack rootTitle="Inbox" rootSubtitle="2 unread" path={path}>
       <VStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
         <NavigationLink title="Open first message" destinationTitle="Message A" destination={<DetailPane />} />
         <NavigationLink title="Open second message" destinationTitle="Message B" destination={<DetailPane />} />
+        <Text font="caption2.monospaced" foregroundStyle="secondary">
+          path depth: {String(path.value.items.length)}
+        </Text>
       </VStack>
     </NavigationStack>
   )

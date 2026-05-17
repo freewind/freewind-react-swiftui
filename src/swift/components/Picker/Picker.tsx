@@ -1,6 +1,19 @@
 import { Button } from '../Button'
 import { HStack } from '../HStack'
-import type { PickerProps } from '../runtime'
+import type { Binding } from '../runtime'
+import type { ViewBaseProps } from '../View'
+
+export type PickerOption<T extends string | number> = {
+  label: string
+  value: T
+}
+
+export type PickerProps<T extends string | number> = ViewBaseProps & {
+  selection: Binding<T>
+  options: PickerOption<T>[]
+  pickerStyle?: 'segmented'
+}
+
 
 export const Picker = <T extends string | number>({
   selection,

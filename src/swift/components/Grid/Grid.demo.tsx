@@ -1,10 +1,10 @@
 import type { FC } from 'react'
 import { LazyHGrid } from '../LazyHGrid/LazyHGrid'
-import { FormSection } from '../../controls'
 import { Grid } from './Grid'
 import { GridRow } from '../GridRow/GridRow'
 import { RoundedRectangle, Text } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 const Cell: FC<{ title: string }> = ({ title }) => {
   return (

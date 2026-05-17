@@ -1,7 +1,7 @@
 import type { FC } from 'react'
-import { FormSection } from '../../controls'
 import { WindowGroup } from './WindowGroup'
 import { Text } from '../runtime'
+import {FormSection} from "../FormSection";
 
 export const WindowGroupDemo: FC = () => {
   return (

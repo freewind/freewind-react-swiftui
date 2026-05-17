@@ -1,10 +1,10 @@
 import type { FC } from 'react'
 import { HelpLink } from '../HelpLink/HelpLink'
 import { ShareLink } from '../ShareLink/ShareLink'
-import { FormSection } from '../../controls'
 import { Link } from './Link'
 import { Text } from '../runtime'
 import { VStack } from '../VStack'
+import {FormSection} from "../FormSection";
 
 export const LinkDemo: FC = () => {
   return (

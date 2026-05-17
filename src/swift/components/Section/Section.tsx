@@ -1,7 +1,15 @@
-import type { FC } from 'react'
-import { type SectionProps } from '../runtime'
+import type { FC, ReactNode } from 'react'
+import type { ViewBaseProps } from '../View'
+
 import { Text } from '../Text'
 import { VStack } from '../VStack'
+
+export type SectionProps = ViewBaseProps & {
+  title?: string
+  header?: ReactNode
+  footer?: ReactNode
+}
+
 
 export const Section: FC<SectionProps> = ({ title, header, footer, children, ...rest }) => {
   return (
