@@ -1,0 +1,1 @@
+export { WindowGroup } from '../runtime'

@@ -1,7 +1,7 @@
 import { useMemo, useState, type FC, type ReactNode } from 'react'
 import { HStack, Sheet, Spacer, Text, TextEditor, TextField, type Binding } from './runtime'
-import {Button} from "./Button";
-import {VStack} from "./VStack";
+import { Button } from './components/Button'
+import { VStack } from './components/VStack'
 
 export type ObservableObject<T extends object> = {
   value: T

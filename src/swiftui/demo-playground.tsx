@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from 'react'
 import { Text } from './runtime'
 import { FormSection } from './controls'
-import {VStack} from "./VStack";
+import { VStack } from './components/VStack'
 
 export const PlaygroundSection: FC<{
   title: string

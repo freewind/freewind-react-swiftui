@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 import { HStack, Label, Text, type FontToken, type ForegroundStyleToken } from './runtime'
-import {VStack} from "./VStack";
+import { VStack } from './components/VStack'
 
 export const fontOptions: Array<{ label: string; value: FontToken }> = [
   { label: 'largeTitle', value: 'largeTitle' },

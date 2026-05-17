@@ -1,0 +1,1 @@
+export { Capsule } from '../runtime'
