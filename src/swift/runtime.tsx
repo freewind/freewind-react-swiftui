@@ -6,6 +6,7 @@ import type {
   FileDocument,
   FocusedValues,
   MockCommandGroup,
+  MockDocumentWorkspace,
   MockSceneInfo,
   MockSceneLifecycle,
   MockWindowInfo,
@@ -43,6 +44,7 @@ const environmentContext = createContext<EnvironmentValues>({})
 const focusedValuesContext = createContext<FocusedValues>({})
 const environmentObjectContext = createContext<Record<string, ObservableObject<object>>>({})
 const sceneLifecycleContext = createContext<ObservableObject<MockSceneLifecycle> | null>(null)
+const documentWorkspaceContext = createContext<ObservableObject<MockDocumentWorkspace> | null>(null)
 const openUrlContext = createContext<OpenURLAction>({
   callAsFunction: () => 'systemAction',
 })
@@ -191,6 +193,21 @@ export const SceneLifecycleProvider = ({
   return <sceneLifecycleContext.Provider value={lifecycle ?? localLifecycle}>{children}</sceneLifecycleContext.Provider>
 }
 
+export const DocumentWorkspaceProvider = ({
+  workspace,
+  children,
+}: {
+  workspace?: ObservableObject<MockDocumentWorkspace>
+  children: ReactNode
+}) => {
+  const localWorkspace = useStateObject<MockDocumentWorkspace>({
+    openedDocumentIds: [],
+    activeDocumentId: null,
+    lastSavedDocumentId: null,
+  })
+  return <documentWorkspaceContext.Provider value={workspace ?? localWorkspace}>{children}</documentWorkspaceContext.Provider>
+}
+
 export const useFocusState = <T extends string | number | boolean | null>(initialValue: T) => {
   return useBaseBinding(initialValue)
 }
@@ -278,6 +295,63 @@ export const useCommandAction = () => {
           : group,
       ),
     }))
+  }
+}
+
+export const useWindowAction = () => {
+  const lifecycle = useSceneLifecycle()
+  return {
+    openWindow: (window: MockWindowInfo) => {
+      lifecycle.setValue(prev => ({
+        ...prev,
+        windows: [...prev.windows.filter(item => item.id !== window.id), window],
+      }))
+    },
+    closeWindow: (windowId: string) => {
+      lifecycle.setValue(prev => ({
+        ...prev,
+        windows: prev.windows.filter(item => item.id !== windowId),
+      }))
+    },
+  }
+}
+
+export const useDocumentWorkspace = (): ObservableObject<MockDocumentWorkspace> => {
+  const workspace = useContext(documentWorkspaceContext)
+  if (workspace) {
+    return workspace
+  }
+  return useStateObject<MockDocumentWorkspace>({
+    openedDocumentIds: [],
+    activeDocumentId: null,
+    lastSavedDocumentId: null,
+  })
+}
+
+export const useDocumentAction = () => {
+  const workspace = useDocumentWorkspace()
+  return {
+    openDocument: (documentId: string) => {
+      workspace.setValue(prev => ({
+        ...prev,
+        openedDocumentIds: [...prev.openedDocumentIds.filter(item => item !== documentId), documentId],
+        activeDocumentId: documentId,
+      }))
+    },
+    saveDocument: (documentId: string) => {
+      workspace.setValue(prev => ({
+        ...prev,
+        lastSavedDocumentId: documentId,
+        activeDocumentId: documentId,
+      }))
+    },
+    closeDocument: (documentId: string) => {
+      workspace.setValue(prev => ({
+        ...prev,
+        openedDocumentIds: prev.openedDocumentIds.filter(item => item !== documentId),
+        activeDocumentId: prev.activeDocumentId === documentId ? prev.openedDocumentIds.find(item => item !== documentId) ?? null : prev.activeDocumentId,
+      }))
+    },
   }
 }
 

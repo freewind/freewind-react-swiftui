@@ -1,13 +1,23 @@
 import type { FC } from 'react'
 import { DocumentGroup } from './DocumentGroup'
-import { Button, GroupBox, HStack, ScrollView, Text, TextField, fileDocument, useAppStorage, useMockEnvironment, useMockFileDocument } from '../runtime'
+import { Button, DocumentWorkspaceProvider, GroupBox, HStack, ScrollView, Text, TextField, fileDocument, useAppStorage, useDocumentAction, useDocumentWorkspace, useMockEnvironment, useMockFileDocument } from '../runtime'
 import { VStack } from '../VStack'
 import { FormSection } from '../FormSection'
 import { parentPath } from '../../../mock-system/fileTree/parentPath'
 import { buildSwiftUiDraft, buildTranslatorExportPacket } from '../../../translator'
 
 export const DocumentGroupDemo: FC = () => {
+  return (
+    <DocumentWorkspaceProvider>
+      <DocumentGroupDemoInner />
+    </DocumentWorkspaceProvider>
+  )
+}
+
+const DocumentGroupDemoInner: FC = () => {
   const env = useMockEnvironment()
+  const documentWorkspace = useDocumentWorkspace()
+  const documentAction = useDocumentAction()
   const primaryDocument = useMockFileDocument('/Downloads/mock-note.txt')
   const briefDocument = useMockFileDocument('/Downloads/peer-mac/files/brief.md')
   const nextName = useAppStorage('document-group:rename', primaryDocument?.fileName ?? 'mock-note.txt')
@@ -54,9 +64,11 @@ export const DocumentGroupDemo: FC = () => {
           selection={selection}
           onCreateDocument={createDocument}
           onOpenDocument={opened => {
+            documentAction.openDocument(opened.id)
             env.fileApi.revealPath(opened.path)
           }}
           onSaveDocument={saved => {
+            documentAction.saveDocument(saved.id)
             saveDocument(saved.path)
           }}
         >
@@ -90,6 +102,14 @@ export const DocumentGroupDemo: FC = () => {
                     onPress={() => env.fileApi.revealPath(parentPath(selectedDocument.path))}
                   />
                   <Button title="Delete" buttonStyle="bordered" onPress={() => env.removePath(selectedDocument.path)} />
+                  <Button
+                    title="Close"
+                    buttonStyle="plain"
+                    onPress={() => {
+                      documentAction.closeDocument(selectedDocument.id)
+                      selection.setValue(null)
+                    }}
+                  />
                 </HStack>
               </>
             ) : (
@@ -98,6 +118,9 @@ export const DocumentGroupDemo: FC = () => {
           </VStack>
         </DocumentGroup>
       </FormSection>
+      <Text font="caption2.monospaced" foregroundStyle="secondary">
+        {JSON.stringify(documentWorkspace.value)}
+      </Text>
       <HStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
         <GroupBox title="Export Packet" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
           <ScrollView axes={['horizontal', 'vertical']} frame={{ maxWidth: 'infinity', height: 220 }} padding={12}>

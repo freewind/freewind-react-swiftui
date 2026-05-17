@@ -56,6 +56,30 @@ export const translatorPageRegistry: TranslatorPageMeta[] = [
     intent: '展示 DynamicProperty 兼容面，供 SwiftUI 状态映射参考。',
     category: 'component',
   },
+  {
+    id: 'component-document-group',
+    title: 'DocumentGroup',
+    intent: '展示 document open/save/new/select 生命周期与 mock fs 边界。',
+    category: 'component',
+  },
+  {
+    id: 'component-window-group',
+    title: 'WindowGroup',
+    intent: '展示 window chrome、key window、open/close 生命周期 stub。',
+    category: 'component',
+  },
+  {
+    id: 'component-commands',
+    title: 'Commands',
+    intent: '展示 command group 注册与命令触发行为 stub。',
+    category: 'component',
+  },
+  {
+    id: 'component-scene',
+    title: 'Scene',
+    intent: '展示 scene role 与 phase/lifecycle stub。',
+    category: 'component',
+  },
 ]
 
 export const getTranslatorPageMeta = (pageId: string): TranslatorPageMeta | undefined => {

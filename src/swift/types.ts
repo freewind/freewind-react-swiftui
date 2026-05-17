@@ -188,3 +188,9 @@ export type MockSceneLifecycle = {
   commands: MockCommandGroup[]
   scenes: MockSceneInfo[]
 }
+
+export type MockDocumentWorkspace = {
+  openedDocumentIds: string[]
+  activeDocumentId: string | null
+  lastSavedDocumentId: string | null
+}

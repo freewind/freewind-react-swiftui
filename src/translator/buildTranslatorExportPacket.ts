@@ -168,6 +168,86 @@ const packets: Record<string, TranslatorExportPacket> = {
       '</EnvironmentObjectProvider>',
     ].join('\n'),
   },
+  'component-document-group': {
+    page: getTranslatorPageMeta('component-document-group')!,
+    constraints: baseConstraints,
+    mappings: baseMappings,
+    stateModels: ['FileDocument[]', 'Binding<string | null>', 'MockDocumentWorkspace'],
+    apiFacades: ['MockEnvironment', 'AppFileApi'],
+    components: ['DocumentGroup', 'TextField', 'Button', 'Picker', 'ScrollView'],
+    modifiers: ['padding', 'frame', 'background', 'controlSize'],
+    fewShot: [
+      'open/save/new/select document -> DocumentGroup + mock workspace',
+      'mock fs rename/delete -> environment facade',
+    ],
+    prompt:
+      '把 DocumentGroup demo 提炼成 SwiftUI 文档工作区，保留 open/save/new/select 生命周期与 mock fs 边界。',
+    jsxSource: [
+      '<DocumentGroup documents={documents} selection={selection}>',
+      '  <TextField text={nextName} />',
+      '  <Button title="Save" />',
+      '</DocumentGroup>',
+    ].join('\n'),
+  },
+  'component-window-group': {
+    page: getTranslatorPageMeta('component-window-group')!,
+    constraints: baseConstraints,
+    mappings: baseMappings,
+    stateModels: ['MockWindowInfo[]', 'MockSceneLifecycle'],
+    apiFacades: ['SceneLifecycleProvider'],
+    components: ['WindowGroup', 'Button', 'Text', 'VStack'],
+    modifiers: ['frame', 'background', 'foregroundStyle'],
+    fewShot: [
+      'window chrome shell -> WindowGroup',
+      'open utility window -> mock lifecycle update',
+    ],
+    prompt:
+      '把 WindowGroup demo 提炼成 SwiftUI window shell reference，保留 key window 与 open/close stub 行为。',
+    jsxSource: [
+      '<WindowGroup id="preview.window" title="Preview Window">...</WindowGroup>',
+      '<Button title="Open Utility" />',
+    ].join('\n'),
+  },
+  'component-commands': {
+    page: getTranslatorPageMeta('component-commands')!,
+    constraints: baseConstraints,
+    mappings: baseMappings,
+    stateModels: ['MockCommandGroup[]', 'MockWindowInfo[]'],
+    apiFacades: ['SceneLifecycleProvider', 'AppSystemApi'],
+    components: ['Commands', 'Button', 'Text', 'VStack'],
+    modifiers: ['padding', 'frame', 'foregroundStyle'],
+    fewShot: [
+      'file menu -> command group',
+      'command action -> open url / window lifecycle update',
+    ],
+    prompt:
+      '把 Commands demo 提炼成 SwiftUI command menu reference，保留 command group 注册与动作 stub。',
+    jsxSource: [
+      '<Commands id="file-menu" title="File">',
+      '  <Button title="New Window" />',
+      '</Commands>',
+    ].join('\n'),
+  },
+  'component-scene': {
+    page: getTranslatorPageMeta('component-scene')!,
+    constraints: baseConstraints,
+    mappings: baseMappings,
+    stateModels: ['MockSceneInfo[]', 'MockSceneLifecycle'],
+    apiFacades: ['SceneLifecycleProvider'],
+    components: ['Scene', 'Text', 'VStack'],
+    modifiers: ['padding', 'foregroundStyle'],
+    fewShot: [
+      'settings scene -> Scene(role: .settings)',
+      'phase display -> lifecycle stub',
+    ],
+    prompt:
+      '把 Scene demo 提炼成 SwiftUI scene reference，保留 role/phase/lifecycle stub。',
+    jsxSource: [
+      '<Scene id="settings.scene" role="settings" title="Settings Scene">',
+      '  <Text>Scene acts as lifecycle/root grouping shell.</Text>',
+      '</Scene>',
+    ].join('\n'),
+  },
 }
 
 export const buildTranslatorExportPacket = (pageId: string): TranslatorExportPacket => {
