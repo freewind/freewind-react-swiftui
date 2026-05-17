@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { FormSection, GroupBox, HStack, ScrollView, Text, VStack } from '../../swift'
+import { FormSection, GroupBox, HStack, Picker, SceneLifecycleProvider, ScrollView, Text, VStack, useBinding, useSceneLifecycle } from '../../swift'
 import { buildSwiftUiDraft, buildTranslatorExportPacket } from '../../translator'
 import { QQDemo } from '../qq'
 
@@ -26,34 +26,66 @@ const sourceCards = [
 ] as const
 
 export const NativeSwiftSourceDemo: FC = () => {
-  return (
-    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-      <FormSection title="真实 Swift 代码">
-        <VStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-          <Text>真实 Swift 源、mock 预览、packet、draft 同页对照。</Text>
-          <Text font="caption" foregroundStyle="secondary">
-            目标：直接给 AE/AI 一份更稳定的 SwiftUI 转换工作台。
-          </Text>
-        </VStack>
-      </FormSection>
-      <GroupBox title="Mock Preview" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-        <QQDemo />
-      </GroupBox>
-      {sourceCards.map(item => {
-        const packet = buildTranslatorExportPacket(item.pageId)
-        const draft = buildSwiftUiDraft(packet)
+  const selection = useBinding<(typeof sourceCards)[number]['pageId']>('native-swift-root-view')
+  const selectedCard = sourceCards.find(item => item.pageId === selection.value) ?? sourceCards[0]
+  const packet = buildTranslatorExportPacket(selectedCard.pageId)
+  const draft = buildSwiftUiDraft(packet)
 
-        return (
-          <GroupBox key={item.title} title={item.title} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-            <HStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-              <Pane title="Swift Source" content={item.swiftSource} />
-              <Pane title="Export Packet" content={JSON.stringify(packet, null, 2)} />
-              <Pane title="SwiftUI Draft" content={draft} />
-            </HStack>
-          </GroupBox>
-        )
-      })}
-    </VStack>
+  return (
+    <SceneLifecycleProvider>
+      <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        <FormSection title="真实 Swift 代码">
+          <VStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            <Text>真实 Swift 源、mock 预览、packet、draft 同页对照。</Text>
+            <Text font="caption" foregroundStyle="secondary">
+              目标：直接给 AE/AI 一份更稳定的 SwiftUI 转换工作台。
+            </Text>
+            <Picker
+              selection={selection}
+              pickerStyle="segmented"
+              options={sourceCards.map(item => ({
+                label: item.title.replace('.swift', ''),
+                value: item.pageId,
+              }))}
+            />
+          </VStack>
+        </FormSection>
+        <LifecyclePanel />
+        <GroupBox title="Mock Preview" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <QQDemo />
+        </GroupBox>
+        <GroupBox title={selectedCard.title} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <HStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            <Pane title="Swift Source" content={selectedCard.swiftSource} />
+            <Pane title="Export Packet" content={JSON.stringify(packet, null, 2)} />
+            <Pane title="SwiftUI Draft" content={draft} />
+          </HStack>
+        </GroupBox>
+      </VStack>
+    </SceneLifecycleProvider>
+  )
+}
+
+const LifecyclePanel: FC = () => {
+  const lifecycle = useSceneLifecycle()
+
+  return (
+    <GroupBox title="Scene Lifecycle Stub" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <VStack spacing={6} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        <Text font="caption" foregroundStyle="secondary">
+          phase: {lifecycle.value.phase}
+        </Text>
+        <Text font="caption2.monospaced" foregroundStyle="tertiary" textSelection="enabled">
+          windows: {JSON.stringify(lifecycle.value.windows)}
+        </Text>
+        <Text font="caption2.monospaced" foregroundStyle="tertiary" textSelection="enabled">
+          commands: {JSON.stringify(lifecycle.value.commands)}
+        </Text>
+        <Text font="caption2.monospaced" foregroundStyle="tertiary" textSelection="enabled">
+          scenes: {JSON.stringify(lifecycle.value.scenes)}
+        </Text>
+      </VStack>
+    </GroupBox>
   )
 }
 

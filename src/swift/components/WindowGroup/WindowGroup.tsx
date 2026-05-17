@@ -1,5 +1,5 @@
-import type { CSSProperties, FC, PropsWithChildren } from 'react'
-import { surfaceColors, textColorMap } from '../runtime'
+import { useEffect, type CSSProperties, type FC, type PropsWithChildren } from 'react'
+import { surfaceColors, textColorMap, useWindowRegistration } from '../runtime'
 import type { ThemeMode } from '../runtime'
 
 export type WindowStyleProps = {
@@ -56,13 +56,27 @@ export const WindowGroup: FC<PropsWithChildren<WindowStyleProps>> = ({
                                                                        minHeight,
                                                                        defaultWidth,
                                                                        defaultHeight,
-                                                                       theme = 'light',
+                                                                     theme = 'light',
                                                                        title = 'SwiftUI Preview',
                                                                        subtitle,
                                                                      }) => {
   const vars = themePalettes[theme] as CSSProperties
   const resolvedWidth = Math.max(defaultWidth ?? minWidth ?? 980, 360)
   const resolvedHeight = Math.max(defaultHeight ?? minHeight ?? 720, 240)
+  const windowRegistration = useWindowRegistration({
+    id: id ?? title,
+    title,
+    isKeyWindow: true,
+    defaultWidth,
+    defaultHeight,
+  })
+  const { register, focus } = windowRegistration
+
+  useEffect(() => {
+    register()
+    focus()
+  }, [register, focus, id, title, defaultWidth, defaultHeight])
+
   return (
     <div
       style={{

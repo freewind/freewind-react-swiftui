@@ -161,3 +161,30 @@ export type ObservableObject<T extends object> = {
   value: T
   setValue: (updater: T | ((prev: T) => T)) => void
 }
+
+export type MockWindowInfo = {
+  id: string
+  title: string
+  isKeyWindow: boolean
+  defaultWidth?: number
+  defaultHeight?: number
+}
+
+export type MockCommandGroup = {
+  id: string
+  title: string
+  commandTitles: string[]
+}
+
+export type MockSceneInfo = {
+  id: string
+  role: 'windowApplication' | 'document' | 'settings'
+  title?: string
+}
+
+export type MockSceneLifecycle = {
+  phase: 'active' | 'inactive' | 'background'
+  windows: MockWindowInfo[]
+  commands: MockCommandGroup[]
+  scenes: MockSceneInfo[]
+}

@@ -5,6 +5,10 @@ import type {
   EnvironmentValues,
   FileDocument,
   FocusedValues,
+  MockCommandGroup,
+  MockSceneInfo,
+  MockSceneLifecycle,
+  MockWindowInfo,
   NavigationPath,
   ObservableObject,
   OpenURLAction,
@@ -38,6 +42,7 @@ export const _internal = {
 const environmentContext = createContext<EnvironmentValues>({})
 const focusedValuesContext = createContext<FocusedValues>({})
 const environmentObjectContext = createContext<Record<string, ObservableObject<object>>>({})
+const sceneLifecycleContext = createContext<ObservableObject<MockSceneLifecycle> | null>(null)
 const openUrlContext = createContext<OpenURLAction>({
   callAsFunction: () => 'systemAction',
 })
@@ -170,6 +175,22 @@ export const OpenURLActionProvider = ({
   return <openUrlContext.Provider value={value}>{children}</openUrlContext.Provider>
 }
 
+export const SceneLifecycleProvider = ({
+  lifecycle,
+  children,
+}: {
+  lifecycle?: ObservableObject<MockSceneLifecycle>
+  children: ReactNode
+}) => {
+  const localLifecycle = useStateObject<MockSceneLifecycle>({
+    phase: 'active',
+    windows: [],
+    commands: [],
+    scenes: [],
+  })
+  return <sceneLifecycleContext.Provider value={lifecycle ?? localLifecycle}>{children}</sceneLifecycleContext.Provider>
+}
+
 export const useFocusState = <T extends string | number | boolean | null>(initialValue: T) => {
   return useBaseBinding(initialValue)
 }
@@ -194,7 +215,63 @@ export const useEnvironmentObject = <T extends object>(initialValue?: T): Observ
 }
 
 export const useScenePhase = () => {
-  return useEnvironment<'active' | 'inactive' | 'background'>('scenePhase', 'active')
+  const lifecycle = useContext(sceneLifecycleContext)
+  return lifecycle?.value.phase ?? useEnvironment<'active' | 'inactive' | 'background'>('scenePhase', 'active')
+}
+
+export const useSceneLifecycle = (): ObservableObject<MockSceneLifecycle> => {
+  const lifecycle = useContext(sceneLifecycleContext)
+  if (lifecycle) {
+    return lifecycle
+  }
+  return useStateObject<MockSceneLifecycle>({
+    phase: 'active',
+    windows: [],
+    commands: [],
+    scenes: [],
+  })
+}
+
+export const useWindowRegistration = (window: MockWindowInfo) => {
+  const lifecycle = useSceneLifecycle()
+  const register = () => {
+    lifecycle.setValue(prev => ({
+      ...prev,
+      windows: [...prev.windows.filter(item => item.id !== window.id), window],
+    }))
+  }
+  return {
+    register,
+    focus: () => {
+      lifecycle.setValue(prev => ({
+        ...prev,
+        windows: prev.windows.map(item => ({
+          ...item,
+          isKeyWindow: item.id === window.id,
+        })),
+      }))
+    },
+  }
+}
+
+export const useCommandRegistration = (group: MockCommandGroup) => {
+  const lifecycle = useSceneLifecycle()
+  return () => {
+    lifecycle.setValue(prev => ({
+      ...prev,
+      commands: [...prev.commands.filter(item => item.id !== group.id), group],
+    }))
+  }
+}
+
+export const useSceneRegistration = (scene: MockSceneInfo) => {
+  const lifecycle = useSceneLifecycle()
+  return () => {
+    lifecycle.setValue(prev => ({
+      ...prev,
+      scenes: [...prev.scenes.filter(item => item.id !== scene.id), scene],
+    }))
+  }
 }
 
 export const navigationPath = (...items: unknown[]): NavigationPath => {

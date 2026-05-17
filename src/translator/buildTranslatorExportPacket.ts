@@ -120,6 +120,81 @@ const packets: Record<string, TranslatorExportPacket> = {
       '</VStack>',
     ].join('\n'),
   },
+  qq: {
+    page: {
+      id: 'qq',
+      title: 'QQ Chat',
+      intent: '把聊天应用壳、联系人、消息列表、输入区转成 SwiftUI 稳定结构。',
+    },
+    constraints: baseConstraints,
+    mappings: baseMappings,
+    stateModels: ['Binding<number>', 'Binding<string>', 'PeerDigest[]', 'ChatMessage[]'],
+    apiFacades: ['AppShell', 'AppSystemApi', 'AppFileApi', 'MockEnvironment'],
+    components: ['HStack', 'VStack', 'ScrollView', 'Picker', 'TextEditor', 'Sheet', 'Button', 'List'],
+    modifiers: ['padding', 'frame', 'background', 'foregroundStyle', 'tint', 'controlSize', 'lineLimit'],
+    fewShot: [
+      '联系人列表 -> ScrollView + peer row',
+      '输入区 -> TextEditor + toolbar style buttons',
+    ],
+    prompt:
+      '把 QQ demo 提炼成 SwiftUI 兼容壳，优先保留 app shell facade、消息状态、附件动作与分栏布局。',
+    jsxSource: [
+      '<HStack spacing={0}>',
+      '  <ContactsPaneMini />',
+      '  <Divider axis="vertical" />',
+      '  <ChatPanel draft={draft} />',
+      '</HStack>',
+    ].join('\n'),
+  },
+  'system-api': {
+    page: {
+      id: 'system-api',
+      title: 'System API Mock',
+      intent: '把 system/file/open-url/mock fs 操作导出给 AI 做 SwiftUI facade 映射。',
+    },
+    constraints: baseConstraints,
+    mappings: baseMappings,
+    stateModels: ['MockEnvironment', 'MockFileNode[]', 'MockOpenEvent[]'],
+    apiFacades: ['AppSystemApi', 'AppFileApi', 'MockEnvironment'],
+    components: ['FormSection', 'Button', 'TextField', 'List', 'ScrollView', 'Text'],
+    modifiers: ['padding', 'frame', 'background', 'foregroundStyle', 'labelsHidden'],
+    fewShot: [
+      'openUrl -> system facade event',
+      'fake fs create/delete/reveal -> in-memory file tree update',
+    ],
+    prompt:
+      '把 system api mock 页面转成 SwiftUI 管理台，保留 fake fs、recent events、open/reveal/url facade。',
+    jsxSource: [
+      '<VStack spacing={18}>',
+      '  <Button title="Create File" />',
+      '  <List>recent events...</List>',
+      '</VStack>',
+    ].join('\n'),
+  },
+  'component-runtime-state': {
+    page: {
+      id: 'component-runtime-state',
+      title: 'Runtime State',
+      intent: '展示 DynamicProperty 兼容面，供 SwiftUI 状态映射参考。',
+    },
+    constraints: baseConstraints,
+    mappings: baseMappings,
+    stateModels: ['StateObject', 'ObservedObject', 'EnvironmentObject', 'FocusedValues'],
+    apiFacades: ['SceneLifecycleProvider'],
+    components: ['EnvironmentObjectProvider', 'FocusedValuesProvider', 'Button', 'Text', 'VStack'],
+    modifiers: ['padding', 'background', 'frame', 'foregroundStyle'],
+    fewShot: [
+      'EnvironmentObject provider -> child read',
+      'FocusedValues -> focus driven derived label',
+    ],
+    prompt:
+      '把 runtime state demo 当成 SwiftUI 状态映射 reference，保留 provider 与 dynamic property 关系。',
+    jsxSource: [
+      '<EnvironmentObjectProvider>',
+      '  <FocusedValuesProvider>...</FocusedValuesProvider>',
+      '</EnvironmentObjectProvider>',
+    ].join('\n'),
+  },
 }
 
 export const buildTranslatorExportPacket = (pageId: string): TranslatorExportPacket => {
