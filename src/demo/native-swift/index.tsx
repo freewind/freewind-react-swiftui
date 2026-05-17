@@ -1,34 +1,14 @@
 import type { FC } from 'react'
 import { FormSection, GroupBox, HStack, Picker, SceneLifecycleProvider, ScrollView, Text, VStack, useBinding, useSceneLifecycle } from '../../swift'
-import { buildSwiftUiDraft, buildTranslatorExportPacket } from '../../translator'
+import { buildSwiftUiDraft, buildTranslatorExportPacket, translatorPageRegistry } from '../../translator'
 import { QQDemo } from '../qq'
 
-import rootViewSwiftSource from '/Users/peng.li/workspace/freewind-qq/native/macos/Sources/FreewindQQMac/Features/RootView.swift?raw'
-import chatScreenSwiftSource from '/Users/peng.li/workspace/freewind-qq/native/macos/Sources/FreewindQQMac/Features/ChatScreen.swift?raw'
-import composerTextViewSwiftSource from '/Users/peng.li/workspace/freewind-qq/native/macos/Sources/FreewindQQMac/ComposerTextView.swift?raw'
-
-const sourceCards = [
-  {
-    title: 'RootView.swift',
-    pageId: 'native-swift-root-view',
-    swiftSource: rootViewSwiftSource,
-  },
-  {
-    title: 'ChatScreen.swift',
-    pageId: 'native-swift-chat-screen',
-    swiftSource: chatScreenSwiftSource,
-  },
-  {
-    title: 'ComposerTextView.swift',
-    pageId: 'native-swift-composer-text-view',
-    swiftSource: composerTextViewSwiftSource,
-  },
-] as const
+const sourceCards = translatorPageRegistry.filter(item => item.category === 'native-swift' && item.swiftSource)
 
 export const NativeSwiftSourceDemo: FC = () => {
-  const selection = useBinding<(typeof sourceCards)[number]['pageId']>('native-swift-root-view')
-  const selectedCard = sourceCards.find(item => item.pageId === selection.value) ?? sourceCards[0]
-  const packet = buildTranslatorExportPacket(selectedCard.pageId)
+  const selection = useBinding(sourceCards[0]?.id ?? 'native-swift-root-view')
+  const selectedCard = sourceCards.find(item => item.id === selection.value) ?? sourceCards[0]
+  const packet = buildTranslatorExportPacket(selectedCard.id)
   const draft = buildSwiftUiDraft(packet)
 
   return (
@@ -45,7 +25,7 @@ export const NativeSwiftSourceDemo: FC = () => {
               pickerStyle="segmented"
               options={sourceCards.map(item => ({
                 label: item.title.replace('.swift', ''),
-                value: item.pageId,
+                value: item.id,
               }))}
             />
           </VStack>
@@ -56,7 +36,7 @@ export const NativeSwiftSourceDemo: FC = () => {
         </GroupBox>
         <GroupBox title={selectedCard.title} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
           <HStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-            <Pane title="Swift Source" content={selectedCard.swiftSource} />
+            <Pane title="Swift Source" content={selectedCard.swiftSource ?? ''} />
             <Pane title="Export Packet" content={JSON.stringify(packet, null, 2)} />
             <Pane title="SwiftUI Draft" content={draft} />
           </HStack>

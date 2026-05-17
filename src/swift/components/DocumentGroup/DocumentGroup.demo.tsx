@@ -1,9 +1,10 @@
 import type { FC } from 'react'
 import { DocumentGroup } from './DocumentGroup'
-import { Button, HStack, Text, TextField, fileDocument, useAppStorage, useMockEnvironment, useMockFileDocument } from '../runtime'
+import { Button, GroupBox, HStack, ScrollView, Text, TextField, fileDocument, useAppStorage, useMockEnvironment, useMockFileDocument } from '../runtime'
 import { VStack } from '../VStack'
 import { FormSection } from '../FormSection'
 import { parentPath } from '../../../mock-system/fileTree/parentPath'
+import { buildSwiftUiDraft, buildTranslatorExportPacket } from '../../../translator'
 
 export const DocumentGroupDemo: FC = () => {
   const env = useMockEnvironment()
@@ -12,6 +13,8 @@ export const DocumentGroupDemo: FC = () => {
   const nextName = useAppStorage('document-group:rename', primaryDocument?.fileName ?? 'mock-note.txt')
   const selection = useAppStorage<string | null>('document-group:selection', primaryDocument?.id ?? briefDocument?.id ?? null)
   const saveStatus = useAppStorage('document-group:save-status', 'idle')
+  const packet = buildTranslatorExportPacket('native-swift-composer-text-view')
+  const draft = buildSwiftUiDraft(packet)
   const documents = [primaryDocument, briefDocument].filter(Boolean).map(item => item!)
   const selectedDocument = documents.find(item => item.id === selection.value) ?? documents[0] ?? null
 
@@ -95,6 +98,22 @@ export const DocumentGroupDemo: FC = () => {
           </VStack>
         </DocumentGroup>
       </FormSection>
+      <HStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        <GroupBox title="Export Packet" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <ScrollView axes={['horizontal', 'vertical']} frame={{ maxWidth: 'infinity', height: 220 }} padding={12}>
+            <Text monospaced textSelection="enabled" font="caption2.monospaced">
+              {JSON.stringify(packet, null, 2)}
+            </Text>
+          </ScrollView>
+        </GroupBox>
+        <GroupBox title="SwiftUI Draft" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <ScrollView axes={['horizontal', 'vertical']} frame={{ maxWidth: 'infinity', height: 220 }} padding={12}>
+            <Text monospaced textSelection="enabled" font="caption2.monospaced">
+              {draft}
+            </Text>
+          </ScrollView>
+        </GroupBox>
+      </HStack>
     </VStack>
   )
 }

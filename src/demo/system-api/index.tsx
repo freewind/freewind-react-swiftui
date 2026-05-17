@@ -1,10 +1,14 @@
 import type { FC } from 'react'
 import {
   Button,
+  GroupBox,
   FormSection,
   HStack,
+  ScrollView,
   Text,
   TextField,
+  buildSwiftUiDraft,
+  buildTranslatorExportPacket,
   useAppStorage,
   useMockEnvironment,
   VStack,
@@ -13,6 +17,8 @@ import {
 export const SystemApiMockDemo: FC = () => {
   const env = useMockEnvironment()
   const fileName = useAppStorage('system-api:new-file-name', 'draft.txt')
+  const packet = buildTranslatorExportPacket('system-api')
+  const draft = buildSwiftUiDraft(packet)
 
   return (
     <VStack spacing={16} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
@@ -64,6 +70,22 @@ export const SystemApiMockDemo: FC = () => {
           )}
         </VStack>
       </FormSection>
+      <HStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        <GroupBox title="Export Packet" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <ScrollView axes={['horizontal', 'vertical']} frame={{ height: 220, maxWidth: 'infinity' }} padding={12}>
+            <Text monospaced textSelection="enabled" font="caption2.monospaced">
+              {JSON.stringify(packet, null, 2)}
+            </Text>
+          </ScrollView>
+        </GroupBox>
+        <GroupBox title="SwiftUI Draft" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <ScrollView axes={['horizontal', 'vertical']} frame={{ height: 220, maxWidth: 'infinity' }} padding={12}>
+            <Text monospaced textSelection="enabled" font="caption2.monospaced">
+              {draft}
+            </Text>
+          </ScrollView>
+        </GroupBox>
+      </HStack>
     </VStack>
   )
 }

@@ -264,6 +264,23 @@ export const useCommandRegistration = (group: MockCommandGroup) => {
   }
 }
 
+export const useCommandAction = () => {
+  const lifecycle = useSceneLifecycle()
+  return (groupId: string, title: string) => {
+    lifecycle.setValue(prev => ({
+      ...prev,
+      commands: prev.commands.map(group =>
+        group.id === groupId
+          ? {
+              ...group,
+              commandTitles: [...group.commandTitles.filter(item => item !== title), title],
+            }
+          : group,
+      ),
+    }))
+  }
+}
+
 export const useSceneRegistration = (scene: MockSceneInfo) => {
   const lifecycle = useSceneLifecycle()
   return () => {

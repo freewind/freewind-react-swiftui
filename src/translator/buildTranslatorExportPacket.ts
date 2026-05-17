@@ -1,4 +1,5 @@
 import type { TranslatorExportPacket } from './types'
+import { getTranslatorPageMeta } from './pageRegistry'
 
 const baseConstraints = [
   '业务层禁原生 DOM 标签，优先走 src/swift DSL 组件。',
@@ -16,11 +17,7 @@ const baseMappings = [
 
 const packets: Record<string, TranslatorExportPacket> = {
   translator: {
-    page: {
-      id: 'translator',
-      title: '转换规约',
-      intent: '给 AE/AI 一份稳定的 JSX -> SwiftUI 结构化输入包。',
-    },
+    page: getTranslatorPageMeta('translator')!,
     constraints: baseConstraints,
     mappings: baseMappings,
     stateModels: ['Binding<T>', 'ObservableObject<T>', 'NavigationPath', 'FileDocument'],
@@ -44,11 +41,7 @@ const packets: Record<string, TranslatorExportPacket> = {
     ].join('\n'),
   },
   'native-swift-root-view': {
-    page: {
-      id: 'native-swift-root-view',
-      title: 'RootView',
-      intent: '把真实 Swift RootView 对照为可转 SwiftUI 的 JSX/mock 壳。',
-    },
+    page: getTranslatorPageMeta('native-swift-root-view')!,
     constraints: baseConstraints,
     mappings: baseMappings,
     stateModels: ['Binding<Int>', 'NavigationPath', 'MockEnvironment', 'AppShell'],
@@ -70,11 +63,7 @@ const packets: Record<string, TranslatorExportPacket> = {
     ].join('\n'),
   },
   'native-swift-chat-screen': {
-    page: {
-      id: 'native-swift-chat-screen',
-      title: 'ChatScreen',
-      intent: '把真实聊天页结构映射到 JSX DSL 与 SwiftUI draft。',
-    },
+    page: getTranslatorPageMeta('native-swift-chat-screen')!,
     constraints: baseConstraints,
     mappings: baseMappings,
     stateModels: ['Binding<String>', 'ChatMessage[]', 'PeerDigest', 'FocusedValues'],
@@ -96,11 +85,7 @@ const packets: Record<string, TranslatorExportPacket> = {
     ].join('\n'),
   },
   'native-swift-composer-text-view': {
-    page: {
-      id: 'native-swift-composer-text-view',
-      title: 'ComposerTextView',
-      intent: '把真实输入框桥接层压缩为 DSL 可表达的输入语义。',
-    },
+    page: getTranslatorPageMeta('native-swift-composer-text-view')!,
     constraints: baseConstraints,
     mappings: baseMappings,
     stateModels: ['Binding<String>', 'FocusedValues', 'FocusState<String | null>'],
@@ -121,11 +106,7 @@ const packets: Record<string, TranslatorExportPacket> = {
     ].join('\n'),
   },
   qq: {
-    page: {
-      id: 'qq',
-      title: 'QQ Chat',
-      intent: '把聊天应用壳、联系人、消息列表、输入区转成 SwiftUI 稳定结构。',
-    },
+    page: getTranslatorPageMeta('qq')!,
     constraints: baseConstraints,
     mappings: baseMappings,
     stateModels: ['Binding<number>', 'Binding<string>', 'PeerDigest[]', 'ChatMessage[]'],
@@ -147,11 +128,7 @@ const packets: Record<string, TranslatorExportPacket> = {
     ].join('\n'),
   },
   'system-api': {
-    page: {
-      id: 'system-api',
-      title: 'System API Mock',
-      intent: '把 system/file/open-url/mock fs 操作导出给 AI 做 SwiftUI facade 映射。',
-    },
+    page: getTranslatorPageMeta('system-api')!,
     constraints: baseConstraints,
     mappings: baseMappings,
     stateModels: ['MockEnvironment', 'MockFileNode[]', 'MockOpenEvent[]'],
@@ -172,11 +149,7 @@ const packets: Record<string, TranslatorExportPacket> = {
     ].join('\n'),
   },
   'component-runtime-state': {
-    page: {
-      id: 'component-runtime-state',
-      title: 'Runtime State',
-      intent: '展示 DynamicProperty 兼容面，供 SwiftUI 状态映射参考。',
-    },
+    page: getTranslatorPageMeta('component-runtime-state')!,
     constraints: baseConstraints,
     mappings: baseMappings,
     stateModels: ['StateObject', 'ObservedObject', 'EnvironmentObject', 'FocusedValues'],
