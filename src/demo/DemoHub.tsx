@@ -1,6 +1,7 @@
 import type { FC } from 'react'
 import {
   Divider,
+  HStack,
   MockEnvironmentProvider,
   ScrollView,
   TextEditorSheet,
@@ -8,12 +9,11 @@ import {
   useBinding,
   VStack,
   WindowGroup,
-  HStack,
 } from '../swiftui'
 import { HomePage } from './HomePage'
 import { demoPages, isDemoCategory, sectionEntries, type DemoHomeSection, type DemoSection } from './model'
 import { renderDemoPage } from './renderDemoPage'
-import { HeroHeader } from './shared'
+import { AppHeader } from './shared'
 import { Sidebar } from './Sidebar'
 
 export const DemoHub: FC = () => {
@@ -35,31 +35,36 @@ export const DemoHub: FC = () => {
   return (
     <MockEnvironmentProvider>
       <WindowGroup minWidth={1100} minHeight={760} theme={theme.value}>
-        <HStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }} spacing={0}>
-          <Sidebar
+        <VStack spacing={0} padding={16} frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }}>
+          <AppHeader
+            title={section.value === 'home' ? 'Demo Home' : activePage.title}
             theme={theme}
-            section={section}
-            currentPage={currentPage}
-            pages={pages}
-            onOpenNotes={() => notesSheetPresented.setValue(true)}
-            onOpenSection={onOpenSection}
+            canGoBack={section.value !== 'home'}
+            onBack={() => section.setValue('home')}
           />
-          {section.value !== 'home' ? <Divider axis="vertical" /> : null}
-          <VStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }}>
-            <ScrollView frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }}>
-              <VStack spacing={18} padding={20} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-                {section.value === 'home' ? (
-                  <HomePage theme={theme} onOpenSection={onOpenSection} />
-                ) : (
-                  <>
-                    <HeroHeader activePage={activePage.title} />
-                    {renderDemoPage(currentPage.value)}
-                  </>
-                )}
-              </VStack>
-            </ScrollView>
-          </VStack>
-        </HStack>
+          <HStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }} spacing={0} padding={{ top: 16 }}>
+            {section.value !== 'home' ? (
+              <>
+                <Sidebar
+                  theme={theme}
+                  section={section}
+                  currentPage={currentPage}
+                  pages={pages}
+                  onOpenNotes={() => notesSheetPresented.setValue(true)}
+                  onOpenSection={onOpenSection}
+                />
+                <Divider axis="vertical" />
+              </>
+            ) : null}
+            <VStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }}>
+              <ScrollView frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }}>
+                <VStack spacing={18} padding={{ horizontal: 20, bottom: 20 }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+                  {section.value === 'home' ? <HomePage onOpenSection={onOpenSection} /> : renderDemoPage(currentPage.value)}
+                </VStack>
+              </ScrollView>
+            </VStack>
+          </HStack>
+        </VStack>
 
         <TextEditorSheet title="Demo Notes" isPresented={notesSheetPresented} text={notes} />
       </WindowGroup>

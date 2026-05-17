@@ -1,23 +1,32 @@
 import type { FC } from 'react'
-import { Button, HStack, Label, Spacer, Text, VStack } from '../swiftui'
+import { Button, HStack, Label, Picker, Spacer, Text, type ThemeMode, useBinding, VStack } from '../swiftui'
 
-export const HeroHeader: FC<{
-  activePage: string
-}> = ({ activePage }) => {
+export const AppHeader: FC<{
+  title: string
+  theme: ReturnType<typeof useBinding<ThemeMode>>
+  canGoBack?: boolean
+  onBack?: () => void
+}> = ({ title, theme, canGoBack, onBack }) => {
   return (
     <HStack
-      padding={18}
+      padding={{ horizontal: 18, vertical: 14 }}
       frame={{ maxWidth: 'infinity' }}
       background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 18 } }}
       spacing={14}
+      alignment="center"
     >
-      <VStack spacing={4} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-        <Text font="title2">{activePage}</Text>
-        <Text foregroundStyle="secondary">
-          用一批受限 SwiftUI-shaped JSX 组件，快速看 UI，方便后续 AI 转 SwiftUI。
-        </Text>
-      </VStack>
-      <Button title="Preview Ready" buttonStyle="borderedProminent" />
+      <HStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        {canGoBack ? <Button title="返回" buttonStyle="bordered" onPress={onBack} /> : null}
+        <Text font="title3.semibold">{title}</Text>
+      </HStack>
+      <Picker
+        selection={theme}
+        pickerStyle="segmented"
+        options={[
+          { label: 'Light', value: 'light' },
+          { label: 'Dark', value: 'dark' },
+        ]}
+      />
     </HStack>
   )
 }
@@ -29,19 +38,21 @@ export const ButtonCard: FC<{
   onPress: () => void
 }> = ({ title, summary, buttonTitle, onPress }) => {
   return (
-    <VStack
-      spacing={10}
+    <HStack
+      spacing={16}
       padding={16}
       frame={{ maxWidth: 'infinity', alignment: 'leading' }}
       background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 18 } }}
+      alignment="center"
     >
-      <Text font="headline">{title}</Text>
-      <Text foregroundStyle="secondary">{summary}</Text>
+      <VStack spacing={4} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        <Text font="headline">{title}</Text>
+        <Text foregroundStyle="secondary">{summary}</Text>
+      </VStack>
       <HStack>
-        <Spacer />
         <Button title={buttonTitle} buttonStyle="borderedProminent" onPress={onPress} />
       </HStack>
-    </VStack>
+    </HStack>
   )
 }
 

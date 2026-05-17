@@ -18,7 +18,7 @@ import {
   Spacer,
   Text,
   TextEditor,
-  TextFieldRow,
+  TextField,
   WindowAccessor,
   useBinding,
   VStack,
@@ -29,7 +29,7 @@ import {
   type TextAlign,
 } from '../swiftui'
 import { BoolField, EnumField, NumberField, PlaygroundSection, StringField, toBoolBinding, toNumber, useBoolBinding } from './playground'
-import { Chip, GalleryRow, SwatchCard } from './shared'
+import { Chip, GalleryRow } from './shared'
 
 const fontOptions: Array<{ label: string; value: FontToken }> = [
   { label: 'largeTitle', value: 'largeTitle' },
@@ -70,12 +70,8 @@ export const TextComponentDemo: FC = () => {
           <Text font="title3.semibold">title3.semibold</Text>
           <Text font="headline">headline</Text>
           <Text font="body">body</Text>
-          <Text font="caption" foregroundStyle="secondary">
-            caption secondary
-          </Text>
-          <Text font="caption2.monospaced" textSelection="enabled">
-            caption2.monospaced selectable
-          </Text>
+          <Text font="caption" foregroundStyle="secondary">caption secondary</Text>
+          <Text font="caption2.monospaced" textSelection="enabled">caption2.monospaced selectable</Text>
         </VStack>
       </FormSection>
 
@@ -138,16 +134,7 @@ export const ButtonComponentDemo: FC = () => {
 
       <PlaygroundSection
         title="Button Playground"
-        preview={
-          <HStack frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-            <Button
-              title={title.value}
-              buttonStyle={buttonStyle.value}
-              controlSize={controlSize.value}
-              disabled={toBoolBinding(disabled)}
-            />
-          </HStack>
-        }
+        preview={<Button title={title.value} buttonStyle={buttonStyle.value} controlSize={controlSize.value} disabled={toBoolBinding(disabled)} />}
         form={
           <>
             <StringField label="title" binding={title} />
@@ -180,10 +167,8 @@ export const ButtonComponentDemo: FC = () => {
   )
 }
 
-export const ImageLabelComponentDemo: FC = () => {
+export const ImageComponentDemo: FC = () => {
   const systemName = useBinding('iphone')
-  const title = useBinding('preview item')
-  const labelSymbol = useBinding('photo')
   const resizable = useBoolBinding(false)
   const scaledToFit = useBoolBinding(false)
 
@@ -196,31 +181,24 @@ export const ImageLabelComponentDemo: FC = () => {
           <Image systemName="pin.fill" />
           <Image systemName="photo" />
           <Image systemName="doc" />
-          <Image systemName="xmark" />
         </HStack>
       </FormSection>
-
       <PlaygroundSection
-        title="Image / Label Playground"
+        title="Image Playground"
         preview={
-          <VStack spacing={12} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-            <Image
-              systemName={systemName.value}
-              resizable={toBoolBinding(resizable)}
-              scaledToFit={toBoolBinding(scaledToFit)}
-              padding={8}
-              background={{ fill: 'tertiary', in: { kind: 'roundedRectangle', cornerRadius: 12 } }}
-            />
-            <Label title={title.value} systemImage={labelSymbol.value} />
-          </VStack>
+          <Image
+            systemName={systemName.value}
+            resizable={toBoolBinding(resizable)}
+            scaledToFit={toBoolBinding(scaledToFit)}
+            padding={8}
+            background={{ fill: 'tertiary', in: { kind: 'roundedRectangle', cornerRadius: 12 } }}
+          />
         }
         form={
           <>
-            <StringField label="Image.systemName" binding={systemName} />
-            <StringField label="Label.title" binding={title} />
-            <StringField label="Label.systemImage" binding={labelSymbol} />
-            <BoolField label="Image.resizable" binding={resizable} />
-            <BoolField label="Image.scaledToFit" binding={scaledToFit} />
+            <StringField label="systemName" binding={systemName} />
+            <BoolField label="resizable" binding={resizable} />
+            <BoolField label="scaledToFit" binding={scaledToFit} />
           </>
         }
       />
@@ -228,38 +206,55 @@ export const ImageLabelComponentDemo: FC = () => {
   )
 }
 
-export const InputComponentDemo: FC = () => {
-  const segmented = useBinding<'all' | 'online' | 'offline'>('all')
-  const field = useBinding('freewind-mac')
-  const editor = useBinding('多行输入，后续映射 TextEditor。')
-  const placeholder = useBinding('input device name')
-  const editorHeight = useBinding('140')
-  const sheetPresented = useBinding(false)
+export const LabelComponentDemo: FC = () => {
+  const title = useBinding('photo file')
+  const systemImage = useBinding('photo')
 
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <FormSection title="静态例子">
-        <VStack spacing={12} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-          <Picker
-            selection={segmented}
-            pickerStyle="segmented"
-            options={[
-              { label: '全部', value: 'all' },
-              { label: '在线', value: 'online' },
-              { label: '离线', value: 'offline' },
-            ]}
-          />
-          <TextFieldRow label="device name" text={field} placeholder="input device name" />
-          <TextEditor text={editor} frame={{ height: 140, maxWidth: 'infinity' }} />
+        <VStack spacing={10} alignment="leading">
+          <Label title="photo file" systemImage="photo" />
+          <Label title="document file" systemImage="doc" />
+          <Label title="pinned item" systemImage="pin.fill" />
         </VStack>
       </FormSection>
-
       <PlaygroundSection
-        title="Input Playground"
+        title="Label Playground"
+        preview={<Label title={title.value} systemImage={systemImage.value} />}
+        form={
+          <>
+            <StringField label="title" binding={title} />
+            <StringField label="systemImage" binding={systemImage} />
+          </>
+        }
+      />
+    </VStack>
+  )
+}
+
+export const PickerComponentDemo: FC = () => {
+  const selection = useBinding<'all' | 'online' | 'offline'>('all')
+
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="静态例子">
+        <Picker
+          selection={selection}
+          pickerStyle="segmented"
+          options={[
+            { label: '全部', value: 'all' },
+            { label: '在线', value: 'online' },
+            { label: '离线', value: 'offline' },
+          ]}
+        />
+      </FormSection>
+      <PlaygroundSection
+        title="Picker Playground"
         preview={
-          <VStack spacing={12} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <VStack spacing={8} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
             <Picker
-              selection={segmented}
+              selection={selection}
               pickerStyle="segmented"
               options={[
                 { label: '全部', value: 'all' },
@@ -267,124 +262,111 @@ export const InputComponentDemo: FC = () => {
                 { label: '离线', value: 'offline' },
               ]}
             />
-            <TextFieldRow label="device name" text={field} placeholder={placeholder.value} />
-            <TextEditor text={editor} frame={{ height: toNumber(editorHeight.value, 140), maxWidth: 'infinity' }} />
-            <Button title="打开 Sheet" buttonStyle="borderedProminent" onPress={() => sheetPresented.setValue(true)} />
+            <Text foregroundStyle="secondary">selection: {selection.value}</Text>
           </VStack>
         }
         form={
-          <>
-            <EnumField
-              label="Picker.selection"
-              binding={segmented}
-              options={[
-                { label: 'all', value: 'all' },
-                { label: 'online', value: 'online' },
-                { label: 'offline', value: 'offline' },
-              ]}
-            />
-            <StringField label="TextField.text" binding={field} />
-            <StringField label="TextField.placeholder" binding={placeholder} />
-            <StringField label="TextEditor.text" binding={editor} />
-            <NumberField label="TextEditor.frame.height" binding={editorHeight} />
-          </>
+          <EnumField
+            label="selection"
+            binding={selection}
+            options={[
+              { label: 'all', value: 'all' },
+              { label: 'online', value: 'online' },
+              { label: 'offline', value: 'offline' },
+            ]}
+          />
         }
       />
-
-      <Sheet isPresented={sheetPresented}>
-        <VStack
-          spacing={12}
-          padding={20}
-          frame={{ width: 380, height: 220 }}
-          background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 20 } }}
-        >
-          <Text font="headline">控件组合 Sheet</Text>
-          <Text foregroundStyle="secondary">这里演示 modal 结构、按钮对齐、文案层级。</Text>
-          <HStack>
-            <Spacer />
-            <Button title="关闭" buttonStyle="borderedProminent" onPress={() => sheetPresented.setValue(false)} />
-          </HStack>
-        </VStack>
-      </Sheet>
     </VStack>
   )
 }
 
-export const LayoutComponentDemo: FC = () => {
-  const spacing = useBinding('12')
-  const showDivider = useBoolBinding(true)
-  const stackAlignment = useBinding<'leading' | 'center' | 'trailing'>('leading')
+export const TextFieldComponentDemo: FC = () => {
+  const text = useBinding('freewind-mac')
+  const placeholder = useBinding('input device name')
 
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <FormSection title="静态例子">
-        <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-          <HStack
-            spacing={12}
-            padding={12}
-            background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
-            frame={{ maxWidth: 'infinity' }}
-          >
-            <Text>A</Text>
-            <Spacer />
-            <Text>B</Text>
-            <Divider axis="vertical" />
-            <Text>C</Text>
-          </HStack>
+        <TextField text={text} placeholder="input device name" textFieldStyle="roundedBorder" frame={{ maxWidth: 'infinity' }} />
+      </FormSection>
+      <PlaygroundSection
+        title="TextField Playground"
+        preview={<TextField text={text} placeholder={placeholder.value} textFieldStyle="roundedBorder" frame={{ maxWidth: 'infinity' }} />}
+        form={
+          <>
+            <StringField label="text" binding={text} />
+            <StringField label="placeholder" binding={placeholder} />
+          </>
+        }
+      />
+    </VStack>
+  )
+}
+
+export const TextEditorComponentDemo: FC = () => {
+  const text = useBinding('多行输入，后续映射 TextEditor。')
+  const height = useBinding('140')
+
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="静态例子">
+        <TextEditor text={text} frame={{ height: 140, maxWidth: 'infinity' }} />
+      </FormSection>
+      <PlaygroundSection
+        title="TextEditor Playground"
+        preview={<TextEditor text={text} frame={{ height: toNumber(height.value, 140), maxWidth: 'infinity' }} />}
+        form={
+          <>
+            <StringField label="text" binding={text} />
+            <NumberField label="frame.height" binding={height} />
+          </>
+        }
+      />
+    </VStack>
+  )
+}
+
+export const VStackComponentDemo: FC = () => {
+  const spacing = useBinding('8')
+  const alignment = useBinding<'leading' | 'center' | 'trailing'>('leading')
+
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="静态例子">
+        <VStack spacing={8} alignment="leading" padding={12} background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}>
+          <Text>row 1</Text>
+          <Text>row 2</Text>
+          <Text>row 3</Text>
         </VStack>
       </FormSection>
-
       <PlaygroundSection
-        title="Layout Playground"
+        title="VStack Playground"
         preview={
-          <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-            <HStack
-              spacing={toNumber(spacing.value, 12)}
-              padding={12}
-              alignment="center"
-              background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
-              frame={{ maxWidth: 'infinity' }}
-            >
-              <Text>A</Text>
-              <Spacer />
-              <Text>B</Text>
-              {toBoolBinding(showDivider) ? <Divider axis="vertical" /> : null}
-              <Text>C</Text>
-            </HStack>
-            <VStack
-              spacing={toNumber(spacing.value, 12)}
-              alignment={stackAlignment.value}
-              padding={12}
-              background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
-              frame={{ maxWidth: 'infinity', alignment: 'leading' }}
-            >
-              <Text>row 1</Text>
-              <Text>row 2</Text>
-              <Text>row 3</Text>
-            </VStack>
-            <ScrollView axes="horizontal" frame={{ maxWidth: 'infinity' }}>
-              <LazyHStack spacing={toNumber(spacing.value, 12)} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-                <Chip title="LazyHStack" />
-                <Chip title="Horizontal" />
-                <Chip title="Scrollable" />
-                <Chip title="Token Friendly" />
-              </LazyHStack>
-            </ScrollView>
+          <VStack
+            spacing={toNumber(spacing.value, 8)}
+            alignment={alignment.value}
+            padding={12}
+            frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+            background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
+          >
+            <Text>row 1</Text>
+            <Text>row 2</Text>
+            <Text>row 3</Text>
           </VStack>
         }
         form={
           <>
             <NumberField label="spacing" binding={spacing} />
             <EnumField
-              label="VStack.alignment"
-              binding={stackAlignment}
+              label="alignment"
+              binding={alignment}
               options={[
                 { label: 'leading', value: 'leading' },
                 { label: 'center', value: 'center' },
                 { label: 'trailing', value: 'trailing' },
               ]}
             />
-            <BoolField label="show Divider" binding={showDivider} />
           </>
         }
       />
@@ -392,68 +374,198 @@ export const LayoutComponentDemo: FC = () => {
   )
 }
 
-export const ContainerComponentDemo: FC = () => {
-  const sheetPresented = useBinding(false)
-  const itemCount = useBinding('8')
-  const openContext = useBoolBinding(false)
+export const HStackComponentDemo: FC = () => {
+  const spacing = useBinding('12')
+
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="静态例子">
+        <HStack spacing={12} padding={12} background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}>
+          <Text>A</Text>
+          <Text>B</Text>
+          <Text>C</Text>
+        </HStack>
+      </FormSection>
+      <PlaygroundSection
+        title="HStack Playground"
+        preview={
+          <HStack
+            spacing={toNumber(spacing.value, 12)}
+            padding={12}
+            frame={{ maxWidth: 'infinity' }}
+            background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
+          >
+            <Text>A</Text>
+            <Text>B</Text>
+            <Text>C</Text>
+          </HStack>
+        }
+        form={<NumberField label="spacing" binding={spacing} />}
+      />
+    </VStack>
+  )
+}
+
+export const SpacerComponentDemo: FC = () => {
+  const minLength = useBinding('60')
+
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="静态例子">
+        <HStack padding={12} frame={{ maxWidth: 'infinity' }} background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}>
+          <Text>Leading</Text>
+          <Spacer />
+          <Text>Trailing</Text>
+        </HStack>
+      </FormSection>
+      <PlaygroundSection
+        title="Spacer Playground"
+        preview={
+          <HStack padding={12} frame={{ maxWidth: 'infinity' }} background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}>
+            <Text>Leading</Text>
+            <Spacer minLength={toNumber(minLength.value, 60)} />
+            <Text>Trailing</Text>
+          </HStack>
+        }
+        form={<NumberField label="minLength" binding={minLength} />}
+      />
+    </VStack>
+  )
+}
+
+export const DividerComponentDemo: FC = () => {
+  const axis = useBinding<'horizontal' | 'vertical'>('horizontal')
+
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="静态例子">
+        <VStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <Text>row 1</Text>
+          <Divider />
+          <Text>row 2</Text>
+        </VStack>
+      </FormSection>
+      <PlaygroundSection
+        title="Divider Playground"
+        preview={
+          axis.value === 'horizontal' ? (
+            <VStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+              <Text>row 1</Text>
+              <Divider />
+              <Text>row 2</Text>
+            </VStack>
+          ) : (
+            <HStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+              <Text>A</Text>
+              <Divider axis="vertical" />
+              <Text>B</Text>
+            </HStack>
+          )
+        }
+        form={
+          <EnumField
+            label="axis"
+            binding={axis}
+            options={[
+              { label: 'horizontal', value: 'horizontal' },
+              { label: 'vertical', value: 'vertical' },
+            ]}
+          />
+        }
+      />
+    </VStack>
+  )
+}
+
+export const ScrollViewComponentDemo: FC = () => {
+  const rowCount = useBinding('8')
 
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <FormSection title="静态例子">
         <ScrollView frame={{ height: 180, maxWidth: 'infinity' }}>
           <VStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-            {Array.from({ length: 10 }).map((_, index) => (
+            {Array.from({ length: 6 }).map((_, index) => (
               <GalleryRow key={String(index)} title={`scroll row ${String(index + 1)}`} meta="vertical scroll content" />
             ))}
           </VStack>
         </ScrollView>
       </FormSection>
-
       <PlaygroundSection
-        title="Container Playground"
+        title="ScrollView Playground"
         preview={
-          <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-            <ScrollView frame={{ height: 180, maxWidth: 'infinity' }}>
-              <VStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-                {Array.from({ length: Math.max(1, toNumber(itemCount.value, 8)) }).map((_, index) => (
-                  <GalleryRow key={String(index)} title={`scroll row ${String(index + 1)}`} meta="vertical scroll content" />
-                ))}
-              </VStack>
-            </ScrollView>
-            <HStack spacing={12}>
-              <Button title="打开 Sheet" buttonStyle="borderedProminent" onPress={() => sheetPresented.setValue(true)} />
-              <ContextMenu
-                items={[
-                  { title: '置顶' },
-                  { title: '清空聊天' },
-                  { title: '删除' },
-                ]}
-              >
-                <Button title={toBoolBinding(openContext) ? '右键我' : 'contextMenu trigger'} buttonStyle="bordered" />
-              </ContextMenu>
-            </HStack>
-          </VStack>
+          <ScrollView frame={{ height: 180, maxWidth: 'infinity' }}>
+            <VStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+              {Array.from({ length: Math.max(1, toNumber(rowCount.value, 8)) }).map((_, index) => (
+                <GalleryRow key={String(index)} title={`scroll row ${String(index + 1)}`} meta="vertical scroll content" />
+              ))}
+            </VStack>
+          </ScrollView>
         }
-        form={
-          <>
-            <NumberField label="Scroll row count" binding={itemCount} />
-            <BoolField label="Context button title alt" binding={openContext} />
-          </>
-        }
+        form={<NumberField label="row count" binding={rowCount} />}
       />
+    </VStack>
+  )
+}
 
-      <Sheet isPresented={sheetPresented}>
+export const LazyHStackComponentDemo: FC = () => {
+  const spacing = useBinding('10')
+
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="静态例子">
+        <ScrollView axes="horizontal" frame={{ maxWidth: 'infinity' }}>
+          <LazyHStack spacing={10}>
+            <Chip title="LazyHStack" />
+            <Chip title="Horizontal" />
+            <Chip title="Scrollable" />
+          </LazyHStack>
+        </ScrollView>
+      </FormSection>
+      <PlaygroundSection
+        title="LazyHStack Playground"
+        preview={
+          <ScrollView axes="horizontal" frame={{ maxWidth: 'infinity' }}>
+            <LazyHStack spacing={toNumber(spacing.value, 10)}>
+              <Chip title="LazyHStack" />
+              <Chip title="Horizontal" />
+              <Chip title="Scrollable" />
+              <Chip title="Token Friendly" />
+            </LazyHStack>
+          </ScrollView>
+        }
+        form={<NumberField label="spacing" binding={spacing} />}
+      />
+    </VStack>
+  )
+}
+
+export const SheetComponentDemo: FC = () => {
+  const title = useBinding('Sheet 内容')
+  const presented = useBinding(false)
+
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="静态例子">
+        <Button title="打开 Sheet" buttonStyle="borderedProminent" onPress={() => presented.setValue(true)} />
+      </FormSection>
+      <PlaygroundSection
+        title="Sheet Playground"
+        preview={<Button title="打开 Sheet" buttonStyle="borderedProminent" onPress={() => presented.setValue(true)} />}
+        form={<StringField label="sheet title" binding={title} />}
+      />
+      <Sheet isPresented={presented}>
         <VStack
           spacing={12}
           padding={20}
           frame={{ width: 360, height: 220 }}
           background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 20 } }}
         >
-          <Text font="headline">Sheet 内容</Text>
+          <Text font="headline">{title.value}</Text>
           <Text foregroundStyle="secondary">这里展示 modal 容器、按钮区、层级关系。</Text>
           <HStack>
             <Spacer />
-            <Button title="关闭" buttonStyle="borderedProminent" onPress={() => sheetPresented.setValue(false)} />
+            <Button title="关闭" buttonStyle="borderedProminent" onPress={() => presented.setValue(false)} />
           </HStack>
         </VStack>
       </Sheet>
@@ -461,55 +573,50 @@ export const ContainerComponentDemo: FC = () => {
   )
 }
 
-export const ShapeTokenComponentDemo: FC = () => {
-  const foreground = useBinding<ForegroundStyleToken>('accentColor')
-  const cornerRadius = useBinding('18')
-  const shapeKind = useBinding<'rounded' | 'capsule' | 'rectangle'>('rounded')
+export const ContextMenuComponentDemo: FC = () => {
+  const altTitle = useBoolBinding(false)
 
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <FormSection title="静态例子">
-        <HStack spacing={12}>
-          <SwatchCard title="Rounded" tone="blue" />
-          <SwatchCard title="Capsule" tone="green" capsule />
-          <SwatchCard title="Rect" tone="red" rectangle />
-        </HStack>
+        <ContextMenu items={[{ title: '置顶' }, { title: '清空聊天' }, { title: '删除' }]}>
+          <Button title="contextMenu trigger" buttonStyle="bordered" />
+        </ContextMenu>
       </FormSection>
-
       <PlaygroundSection
-        title="Shape / Token Playground"
+        title="ContextMenu Playground"
         preview={
-          <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-            <Text foregroundStyle={foreground.value}>foregroundStyle preview</Text>
-            {shapeKind.value === 'rounded' ? (
-              <RoundedRectangle fill={foreground.value} cornerRadius={toNumber(cornerRadius.value, 18)} padding={18} frame={{ width: 220 }}>
-                <Text foregroundColor="#ffffff">RoundedRectangle</Text>
-              </RoundedRectangle>
-            ) : null}
-            {shapeKind.value === 'capsule' ? (
-              <HStack padding={18} background={{ fill: foreground.value, in: { kind: 'capsule' } }}>
-                <Text foregroundColor="#ffffff">Capsule token</Text>
-              </HStack>
-            ) : null}
-            {shapeKind.value === 'rectangle' ? (
-              <HStack padding={18} background={{ fill: foreground.value, in: { kind: 'rectangle' } }}>
-                <Text foregroundColor="#ffffff">Rectangle token</Text>
-              </HStack>
-            ) : null}
-          </VStack>
+          <ContextMenu items={[{ title: '置顶' }, { title: '清空聊天' }, { title: '删除' }]}>
+            <Button title={toBoolBinding(altTitle) ? '右键我' : 'contextMenu trigger'} buttonStyle="bordered" />
+          </ContextMenu>
+        }
+        form={<BoolField label="alt title" binding={altTitle} />}
+      />
+    </VStack>
+  )
+}
+
+export const RoundedRectangleComponentDemo: FC = () => {
+  const fill = useBinding<ForegroundStyleToken>('accentColor')
+  const cornerRadius = useBinding('18')
+
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="静态例子">
+        <RoundedRectangle fill="blue" cornerRadius={18} padding={18} frame={{ width: 220 }}>
+          <Text foregroundColor="#ffffff">RoundedRectangle</Text>
+        </RoundedRectangle>
+      </FormSection>
+      <PlaygroundSection
+        title="RoundedRectangle Playground"
+        preview={
+          <RoundedRectangle fill={fill.value} cornerRadius={toNumber(cornerRadius.value, 18)} padding={18} frame={{ width: 220 }}>
+            <Text foregroundColor="#ffffff">RoundedRectangle</Text>
+          </RoundedRectangle>
         }
         form={
           <>
-            <EnumField label="foregroundStyle" binding={foreground} options={foregroundOptions} />
-            <EnumField
-              label="shape kind"
-              binding={shapeKind}
-              options={[
-                { label: 'rounded', value: 'rounded' },
-                { label: 'capsule', value: 'capsule' },
-                { label: 'rectangle', value: 'rectangle' },
-              ]}
-            />
+            <EnumField label="fill" binding={fill} options={foregroundOptions} />
             <NumberField label="cornerRadius" binding={cornerRadius} />
           </>
         }
@@ -518,92 +625,166 @@ export const ShapeTokenComponentDemo: FC = () => {
   )
 }
 
-export const NativeMockComponentDemo: FC = () => {
-  const targetedField = useBinding<'true' | 'false'>('false')
-  const geometryFill = useBinding<ForegroundStyleToken>('secondary')
+export const TokenColorComponentDemo: FC = () => {
+  const foreground = useBinding<ForegroundStyleToken>('accentColor')
 
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <FormSection title="静态例子">
-        <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        <VStack spacing={8} alignment="leading">
+          {foregroundOptions.map(option => (
+            <Text key={option.value} foregroundStyle={option.value}>
+              {option.label}
+            </Text>
+          ))}
+        </VStack>
+      </FormSection>
+      <PlaygroundSection
+        title="Token Color Playground"
+        preview={
+          <VStack spacing={12} alignment="leading">
+            <Text foregroundStyle={foreground.value}>foregroundStyle preview</Text>
+            <HStack padding={18} background={{ fill: foreground.value, in: { kind: 'roundedRectangle', cornerRadius: 16 } }}>
+              <Text foregroundColor="#ffffff">background token preview</Text>
+            </HStack>
+          </VStack>
+        }
+        form={<EnumField label="foregroundStyle" binding={foreground} options={foregroundOptions} />}
+      />
+    </VStack>
+  )
+}
+
+export const GeometryReaderComponentDemo: FC = () => {
+  const fill = useBinding<ForegroundStyleToken>('secondary')
+
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="静态例子">
+        <GeometryReader
+          padding={12}
+          background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+          frame={{ maxWidth: 'infinity' }}
+        >
+          {proxy => <Text font="caption2.monospaced">width: {String(proxy.size.width)} height: {String(proxy.size.height)}</Text>}
+        </GeometryReader>
+      </FormSection>
+      <PlaygroundSection
+        title="GeometryReader Playground"
+        preview={
           <GeometryReader
+            padding={12}
+            background={{ fill: fill.value, in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+            frame={{ maxWidth: 'infinity' }}
+          >
+            {proxy => <Text font="caption2.monospaced">width: {String(proxy.size.width)} height: {String(proxy.size.height)}</Text>}
+          </GeometryReader>
+        }
+        form={<EnumField label="background.fill" binding={fill} options={foregroundOptions} />}
+      />
+    </VStack>
+  )
+}
+
+export const ScrollViewReaderComponentDemo: FC = () => {
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="静态例子">
+        <ScrollViewReader
+          padding={12}
+          background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+          frame={{ maxWidth: 'infinity' }}
+        >
+          {proxy => (
+            <HStack>
+              <Text>ScrollViewReader mock</Text>
+              <Spacer />
+              <Button title="scrollTo(bottom)" buttonStyle="bordered" onPress={() => proxy.scrollTo('bottom', { anchor: 'bottom' })} />
+            </HStack>
+          )}
+        </ScrollViewReader>
+      </FormSection>
+      <PlaygroundSection
+        title="ScrollViewReader Playground"
+        preview={
+          <ScrollViewReader
             padding={12}
             background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
             frame={{ maxWidth: 'infinity' }}
           >
             {proxy => (
-              <Text font="caption2.monospaced">
-                width: {String(proxy.size.width)} height: {String(proxy.size.height)}
-              </Text>
+              <HStack>
+                <Text>ScrollViewReader mock</Text>
+                <Spacer />
+                <Button title="scrollTo(bottom)" buttonStyle="bordered" onPress={() => proxy.scrollTo('bottom', { anchor: 'bottom' })} />
+              </HStack>
             )}
-          </GeometryReader>
+          </ScrollViewReader>
+        }
+        form={<Text foregroundStyle="secondary">当前支持面：`scrollTo(id, anchor)` mock</Text>}
+      />
+    </VStack>
+  )
+}
+
+export const DropAreaComponentDemo: FC = () => {
+  const targeted = useBinding<'true' | 'false'>('false')
+
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="静态例子">
+        <DropArea
+          padding={12}
+          background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+          frame={{ maxWidth: 'infinity' }}
+        >
+          <Text>DropArea mock，对应 SwiftUI `onDrop` 语义。</Text>
+        </DropArea>
+      </FormSection>
+      <PlaygroundSection
+        title="DropArea Playground"
+        preview={
+          <DropArea
+            isTargeted={{
+              value: toBoolBinding(targeted),
+              setValue: next => targeted.setValue(next ? 'true' : 'false'),
+            }}
+            padding={12}
+            background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+            frame={{ maxWidth: 'infinity' }}
+          >
+            <Text>DropArea mock，对应 SwiftUI `onDrop` 语义。</Text>
+          </DropArea>
+        }
+        form={<BoolField label="isTargeted" binding={targeted} />}
+      />
+    </VStack>
+  )
+}
+
+export const WindowAccessorComponentDemo: FC = () => {
+  const resolved = useBinding('Mock Window')
+
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <FormSection title="静态例子">
+        <VStack spacing={8} padding={12} background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          <Text font="headline">WindowAccessor</Text>
+          <Text foregroundStyle="secondary">对应 `NSViewRepresentable` bridge 的最小 mock。</Text>
+          <WindowAccessor onResolve={window => resolved.setValue(window.title)} />
+          <Text font="caption2.monospaced">{resolved.value}</Text>
         </VStack>
       </FormSection>
-
       <PlaygroundSection
-        title="Native Mock Playground"
+        title="WindowAccessor Playground"
         preview={
-          <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-            <GeometryReader
-              padding={12}
-              background={{ fill: geometryFill.value, in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
-              frame={{ maxWidth: 'infinity' }}
-            >
-              {proxy => (
-                <VStack spacing={8} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-                  <Text font="headline">GeometryReader</Text>
-                  <Text font="caption2.monospaced">
-                    width: {String(proxy.size.width)} height: {String(proxy.size.height)}
-                  </Text>
-                </VStack>
-              )}
-            </GeometryReader>
-            <ScrollViewReader
-              padding={12}
-              background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
-              frame={{ maxWidth: 'infinity' }}
-            >
-              {proxy => (
-                <HStack>
-                  <Text>ScrollViewReader mock</Text>
-                  <Spacer />
-                  <Button title="scrollTo(bottom)" buttonStyle="bordered" onPress={() => proxy.scrollTo('bottom', { anchor: 'bottom' })} />
-                </HStack>
-              )}
-            </ScrollViewReader>
-            <DropArea
-              isTargeted={{
-                value: toBoolBinding(targetedField),
-                setValue: next => targetedField.setValue(next ? 'true' : 'false'),
-              }}
-              padding={12}
-              background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
-              frame={{ maxWidth: 'infinity' }}
-              onDrop={() => {}}
-            >
-              <Text>DropArea mock，对应 SwiftUI `onDrop` 语义。</Text>
-            </DropArea>
-            <VStack
-              spacing={8}
-              padding={12}
-              background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
-              frame={{ maxWidth: 'infinity', alignment: 'leading' }}
-            >
-              <Text font="headline">WindowAccessor</Text>
-              <Text foregroundStyle="secondary">对应 `NSViewRepresentable` bridge 的最小 mock。</Text>
-              <WindowAccessor onResolve={window => void window.title} />
-            </VStack>
+          <VStack spacing={8} padding={12} background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            <Text font="headline">WindowAccessor</Text>
+            <WindowAccessor onResolve={window => resolved.setValue(window.title)} />
+            <Text font="caption2.monospaced">{resolved.value}</Text>
           </VStack>
         }
-        form={
-          <>
-            <EnumField label="GeometryReader.fill" binding={geometryFill} options={foregroundOptions} />
-            <BoolField
-              label="DropArea.isTargeted"
-              binding={targetedField}
-            />
-          </>
-        }
+        form={<Text foregroundStyle="secondary">当前支持面：`onResolve(window)` mock</Text>}
       />
     </VStack>
   )
