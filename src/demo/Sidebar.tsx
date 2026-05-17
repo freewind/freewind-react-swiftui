@@ -94,20 +94,6 @@ export const Sidebar: FC<{
         </VStack>
       </ScrollView>
 
-      <FormSection title="切换频道">
-        <VStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-          {sectionEntries.map(entry => (
-            <Button
-              key={entry.id}
-              title={entry.title}
-              onPress={() => onOpenSection(entry.id)}
-              buttonStyle="bordered"
-              frame={{ maxWidth: 'infinity', alignment: 'leading' }}
-            />
-          ))}
-        </VStack>
-      </FormSection>
-
       <FormSection title="demo 原则">
         <VStack spacing={8} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
           <Text font="caption" foregroundStyle="secondary">
