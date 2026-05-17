@@ -3,12 +3,12 @@ import { FormSection, GroupBox, HStack, Picker, SceneLifecycleProvider, ScrollVi
 import { buildSwiftUiDraft, buildTranslatorExportPacket, translatorPageRegistry } from '../../translator'
 import { QQDemo } from '../qq'
 
-const sourceCards = translatorPageRegistry.filter(item => item.category === 'native-swift' && item.swiftSource)
+const sourceCards = translatorPageRegistry.filter(item => item.page.category === 'native-swift' && item.page.swiftSource)
 
 export const NativeSwiftSourceDemo: FC = () => {
-  const selection = useBinding(sourceCards[0]?.id ?? 'native-swift-root-view')
-  const selectedCard = sourceCards.find(item => item.id === selection.value) ?? sourceCards[0]
-  const packet = buildTranslatorExportPacket(selectedCard.id)
+  const selection = useBinding(sourceCards[0]?.page.id ?? 'native-swift-root-view')
+  const selectedCard = sourceCards.find(item => item.page.id === selection.value) ?? sourceCards[0]
+  const packet = buildTranslatorExportPacket(selectedCard.page.id)
   const draft = buildSwiftUiDraft(packet)
 
   return (
@@ -24,25 +24,76 @@ export const NativeSwiftSourceDemo: FC = () => {
               selection={selection}
               pickerStyle="segmented"
               options={sourceCards.map(item => ({
-                label: item.title.replace('.swift', ''),
-                value: item.id,
+                label: item.page.title.replace('.swift', ''),
+                value: item.page.id,
               }))}
             />
           </VStack>
         </FormSection>
         <LifecyclePanel />
+        <RegistryPanel selectedCard={selectedCard} />
         <GroupBox title="Mock Preview" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
           <QQDemo />
         </GroupBox>
-        <GroupBox title={selectedCard.title} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        <GroupBox title={selectedCard.page.title} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
           <HStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-            <Pane title="Swift Source" content={selectedCard.swiftSource ?? ''} />
+            <Pane title="Swift Source" content={selectedCard.page.swiftSource ?? ''} />
             <Pane title="Export Packet" content={JSON.stringify(packet, null, 2)} />
             <Pane title="SwiftUI Draft" content={draft} />
           </HStack>
         </GroupBox>
       </VStack>
     </SceneLifecycleProvider>
+  )
+}
+
+const RegistryPanel: FC<{
+  selectedCard: (typeof sourceCards)[number]
+}> = ({ selectedCard }) => {
+  const sections = [
+    { title: 'Aligned', items: selectedCard.coverage?.aligned ?? [], tone: 'green' as const },
+    { title: 'Stub', items: selectedCard.coverage?.stub ?? [], tone: 'blue' as const },
+    { title: 'Gap', items: selectedCard.coverage?.gap ?? [], tone: 'red' as const },
+  ]
+
+  return (
+    <GroupBox title="Registry Meta" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <VStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        <Text>{selectedCard.page.intent}</Text>
+        <Text font="caption" foregroundStyle="secondary">
+          components: {selectedCard.components.join(', ')}
+        </Text>
+        <Text font="caption" foregroundStyle="secondary">
+          api facades: {selectedCard.apiFacades.join(', ')}
+        </Text>
+        <HStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          {sections.map(section => (
+            <VStack
+              key={section.title}
+              spacing={6}
+              padding={12}
+              frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+              background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
+            >
+              <Text font="caption.semibold" foregroundStyle={section.tone}>
+                {section.title}
+              </Text>
+              {section.items.length ? (
+                section.items.map(item => (
+                  <Text key={item} font="caption" foregroundStyle="secondary">
+                    {item}
+                  </Text>
+                ))
+              ) : (
+                <Text font="caption" foregroundStyle="secondary">
+                  none
+                </Text>
+              )}
+            </VStack>
+          ))}
+        </HStack>
+      </VStack>
+    </GroupBox>
   )
 }
 
