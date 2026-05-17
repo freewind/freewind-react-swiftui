@@ -111,11 +111,14 @@ export type TabProps<T extends string | number> = {
   tag: T
   title: string
   systemImage?: string
+  badge?: string | number
+  disabled?: boolean
   children: ReactNode
 }
 
 export type TabViewProps<T extends string | number> = ViewBaseProps & {
   selection?: Binding<T>
+  tabBarHidden?: boolean
   children: ReactNode
 }
 

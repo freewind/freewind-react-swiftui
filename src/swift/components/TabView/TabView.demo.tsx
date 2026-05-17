@@ -11,14 +11,14 @@ export const TabViewDemo: FC = () => {
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <FormSection title="基础页签容器">
-        <TabView selection={selection}>
-          <Tab tag="contacts" title="联系人" systemImage="iphone">
+        <TabView selection={selection} tint="green">
+          <Tab tag="contacts" title="联系人" systemImage="iphone" badge={3}>
             <Text>联系人列表内容</Text>
           </Tab>
           <Tab tag="images" title="图片" systemImage="photo">
             <Text>图片流内容</Text>
           </Tab>
-          <Tab tag="files" title="文件" systemImage="doc">
+          <Tab tag="files" title="文件" systemImage="doc" disabled>
             <Text>文件流内容</Text>
           </Tab>
         </TabView>
@@ -27,7 +27,7 @@ export const TabViewDemo: FC = () => {
         title="带图标 tabs"
         summary="对应 SwiftUI `TabView` + `tabItem` + `tag` 的压缩表达。"
         preview={
-          <TabView selection={selection}>
+          <TabView selection={selection} tabBarHidden={selection.value === 'images'}>
             <Tab tag="contacts" title="聊天" systemImage="iphone">
               <VStack spacing={8} alignment="leading">
                 <Text>当前 tab: 聊天</Text>

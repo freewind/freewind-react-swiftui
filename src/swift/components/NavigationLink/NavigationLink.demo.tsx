@@ -17,8 +17,8 @@ export const NavigationLinkDemo: FC = () => {
           frame={{ maxWidth: 'infinity', alignment: 'leading' }}
           background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
         >
-          <NavigationLink title="General" onNavigate={() => target.setValue('General')} />
-          <NavigationLink title="Attachments" onNavigate={() => target.setValue('Attachments')} />
+          <NavigationLink title="General" value="基础设置" onNavigate={() => target.setValue('General')} />
+          <NavigationLink title="Attachments" value="12 files" onNavigate={() => target.setValue('Attachments')} />
         </VStack>
       </FormSection>
       <PlaygroundSection
@@ -28,6 +28,7 @@ export const NavigationLinkDemo: FC = () => {
           <VStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
             <NavigationLink
               onNavigate={() => target.setValue('Current Device')}
+              value="Mac mini"
               padding={12}
               background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
             >

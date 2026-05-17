@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { HStack, Table, Text } from '../runtime'
+import { HStack, Table, Text, useBinding } from '../runtime'
 import { PlaygroundSection } from '../../demo-playground'
 import { ComponentPropsTable } from '../../props-table'
 import {Button} from "../Button";
@@ -13,6 +13,8 @@ const peers = [
 ]
 
 export const TableDemo: FC = () => {
+  const selection = useBinding<string | null>('p1')
+
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <FormSection title="基础表格">
@@ -24,8 +26,12 @@ export const TableDemo: FC = () => {
           ]}
           dataSource={peers}
           rowKey={record => record.id}
+          selection={selection}
           frame={{ maxWidth: 'infinity' }}
         />
+        <Text font="caption" foregroundStyle="secondary">
+          selected: {selection.value ?? 'none'}
+        </Text>
       </FormSection>
       <PlaygroundSection
         title="带操作列"
@@ -56,6 +62,12 @@ export const TableDemo: FC = () => {
             ]}
             dataSource={peers}
             rowKey={record => record.id}
+            selection={selection}
+            rowActions={() => (
+              <HStack spacing={6}>
+                <Button title="Open" buttonStyle="bordered" controlSize="small" />
+              </HStack>
+            )}
             frame={{ maxWidth: 'infinity' }}
           />
         }

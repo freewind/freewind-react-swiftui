@@ -1,6 +1,7 @@
 import { Divider } from '../Divider'
 import { HStack } from '../HStack'
 import { Text } from '../Text'
+import type { Binding } from '../runtime'
 import type { ViewBaseProps } from '../View'
 import type { ReactNode } from 'react'
 
@@ -19,6 +20,9 @@ export type TableProps<T> = ViewBaseProps & {
   dataSource: T[]
   rowKey: (record: T, index: number) => string
   emptyText?: string
+  selection?: Binding<string | null>
+  onSelect?: (record: T, index: number) => void
+  rowActions?: (record: T, index: number) => ReactNode
 }
 
 
@@ -27,6 +31,9 @@ export const Table = <T,>({
   dataSource,
   rowKey,
   emptyText = 'No Data',
+  selection,
+  onSelect,
+  rowActions,
   ...rest
 }: TableProps<T>) => {
   return (
@@ -64,7 +71,20 @@ export const Table = <T,>({
       ) : (
         dataSource.map((record, index) => (
           <VStack key={rowKey(record, index)} spacing={0} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-            <HStack spacing={12} padding={{ horizontal: 12, vertical: 10 }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            <HStack
+              spacing={12}
+              padding={{ horizontal: 12, vertical: 10 }}
+              frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+              background={
+                selection?.value === rowKey(record, index)
+                  ? { fill: 'tertiary', in: { kind: 'roundedRectangle', cornerRadius: 10 } }
+                  : undefined
+              }
+              onTapGesture={() => {
+                selection?.setValue(rowKey(record, index))
+                onSelect?.(record, index)
+              }}
+            >
               {columns.map(column => {
                 const cell = column.render?.(record, index) ?? (column.dataIndex ? String(record[column.dataIndex] ?? '') : '')
 
@@ -81,6 +101,7 @@ export const Table = <T,>({
                   </VStack>
                 )
               })}
+              {rowActions ? <VStack>{rowActions(record, index)}</VStack> : null}
             </HStack>
             {index < dataSource.length - 1 ? <Divider /> : null}
           </VStack>

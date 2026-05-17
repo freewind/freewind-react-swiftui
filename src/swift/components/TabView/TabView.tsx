@@ -9,6 +9,7 @@ import { VStack } from '../VStack'
 export const TabView = <T extends string | number>({
   selection,
   children,
+  tabBarHidden = false,
   ...rest
 }: TabViewProps<T>) => {
   const tabs = (Array.isArray(children) ? children : [children]).filter(isValidElement) as Array<ReactElement<TabProps<T>>>
@@ -26,25 +27,34 @@ export const TabView = <T extends string | number>({
 
   return (
     <VStack spacing={12} alignment="leading" {...rest}>
-      <HStack
-        spacing={6}
-        padding={4}
-        background={{ fill: 'tertiary', in: { kind: 'roundedRectangle', cornerRadius: 12 } }}
-      >
-        {tabs.map(tab => (
-          <Button
-            key={String(tab.props.tag)}
-            buttonStyle={tab.props.tag === currentTag ? 'borderedProminent' : 'plain'}
-            controlSize="small"
-            onPress={() => setCurrentTag(tab.props.tag)}
-          >
-            <HStack spacing={6}>
-              {tab.props.systemImage ? <Image systemName={tab.props.systemImage}/> : null}
-              <Text>{tab.props.title}</Text>
-            </HStack>
-          </Button>
-        ))}
-      </HStack>
+      {tabBarHidden ? null : (
+        <HStack
+          spacing={6}
+          padding={4}
+          background={{ fill: 'tertiary', in: { kind: 'roundedRectangle', cornerRadius: 12 } }}
+        >
+          {tabs.map(tab => (
+            <Button
+              key={String(tab.props.tag)}
+              buttonStyle={tab.props.tag === currentTag ? 'borderedProminent' : 'plain'}
+              controlSize={rest.controlSize ?? 'small'}
+              tint={rest.tint}
+              onPress={() => setCurrentTag(tab.props.tag)}
+              disabled={tab.props.disabled}
+            >
+              <HStack spacing={6}>
+                {tab.props.systemImage ? <Image systemName={tab.props.systemImage}/> : null}
+                <Text>{tab.props.title}</Text>
+                {tab.props.badge != null ? (
+                  <Text font="caption2.monospaced" foregroundStyle={tab.props.tag === currentTag ? 'primary' : 'secondary'}>
+                    {String(tab.props.badge)}
+                  </Text>
+                ) : null}
+              </HStack>
+            </Button>
+          ))}
+        </HStack>
+      )}
       <VStack
         spacing={10}
         padding={14}

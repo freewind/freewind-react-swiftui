@@ -10,6 +10,8 @@ import { VStack } from '../VStack'
 
 export type NavigationLinkProps = ViewBaseProps & {
   title?: string
+  value?: string
+  isDetailLink?: boolean
   onNavigate?: () => void
   destination?: ReactNode
   destinationTitle?: string
@@ -18,6 +20,7 @@ export type NavigationLinkProps = ViewBaseProps & {
 
 export const NavigationLink: FC<NavigationLinkProps> = ({
   title,
+  value,
   onNavigate,
   destination,
   destinationTitle,
@@ -31,7 +34,7 @@ export const NavigationLink: FC<NavigationLinkProps> = ({
       onPress={() => {
         onNavigate?.()
         if (destination && navigation) {
-          navigation.push(destination, { title: destinationTitle ?? title })
+          navigation.push(destination, { title: destinationTitle ?? title ?? value })
         }
       }}
       frame={{ maxWidth: 'infinity', alignment: 'leading' }}
@@ -40,6 +43,11 @@ export const NavigationLink: FC<NavigationLinkProps> = ({
       <HStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
         <VStack spacing={0} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
           {children ?? <Text>{title ?? 'NavigationLink'}</Text>}
+          {value ? (
+            <Text font="caption" foregroundStyle="secondary">
+              {value}
+            </Text>
+          ) : null}
         </VStack>
         <Text font="caption2.monospaced" foregroundStyle="tertiary">
           ›

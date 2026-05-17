@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import { OutlineGroup } from './OutlineGroup'
 import { TimelineView } from '../TimelineView/TimelineView'
-import { Text } from '../runtime'
+import { Text, useBinding } from '../runtime'
 import { VStack } from '../VStack'
 import {FormSection} from "../FormSection";
 
@@ -17,6 +17,8 @@ const nodes: TreeNode[] = [
 ]
 
 export const OutlineGroupDemo: FC = () => {
+  const expandedIds = useBinding<string[]>(['1'])
+
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <FormSection title="OutlineGroup / TimelineView">
@@ -26,7 +28,11 @@ export const OutlineGroupDemo: FC = () => {
             id={item => item.id}
             label={item => <Text>{item.title}</Text>}
             childrenOf={item => item.children}
+            expandedIds={expandedIds}
           />
+          <Text font="caption" foregroundStyle="secondary">
+            expanded: {expandedIds.value.join(', ') || 'none'}
+          </Text>
           <TimelineView schedule="everySecond">
             {({ date }) => <Text font="caption2.monospaced" foregroundStyle="secondary">{date.toLocaleTimeString()}</Text>}
           </TimelineView>
