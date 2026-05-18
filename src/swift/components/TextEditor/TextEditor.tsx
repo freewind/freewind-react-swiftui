@@ -1,5 +1,5 @@
-import { useEffect, useRef, type FC } from 'react'
-import { inputChrome, viewStyle } from '../runtime'
+import { useContext, useEffect, useRef, type FC } from 'react'
+import { inputChrome, parentStackAxisContext, viewStyle } from '../runtime'
 import type { Binding } from '../runtime'
 import type { ViewBaseProps } from '../View'
 
@@ -12,6 +12,7 @@ export type TextEditorProps = ViewBaseProps & {
 
 export const TextEditor: FC<TextEditorProps> = ({ text, focused, equals, controlSize = 'regular', tint, ...rest }) => {
   const ref = useRef<HTMLTextAreaElement | null>(null)
+  const parentStackAxis = useContext(parentStackAxisContext)
   const isFocused = focused ? focused.value === (equals ?? null) : false
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export const TextEditor: FC<TextEditorProps> = ({ text, focused, equals, control
       }}
       style={{
         ...inputChrome('roundedBorder', controlSize, tint),
-        ...viewStyle(rest),
+        ...viewStyle(rest, parentStackAxis),
         resize: 'none',
         minHeight: 120,
       }}

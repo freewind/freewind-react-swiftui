@@ -1,5 +1,6 @@
 import type { CSSProperties, FC } from 'react'
-import { viewStyle } from '../runtime'
+import { useContext } from 'react'
+import { parentStackAxisContext, viewStyle } from '../runtime'
 import type { ViewBaseProps } from '../View'
 
 import { Text } from '../Text'
@@ -30,8 +31,9 @@ export const Image: FC<ImageProps> = ({
   children,
   ...rest
 }) => {
+  const parentStackAxis = useContext(parentStackAxisContext)
   const style: CSSProperties = {
-    ...viewStyle(rest),
+    ...viewStyle(rest, parentStackAxis),
     objectFit: scaledToFit || resizable ? 'contain' : undefined,
     display: 'block',
   }

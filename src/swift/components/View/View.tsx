@@ -72,8 +72,16 @@ export const View: FC<
   const dragStartRef = useRef<{ x: number; y: number } | null>(null)
   const baseStyle = viewStyle(rest, parentStackAxis)
   const stackStyle = stackStyleFrom(stack)
+  const fillsWidth = baseStyle.width !== undefined || baseStyle.maxWidth !== undefined || baseStyle.alignSelf === 'stretch'
+  const fillsHeight = baseStyle.height !== undefined || baseStyle.maxHeight !== undefined
   const containerStyle: CSSProperties = {
     ...baseStyle,
+    ...(stack && fillsWidth
+      ? { width: baseStyle.width ?? '100%' }
+      : null),
+    ...(stack && fillsHeight
+      ? { height: baseStyle.height ?? '100%' }
+      : null),
     position: 'relative',
     pointerEvents: finalDisabled ? 'none' : undefined,
     opacity: finalDisabled ? 0.55 : baseStyle.opacity,
@@ -83,10 +91,10 @@ export const View: FC<
         ...stackStyle,
         minWidth: 0,
         minHeight: 0,
-        ...(baseStyle.width !== undefined || baseStyle.maxWidth !== undefined || baseStyle.alignSelf === 'stretch'
+        ...(fillsWidth
           ? { width: '100%' }
           : null),
-        ...(baseStyle.height !== undefined || baseStyle.maxHeight !== undefined
+        ...(fillsHeight
           ? { height: '100%' }
           : null),
       }

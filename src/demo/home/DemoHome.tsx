@@ -6,7 +6,6 @@ import {
   MockEnvironmentProvider,
   ScrollView,
   Text,
-  TextEditorSheet,
   type ThemeMode,
   useBinding,
   VStack,
@@ -21,8 +20,6 @@ export const DemoHome: FC = () => {
   const theme = useBinding<ThemeMode>('light')
   const section = useBinding<DemoHomeSection>('home')
   const currentPage = useBinding<string | null>(null)
-  const notesSheetPresented = useBinding(false)
-  const notes = useBinding('这里放 demo 说明、转换 hint、组件限制。')
 
   const pages = isDemoCategory(section.value) ? demoPages.filter(page => page.category === section.value) : []
   const pageGroups = isDemoCategory(section.value) ? groupPagesByCategory(pages, section.value) : []
@@ -44,7 +41,6 @@ export const DemoHome: FC = () => {
         windowMode="maximized"
         theme={theme.value}
         title={activePage?.title ?? activeSection?.title ?? 'Demo Home'}
-        subtitle="SwiftUI Preview Window"
         contentScrollAxes="vertical"
         contentShowsIndicators
       >
@@ -61,12 +57,7 @@ export const DemoHome: FC = () => {
           <HStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }} spacing={0} padding={{ top: 16 }}>
             {showSidebar ? (
               <>
-                <Sidebar
-                  section={section}
-                  currentPage={currentPage}
-                  groups={pageGroups}
-                  onOpenNotes={() => notesSheetPresented.setValue(true)}
-                />
+                <Sidebar section={section} currentPage={currentPage} groups={pageGroups} />
                 <Divider axis="vertical" />
               </>
             ) : null}
@@ -83,8 +74,6 @@ export const DemoHome: FC = () => {
             </VStack>
           </HStack>
         </VStack>
-
-        <TextEditorSheet title="Demo Notes" isPresented={notesSheetPresented} text={notes} />
       </WindowGroup>
     </MockEnvironmentProvider>
   )
@@ -94,8 +83,7 @@ const Sidebar: FC<{
   section: ReturnType<typeof useBinding<DemoHomeSection>>
   currentPage: ReturnType<typeof useBinding<string | null>>
   groups: Array<{ title: string; pages: Array<{ id: string; title: string }> }>
-  onOpenNotes: () => void
-}> = ({ section, currentPage, groups, onOpenNotes }) => {
+}> = ({ section, currentPage, groups }) => {
   const scrollIdentity = `${section.value}:${groups.map(group => `${group.title}:${group.pages.map(page => page.id).join(',')}`).join('|')}`
 
   return (
@@ -126,7 +114,6 @@ const Sidebar: FC<{
           ))}
         </VStack>
       </ScrollView>
-      <Button title="Notes" buttonStyle="bordered" frame={{ maxWidth: 'infinity', alignment: 'leading' }} onPress={onOpenNotes} />
     </VStack>
   )
 }

@@ -1,5 +1,5 @@
-import { useEffect, useRef, type FC } from 'react'
-import { inputChrome, viewStyle } from '../runtime'
+import { useContext, useEffect, useRef, type FC } from 'react'
+import { inputChrome, parentStackAxisContext, viewStyle } from '../runtime'
 import type { Binding, TextFieldStyleToken } from '../runtime'
 import type { ViewBaseProps } from '../View'
 
@@ -27,6 +27,7 @@ export const TextField: FC<TextFieldProps> = ({
   ...rest
 }) => {
   const ref = useRef<HTMLInputElement | null>(null)
+  const parentStackAxis = useContext(parentStackAxisContext)
   const isFocused = focused ? focused.value === (equals ?? null) : false
 
   useEffect(() => {
@@ -65,7 +66,7 @@ export const TextField: FC<TextFieldProps> = ({
       enterKeyHint={submitLabel}
       style={{
         ...inputChrome(textFieldStyle, controlSize, tint),
-        ...viewStyle(rest),
+        ...viewStyle(rest, parentStackAxis),
       }}
     />
   )

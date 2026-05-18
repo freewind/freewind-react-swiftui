@@ -1,7 +1,7 @@
 import type { CSSProperties, FC } from 'react'
 import type { ControlSizeToken } from '../../types'
 import { useContext } from 'react'
-import { disabledContext, surfaceColors, textColorMap, viewStyle } from '../runtime'
+import { disabledContext, parentStackAxisContext, surfaceColors, textColorMap, viewStyle } from '../runtime'
 import type { ViewBaseProps } from '../View'
 
 export type ButtonStyleToken = 'plain' | 'bordered' | 'borderedProminent' | 'borderless' | 'link'
@@ -63,6 +63,7 @@ export const Button: FC<ButtonProps> = ({
   ...rest
 }) => {
   const disabled = useContext(disabledContext) || Boolean(rest.disabled)
+  const parentStackAxis = useContext(parentStackAxisContext)
   const tintColor =
     typeof rest.tint === 'string' && rest.tint.startsWith('#')
       ? rest.tint
@@ -71,7 +72,7 @@ export const Button: FC<ButtonProps> = ({
         : surfaceColors.accent
   const style = {
     ...buttonChrome(buttonStyle, controlSize, disabled),
-    ...viewStyle(rest),
+    ...viewStyle(rest, parentStackAxis),
     ...(buttonStyle === 'borderedProminent' ? { background: tintColor } : null),
     ...(buttonStyle === 'link' ? { color: tintColor } : null),
   }

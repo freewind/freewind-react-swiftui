@@ -80,7 +80,6 @@ import { ZStackDemo } from '../../swift/components/ZStack'
 import { DashboardDemo, FormSheetDemo, SplitViewDemo } from '../layouts'
 import { FileBrowserDemo } from '../file-browser'
 import { ImageBrowserDemo } from '../image-browser'
-import { NativeSwiftSourceDemo } from '../native-swift'
 import { QQDemo } from '../qq'
 import { SystemApiMockDemo } from '../system-api'
 import { TodoDemo } from '../todo'
@@ -167,7 +166,6 @@ export const renderDemoPage = (pageId: string) => {
     'component-drop-area': DropAreaDemo,
     'component-window-accessor': WindowAccessorDemo,
     translator: TranslatorSpecDemo,
-    'native-swift': NativeSwiftSourceDemo,
     'split-view': SplitViewDemo,
     dashboard: DashboardDemo,
     'form-sheet': FormSheetDemo,

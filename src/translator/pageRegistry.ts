@@ -1,13 +1,10 @@
-import rootViewSwiftSource from '/Users/peng.li/workspace/freewind-qq/native/macos/Sources/FreewindQQMac/Features/RootView.swift?raw'
-import chatScreenSwiftSource from '/Users/peng.li/workspace/freewind-qq/native/macos/Sources/FreewindQQMac/Features/ChatScreen.swift?raw'
-import composerTextViewSwiftSource from '/Users/peng.li/workspace/freewind-qq/native/macos/Sources/FreewindQQMac/ComposerTextView.swift?raw'
 import type { TranslatorExportPacket } from './types'
 
 export type TranslatorPageMeta = {
   id: string
   title: string
   intent: string
-  category: 'translator' | 'native-swift' | 'app' | 'component'
+  category: 'translator' | 'app' | 'component'
   swiftSource?: string
 }
 
@@ -67,61 +64,10 @@ const specs: TranslatorPageSpec[] = [
       '</VStack>',
     ].join('\n'),
     coverage: {
-      aligned: ['TranslatorExportPacket', 'page-aware draft', '真实 Swift compare workspace'],
+      aligned: ['TranslatorExportPacket', 'page-aware draft', 'category-aware packet'],
       stub: ['AST 自动抽取', '更细粒度 capability 推断'],
       gap: ['从 Swift 源反向生成 JSX'],
     },
-  }),
-  makeSpec({
-    page: {
-      id: 'native-swift-root-view',
-      title: 'RootView',
-      intent: '把真实 Swift RootView 对照为可转 SwiftUI 的 JSX/mock 壳。',
-      category: 'native-swift',
-      swiftSource: rootViewSwiftSource,
-    },
-    stateModels: ['Binding<Int>', 'NavigationPath', 'MockEnvironment', 'AppShell'],
-    apiFacades: ['AppShell', 'AppSystemApi', 'AppFileApi'],
-    components: ['NavigationStack', 'List', 'Picker', 'Text', 'Button', 'HStack', 'VStack'],
-    modifiers: ['padding', 'frame', 'background', 'foregroundStyle', 'tint', 'controlSize'],
-    fewShot: ['Swift RootView 联系人侧栏 -> JSX HStack + VStack + Picker + mock app shell', 'Swift NavigationSplit-ish layout -> JSX HStack + detail pane'],
-    prompt: '把 RootView.swift 对照成 SwiftUI/JSX 双向稳定表示，保留侧栏、选择态、mock facade 边界，不要引入真实 IO。',
-    jsxSource: ['<HStack spacing={0}>', '  <ContactsPaneMini />', '  <Divider axis="vertical" />', '  <ChatPanel draft={draft} />', '</HStack>'].join('\n'),
-    coverage: { aligned: ['分栏壳', '联系人/聊天布局', 'mock app shell 边界'], stub: ['NavigationSplitView 细语义', 'toolbar/title bar'], gap: ['真实窗口 chrome'] },
-  }),
-  makeSpec({
-    page: {
-      id: 'native-swift-chat-screen',
-      title: 'ChatScreen',
-      intent: '把真实聊天页结构映射到 JSX DSL 与 SwiftUI draft。',
-      category: 'native-swift',
-      swiftSource: chatScreenSwiftSource,
-    },
-    stateModels: ['Binding<String>', 'ChatMessage[]', 'PeerDigest', 'FocusedValues'],
-    apiFacades: ['AppShell', 'AppFileApi'],
-    components: ['ScrollView', 'TextEditor', 'Button', 'Sheet', 'Popover', 'NavigationLink'],
-    modifiers: ['padding', 'frame', 'background', 'lineLimit', 'labelsHidden'],
-    fewShot: ['消息列表 -> ScrollView + VStack + message row', '附件弹层 -> Sheet/Popover + mock save/open facade'],
-    prompt: '把 ChatScreen.swift 转成结构稳定的 SwiftUI/JSX，对消息列表、输入区、附件动作优先保留状态和 facade 边界。',
-    jsxSource: ['<VStack spacing={0}>', '  <ScrollView>...</ScrollView>', '  <Divider />', '  <TextEditor text={draft} />', '</VStack>'].join('\n'),
-    coverage: { aligned: ['消息列表结构', '输入区壳', '附件 facade'], stub: ['滚动定位', '输入法/键盘桥接'], gap: ['真实富文本/粘贴板桥接'] },
-  }),
-  makeSpec({
-    page: {
-      id: 'native-swift-composer-text-view',
-      title: 'ComposerTextView',
-      intent: '把真实输入框桥接层压缩为 DSL 可表达的输入语义。',
-      category: 'native-swift',
-      swiftSource: composerTextViewSwiftSource,
-    },
-    stateModels: ['Binding<String>', 'FocusedValues', 'FocusState<String | null>'],
-    apiFacades: ['AppSystemApi'],
-    components: ['TextEditor', 'TextField', 'Button', 'Popover'],
-    modifiers: ['tint', 'controlSize', 'lineLimit'],
-    fewShot: ['NSTextView bridge -> TextEditor + FocusState + submit/draft state', '快捷动作按钮 -> Button + Popover'],
-    prompt: '把 ComposerTextView.swift 提炼成输入控件 DSL，优先保留 focus、draft、submit 与系统能力边界。',
-    jsxSource: ['<VStack spacing={8}>', '  <TextEditor text={draft} focused={focus} equals="composer" />', '  <HStack><Button title="Send" /></HStack>', '</VStack>'].join('\n'),
-    coverage: { aligned: ['draft/focus', '发送动作壳', '系统动作边界'], stub: ['多段文本属性', 'IME bridge'], gap: ['原生 NSTextView delegate 细节'] },
   }),
   makeSpec({
     page: { id: 'qq', title: 'QQ Chat', intent: '把聊天应用壳、联系人、消息列表、输入区转成 SwiftUI 稳定结构。', category: 'app' },

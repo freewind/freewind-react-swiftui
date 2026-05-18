@@ -56,7 +56,6 @@ const statusStyle: Record<CapabilitySection['rows'][number]['status'], 'green' |
 
 const categoryOptions = [
   { label: '规约', value: 'translator' },
-  { label: '原生', value: 'native-swift' },
   { label: '案例', value: 'app' },
   { label: '组件', value: 'component' },
 ] as const

@@ -1,6 +1,6 @@
 export type DemoCategory = 'components' | 'layouts' | 'apps'
 
-export type DemoSection = DemoCategory | 'translator' | 'native-swift'
+export type DemoSection = DemoCategory | 'translator'
 
 export type DemoHomeSection = DemoSection | 'home'
 
@@ -45,11 +45,5 @@ export const sectionEntries: SectionEntry[] = [
     title: '转换规约',
     summary: 'JSX 到 SwiftUI 的结构化导出与 draft 预览。',
     defaultPageId: 'translator',
-  },
-  {
-    id: 'native-swift',
-    title: '真实 Swift',
-    summary: '真实 Swift 源与 mock 预览并排对照。',
-    defaultPageId: 'native-swift',
   },
 ]

@@ -1,5 +1,6 @@
 import type { CSSProperties, FC } from 'react'
-import { viewStyle } from '../runtime'
+import { useContext } from 'react'
+import { parentStackAxisContext, viewStyle } from '../runtime'
 import type { FontToken, TextAlign } from '../runtime'
 import type { ViewBaseProps } from '../View'
 
@@ -56,7 +57,8 @@ export const Text: FC<TextProps> = ({
   multilineTextAlignment,
   ...rest
 }) => {
-  const baseStyle = viewStyle(rest)
+  const parentStackAxis = useContext(parentStackAxisContext)
+  const baseStyle = viewStyle(rest, parentStackAxis)
   const style: CSSProperties = {
     ...baseStyle,
     ...fontStyles[font],

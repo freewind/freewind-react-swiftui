@@ -23,7 +23,7 @@ const DocumentGroupDemoInner: FC = () => {
   const nextName = useAppStorage('document-group:rename', primaryDocument?.fileName ?? 'mock-note.txt')
   const selection = useAppStorage<string | null>('document-group:selection', primaryDocument?.id ?? briefDocument?.id ?? null)
   const saveStatus = useAppStorage('document-group:save-status', 'idle')
-  const packet = buildTranslatorExportPacket('native-swift-composer-text-view')
+  const packet = buildTranslatorExportPacket('component-document-group')
   const draft = buildSwiftUiDraft(packet)
   const documents = [primaryDocument, briefDocument].filter(Boolean).map(item => item!)
   const selectedDocument = documents.find(item => item.id === selection.value) ?? documents[0] ?? null
