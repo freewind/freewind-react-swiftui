@@ -1,9 +1,12 @@
-import { Button, FormSection, HStack, Image, Picker, Text, TextField, useBinding, VStack } from '../../swift'
+import { Button, FormSection, HStack, Picker, Text, TextField, Toggle, binding, useBinding, VStack } from '../../swift'
 import { todoItems } from './todoItems'
 
 export function TodoDemo() {
   const segment = useBinding<'all' | 'open' | 'done'>('all')
   const input = useBinding('给 SwiftUI JSX demo 再加更多 case')
+  const items = useBinding(todoItems)
+
+  const visibleItems = items.value.filter(item => (segment.value === 'all' ? true : segment.value === 'done' ? item.done : !item.done))
 
   return (
     <FormSection title="Todo List">
@@ -19,12 +22,29 @@ export function TodoDemo() {
         />
         <HStack spacing={10}>
           <TextField text={input} placeholder="new task" textFieldStyle="roundedBorder" frame={{ maxWidth: 'infinity' }} />
-          <Button title="添加" buttonStyle="borderedProminent" />
+          <Button
+            title="添加"
+            buttonStyle="borderedProminent"
+            onPress={() => {
+              const title = input.value.trim()
+              if (!title) {
+                return
+              }
+              items.setValue([
+                ...items.value,
+                {
+                  id: `t${String(items.value.length + 1)}`,
+                  title,
+                  done: false,
+                  tag: 'new',
+                },
+              ])
+              input.setValue('')
+            }}
+          />
         </HStack>
         <VStack spacing={8}>
-          {todoItems
-            .filter(item => (segment.value === 'all' ? true : segment.value === 'done' ? item.done : !item.done))
-            .map(item => (
+          {visibleItems.map(item => (
               <HStack
                 key={item.id}
                 spacing={10}
@@ -32,7 +52,12 @@ export function TodoDemo() {
                 frame={{ maxWidth: 'infinity', alignment: 'leading' }}
                 background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 14 } }}
               >
-                <Image systemName={item.done ? 'pin.fill' : 'doc'} />
+                <Toggle
+                  labelsHidden
+                  isOn={binding(item.done, nextDone => {
+                    items.setValue(items.value.map(prevItem => (prevItem.id === item.id ? { ...prevItem, done: nextDone } : prevItem)))
+                  })}
+                />
                 <VStack spacing={2} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
                   <Text>{item.title}</Text>
                   <Text font="caption" foregroundStyle="secondary">
