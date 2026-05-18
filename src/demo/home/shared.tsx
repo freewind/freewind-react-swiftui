@@ -10,7 +10,7 @@ export const AppHeader: FC<{
   return (
     <HStack
       padding={{ horizontal: 18, vertical: 14 }}
-      frame={{ maxWidth: 'infinity' }}
+      frame={{ width: 'infinity', maxWidth: 'infinity' }}
       background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 18 } }}
       spacing={14}
       alignment="center"
