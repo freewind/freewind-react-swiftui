@@ -8,10 +8,16 @@ export const LazyHGridDemo: FC = () => {
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <FormSection title="LazyHGrid">
-        <LazyHGrid rows={2} spacing={10} frame={{ maxWidth: 'infinity' }}>
+        <LazyHGrid
+          rows={2}
+          spacing={10}
+          frame={{ maxWidth: 'infinity' }}
+          padding={12}
+          background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
+        >
           {Array.from({ length: 8 }).map((_, index) => (
-            <RoundedRectangle key={index} fill="thinMaterial" frame={{ width: 120, height: 72 }} padding={10}>
-              <Text>Card {String(index + 1)}</Text>
+            <RoundedRectangle key={index} fill={index % 2 === 0 ? 'blue' : 'green'} frame={{ width: 120, height: 72 }} padding={10}>
+              <Text foregroundColor="#ffffff">Card {String(index + 1)}</Text>
             </RoundedRectangle>
           ))}
         </LazyHGrid>

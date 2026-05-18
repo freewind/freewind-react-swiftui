@@ -8,10 +8,15 @@ export const LazyVStackDemo: FC = () => {
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <FormSection title="LazyVStack">
-        <LazyVStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        <LazyVStack
+          spacing={10}
+          frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+          padding={12}
+          background={{ fill: 'ultraThinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
+        >
           {Array.from({ length: 6 }).map((_, index) => (
-            <RoundedRectangle key={index} fill="thinMaterial" frame={{ maxWidth: 'infinity' }} padding={12}>
-              <Text>Row {String(index + 1)}</Text>
+            <RoundedRectangle key={index} fill={index % 2 === 0 ? 'blue' : 'green'} frame={{ maxWidth: 'infinity' }} padding={12}>
+              <Text foregroundColor="#ffffff">Row {String(index + 1)}</Text>
             </RoundedRectangle>
           ))}
         </LazyVStack>

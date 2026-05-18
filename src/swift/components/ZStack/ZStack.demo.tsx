@@ -9,10 +9,14 @@ export const ZStackDemo: FC = () => {
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <FormSection title="ZStack">
-        <ZStack frame={{ width: 240, height: 180 }}>
-          <RoundedRectangle fill="thinMaterial" frame={{ width: 220, height: 160 }} />
-          <Circle fill="accentColor" frame={{ width: 96, height: 96 }} />
-          <Text foregroundColor="#ffffff">Overlay</Text>
+        <ZStack
+          frame={{ width: 260, height: 200 }}
+          background={{ fill: 'ultraThinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 18 } }}
+        >
+          <RoundedRectangle fill="blue" frame={{ width: 240, height: 180 }} />
+          <RoundedRectangle fill="green" frame={{ width: 168, height: 116 }} />
+          <Circle fill="red" frame={{ width: 92, height: 92 }} />
+          <Text foregroundColor="#ffffff">top overlay</Text>
         </ZStack>
       </FormSection>
     </VStack>
