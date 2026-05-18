@@ -40,7 +40,7 @@ export const DemoHome: FC = () => {
       <WindowGroup
         minWidth={1100}
         minHeight={760}
-        isFullScreen
+        windowMode="maximized"
         theme={theme.value}
         title={activePage?.title ?? activeSection?.title ?? 'Demo Home'}
         subtitle="SwiftUI Preview Window"

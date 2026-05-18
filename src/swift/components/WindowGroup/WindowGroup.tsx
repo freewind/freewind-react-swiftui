@@ -10,7 +10,7 @@ export type WindowStyleProps = {
   minHeight?: number
   defaultWidth?: number
   defaultHeight?: number
-  isFullScreen?: boolean
+  windowMode?: 'windowed' | 'maximized' | 'fullscreen'
   theme?: ThemeMode
   title?: string
   subtitle?: string
@@ -61,7 +61,7 @@ export const WindowGroup: FC<PropsWithChildren<WindowStyleProps>> = ({
                                                                        minHeight,
                                                                        defaultWidth,
                                                                        defaultHeight,
-                                                                       isFullScreen = false,
+                                                                       windowMode = 'windowed',
                                                                      theme = 'light',
                                                                        title = 'SwiftUI Preview',
                                                                        subtitle,
@@ -71,6 +71,9 @@ export const WindowGroup: FC<PropsWithChildren<WindowStyleProps>> = ({
   const vars = themePalettes[theme] as CSSProperties
   const resolvedWidth = Math.max(defaultWidth ?? minWidth ?? 980, 360)
   const resolvedHeight = Math.max(defaultHeight ?? minHeight ?? 720, 240)
+  const inset = windowMode === 'fullscreen' ? 0 : windowMode === 'maximized' ? 8 : 16
+  const isFullscreenWindow = windowMode === 'fullscreen'
+  const isMaximizedWindow = windowMode === 'maximized'
   const windowRegistration = useWindowRegistration({
     id: id ?? title,
     title,
@@ -100,22 +103,30 @@ export const WindowGroup: FC<PropsWithChildren<WindowStyleProps>> = ({
         display: 'flex',
         alignItems: 'stretch',
         justifyContent: 'center',
-        padding: isFullScreen ? 0 : 16,
+        padding: inset,
         boxSizing: 'border-box',
       }}
     >
       <div
         style={{
-          width: isFullScreen ? '100vw' : `min(calc(100vw - 32px), ${String(resolvedWidth)}px)`,
-          height: isFullScreen ? '100vh' : `min(calc(100vh - 32px), ${String(resolvedHeight)}px)`,
+          width: isFullscreenWindow
+            ? '100vw'
+            : isMaximizedWindow
+              ? `calc(100vw - ${String(inset * 2)}px)`
+              : `min(calc(100vw - ${String(inset * 2)}px), ${String(resolvedWidth)}px)`,
+          height: isFullscreenWindow
+            ? '100vh'
+            : isMaximizedWindow
+              ? `calc(100vh - ${String(inset * 2)}px)`
+              : `min(calc(100vh - ${String(inset * 2)}px), ${String(resolvedHeight)}px)`,
           maxWidth: '100%',
           maxHeight: '100%',
-          borderRadius: isFullScreen ? 0 : 18,
+          borderRadius: isFullscreenWindow ? 0 : 18,
           overflow: 'hidden',
-          border: isFullScreen ? 'none' : `1px solid ${surfaceColors.border}`,
+          border: isFullscreenWindow ? 'none' : `1px solid ${surfaceColors.border}`,
           background: surfaceColors.panelBg,
           boxShadow:
-            isFullScreen
+            isFullscreenWindow
               ? 'none'
               : theme === 'dark'
               ? '0 20px 60px rgba(0, 0, 0, 0.45)'
