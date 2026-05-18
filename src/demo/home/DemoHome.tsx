@@ -26,6 +26,7 @@ export const DemoHome: FC = () => {
   const activePage = demoPages.find(page => page.id === currentPage.value)
   const activeSection = sectionEntries.find(entry => entry.id === section.value)
   const showSidebar = isDemoCategory(section.value)
+  const contentScrollIdentity = `${section.value}:${currentPage.value ?? 'landing'}`
 
   const onOpenSection = (nextSection: DemoSection) => {
     const entry = sectionEntries.find(item => item.id === nextSection)
@@ -60,7 +61,7 @@ export const DemoHome: FC = () => {
               </>
             ) : null}
             <VStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }}>
-              <ScrollView frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }} showsIndicators>
+              <ScrollView key={contentScrollIdentity} frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }} showsIndicators>
                 <VStack spacing={18} padding={{ top: 12, horizontal: 20, bottom: 20 }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
                   {section.value === 'home' ? (
                     <HomePage onOpenSection={onOpenSection} />
