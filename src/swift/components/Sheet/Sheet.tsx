@@ -82,7 +82,16 @@ export const Sheet: FC<SheetProps> = ({
         zIndex: 999,
       }}
     >
-      <div onClick={stopClick} style={{maxWidth: '100%', maxHeight: '100%', width: '100%'}}>
+      <div
+        onClick={stopClick}
+        style={{
+          width: '100%',
+          maxWidth: '100%',
+          maxHeight: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
         <VStack frame={{ width: maxWidth, maxWidth: 'infinity', alignment: 'leading' }}>
           {title ? (
             <Text font="headline.semibold" padding={{ bottom: 8 }}>
