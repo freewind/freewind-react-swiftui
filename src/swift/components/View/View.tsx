@@ -100,9 +100,89 @@ export const View: FC<
       }
     : { display: 'contents' }
 
+  if (stack) {
+    const activeStack = stack
+    const stackContainerStyle: CSSProperties = {
+      ...containerStyle,
+      ...stackStyle,
+    }
+
+    return (
+      <disabledContext.Provider value={finalDisabled}>
+        <parentStackAxisContext.Provider value={activeStack.axis}>
+          <div
+            data-type={dataType}
+            style={stackContainerStyle}
+            onClick={() => rest.onTapGesture?.()}
+            onMouseDown={event => {
+              if (rest.onLongPressGesture) {
+                longPressTimerRef.current = window.setTimeout(() => {
+                  rest.onLongPressGesture?.()
+                  longPressTimerRef.current = null
+                }, 450)
+              }
+              if (rest.onDragGesture) {
+                dragStartRef.current = {x: event.clientX, y: event.clientY}
+              }
+            }}
+            onMouseMove={event => {
+              if (!dragStartRef.current || !rest.onDragGesture) {
+                return
+              }
+              rest.onDragGesture({
+                translation: {
+                  x: event.clientX - dragStartRef.current.x,
+                  y: event.clientY - dragStartRef.current.y,
+                },
+              })
+            }}
+            onMouseUp={() => {
+              if (longPressTimerRef.current != null) {
+                window.clearTimeout(longPressTimerRef.current)
+                longPressTimerRef.current = null
+              }
+              dragStartRef.current = null
+            }}
+            onMouseLeave={() => {
+              if (longPressTimerRef.current != null) {
+                window.clearTimeout(longPressTimerRef.current)
+                longPressTimerRef.current = null
+              }
+              dragStartRef.current = null
+            }}
+            onWheel={event => {
+              if (rest.onMagnificationGesture) {
+                rest.onMagnificationGesture(Number((1 - event.deltaY / 1000).toFixed(3)))
+              }
+              if (rest.onRotationGesture) {
+                rest.onRotationGesture(Number((-event.deltaY / 6).toFixed(2)))
+              }
+            }}
+          >
+            {children}
+            {overlay ? (
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  pointerEvents: 'none',
+                }}
+              >
+                {overlay}
+              </div>
+            ) : null}
+          </div>
+        </parentStackAxisContext.Provider>
+      </disabledContext.Provider>
+    )
+  }
+
   return (
     <disabledContext.Provider value={finalDisabled}>
-      <parentStackAxisContext.Provider value={stack?.axis ?? parentStackAxis}>
+      <parentStackAxisContext.Provider value={parentStackAxis}>
         <div data-type={dataType} style={containerStyle}>
           <div
             style={contentStyle}
