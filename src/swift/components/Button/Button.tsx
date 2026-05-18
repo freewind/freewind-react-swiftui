@@ -28,7 +28,9 @@ const buttonChrome = (
 
   const common: CSSProperties = {
     borderRadius: 10,
-    border: '1px solid transparent',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'transparent',
     background: 'transparent',
     color: textColorMap.primary,
     whiteSpace: 'nowrap',
@@ -47,7 +49,7 @@ const buttonChrome = (
     case 'borderless':
       return { ...common, padding: 0 }
     case 'link':
-      return { ...common, color: surfaceColors.accent, padding: 0, border: 'none', background: 'transparent' }
+      return { ...common, color: surfaceColors.accent, padding: 0, borderWidth: 0, background: 'transparent' }
     case 'plain':
     default:
       return common
