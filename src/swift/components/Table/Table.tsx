@@ -33,12 +33,29 @@ export type TableProps<T> = ViewBaseProps & {
 type TableColumnElement<T> = ReactElement<TableColumnProps<T>>
 type TableRowElement<T> = ReactElement<TableRowProps<T>>
 
+const matchElementType = (node: ReactNode, expected: unknown, displayName: string) => {
+  if (!isValidElement(node)) {
+    return false
+  }
+
+  if (node.type === expected) {
+    return true
+  }
+
+  if (typeof node.type === 'function') {
+    const componentType = node.type as { displayName?: string; name?: string }
+    return componentType.displayName === displayName || componentType.name === displayName
+  }
+
+  return false
+}
+
 const isTableColumnElement = <T,>(node: ReactNode): node is TableColumnElement<T> => {
-  return isValidElement(node) && node.type === TableColumn
+  return matchElementType(node, TableColumn, 'TableColumn')
 }
 
 const isTableRowElement = <T,>(node: ReactNode): node is TableRowElement<T> => {
-  return isValidElement(node) && node.type === TableRow
+  return matchElementType(node, TableRow, 'TableRow')
 }
 
 const inferRowId = <T,>(record: T, index: number) => {
