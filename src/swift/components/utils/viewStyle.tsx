@@ -57,11 +57,6 @@ const applyFrame = (
 
   const stretchCrossAxis = (axis: 'horizontal' | 'vertical') => {
     style.alignSelf = 'stretch'
-    if (axis === 'horizontal') {
-      style.height = style.height ?? '100%'
-    } else {
-      style.width = style.width ?? '100%'
-    }
   }
 
   const setLength = (key: keyof FrameSpec, value?: FrameValue | number) => {
@@ -230,6 +225,9 @@ const applyShape = (style: CSSProperties, shape: ShapeSpec) => {
 export const viewStyle = (
   props: Omit<ViewBaseProps, 'children'>,
   parentStackAxis?: 'horizontal' | 'vertical' | 'z',
+  options?: {
+    isStackContainer?: boolean
+  },
 ): CSSProperties => {
   const style: CSSProperties = {
     boxSizing: 'border-box',
@@ -244,6 +242,12 @@ export const viewStyle = (
   applyTint(style, props.tint)
   applyLineLimit(style, props.lineLimit)
   applyControlSize(style, props.controlSize)
+
+  if (options?.isStackContainer) {
+    delete style.display
+    delete style.justifyItems
+    delete style.alignItems
+  }
 
   if (props.opacity !== undefined) {
     style.opacity = props.opacity

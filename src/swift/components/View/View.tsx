@@ -70,17 +70,28 @@ export const View: FC<
   const finalDisabled = inheritedDisabled || Boolean(disabled)
   const longPressTimerRef = useRef<number | null>(null)
   const dragStartRef = useRef<{ x: number; y: number } | null>(null)
-  const baseStyle = viewStyle(rest, parentStackAxis)
+  const baseStyle = viewStyle(rest, parentStackAxis, { isStackContainer: Boolean(stack) })
   const stackStyle = stackStyleFrom(stack)
-  const fillsWidth = baseStyle.width !== undefined || baseStyle.maxWidth !== undefined || baseStyle.alignSelf === 'stretch'
-  const fillsHeight = baseStyle.height !== undefined || baseStyle.maxHeight !== undefined
+  const frame = rest.frame
+  const hasExplicitWidth = baseStyle.width !== undefined
+  const hasExplicitHeight = baseStyle.height !== undefined
+  const fillsWidth = hasExplicitWidth || baseStyle.maxWidth !== undefined || baseStyle.alignSelf === 'stretch'
+  const fillsHeight = hasExplicitHeight || baseStyle.maxHeight !== undefined
+  const fillsWidthByMinConstraint = frame?.minWidth !== undefined
+  const fillsHeightByMinConstraint = frame?.minHeight !== undefined
   const containerStyle: CSSProperties = {
     ...baseStyle,
-    ...(stack && fillsWidth
-      ? { width: baseStyle.width ?? '100%' }
+    ...(stack
+      ? {
+          display: 'flex',
+          flexDirection: 'column',
+        }
       : null),
-    ...(stack && fillsHeight
-      ? { height: baseStyle.height ?? '100%' }
+    ...(stack && hasExplicitWidth
+      ? { width: baseStyle.width }
+      : null),
+    ...(stack && hasExplicitHeight
+      ? { height: baseStyle.height }
       : null),
     position: 'relative',
     pointerEvents: finalDisabled ? 'none' : undefined,
@@ -93,9 +104,13 @@ export const View: FC<
         minHeight: 0,
         ...(fillsWidth
           ? { width: '100%' }
+          : fillsWidthByMinConstraint
+            ? { minWidth: '100%' }
           : null),
         ...(fillsHeight
-          ? { height: '100%' }
+          ? { flex: '1 1 auto' }
+          : fillsHeightByMinConstraint
+            ? { minHeight: '100%' }
           : null),
       }
     : { display: 'contents' }
