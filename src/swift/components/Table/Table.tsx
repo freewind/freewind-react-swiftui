@@ -1,112 +1,221 @@
+import { Children, isValidElement, type ReactElement, type ReactNode } from 'react'
 import { Divider } from '../Divider'
 import { HStack } from '../HStack'
+import { RoundedRectangle } from '../RoundedRectangle'
 import { Text } from '../Text'
 import type { Binding } from '../runtime'
 import type { ViewBaseProps } from '../View'
-import type { ReactNode } from 'react'
-
 import { VStack } from '../VStack'
 
-export type TableColumn<T> = {
-  key: string
+export type TableColumnProps<T> = {
   title: string
-  dataIndex?: keyof T
+  value?: keyof T
   width?: number
-  render?: (record: T, index: number) => ReactNode
+  alignment?: 'leading' | 'center' | 'trailing'
+  children?: (row: T) => ReactNode
+}
+
+export type TableRowProps<T> = {
+  value: T
+  id?: string
 }
 
 export type TableProps<T> = ViewBaseProps & {
-  columns: TableColumn<T>[]
-  dataSource: T[]
-  rowKey: (record: T, index: number) => string
+  children: ReactNode
+  data?: T[]
+  id?: keyof T | ((row: T, index: number) => string)
+  of?: unknown
   emptyText?: string
   selection?: Binding<string | null>
-  onSelect?: (record: T, index: number) => void
-  rowActions?: (record: T, index: number) => ReactNode
+  sortOrder?: Binding<Array<keyof T>>
 }
 
+type TableColumnElement<T> = ReactElement<TableColumnProps<T>>
+type TableRowElement<T> = ReactElement<TableRowProps<T>>
+
+const isTableColumnElement = <T,>(node: ReactNode): node is TableColumnElement<T> => {
+  return isValidElement(node) && node.type === TableColumn
+}
+
+const isTableRowElement = <T,>(node: ReactNode): node is TableRowElement<T> => {
+  return isValidElement(node) && node.type === TableRow
+}
+
+const inferRowId = <T,>(record: T, index: number) => {
+  if (typeof record === 'string' || typeof record === 'number') {
+    return String(record)
+  }
+
+  if (record && typeof record === 'object' && 'id' in record) {
+    const value = record.id
+    if (typeof value === 'string' || typeof value === 'number') {
+      return String(value)
+    }
+  }
+
+  return String(index)
+}
+
+const readComparableValue = <T,>(record: T, key: keyof T) => {
+  const value = record[key]
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+    return value
+  }
+  return String(value ?? '')
+}
+
+const renderCell = <T,>(column: TableColumnElement<T>, record: T) => {
+  if (column.props.children) {
+    return column.props.children(record)
+  }
+
+  if (column.props.value) {
+    const value = record[column.props.value]
+    if (typeof value === 'string' || typeof value === 'number') {
+      return <Text>{String(value)}</Text>
+    }
+    return <Text foregroundStyle="secondary">{String(value ?? '')}</Text>
+  }
+
+  return <Text foregroundStyle="secondary" />
+}
+
+export const TableColumn = <T,>(_props: TableColumnProps<T>) => {
+  return null
+}
+
+TableColumn.displayName = 'TableColumn'
+
+export const TableRow = <T,>(_props: TableRowProps<T>) => {
+  return null
+}
+
+TableRow.displayName = 'TableRow'
 
 export const Table = <T,>({
-  columns,
-  dataSource,
-  rowKey,
+  children,
+  data,
+  id,
   emptyText = 'No Data',
   selection,
-  onSelect,
-  rowActions,
+  sortOrder,
   ...rest
 }: TableProps<T>) => {
+  const nodes = Children.toArray(children)
+  const columns = nodes.filter(isTableColumnElement<T>)
+  const staticRows = nodes.filter(isTableRowElement<T>)
+  const rows = (data
+    ? data.map((record, index) => ({
+        record,
+        id:
+          typeof id === 'function'
+            ? id(record, index)
+            : typeof id === 'string'
+              ? String(record[id] ?? inferRowId(record, index))
+              : inferRowId(record, index),
+      }))
+    : staticRows.map((row, index) => ({
+        record: row.props.value,
+        id: row.props.id ?? inferRowId(row.props.value, index),
+      })))
+    .slice()
+
+  const activeSortKey = sortOrder?.value[0]
+
+  if (activeSortKey) {
+    rows.sort((left, right) => {
+      const leftValue = readComparableValue(left.record, activeSortKey)
+      const rightValue = readComparableValue(right.record, activeSortKey)
+
+      if (leftValue < rightValue) {
+        return -1
+      }
+      if (leftValue > rightValue) {
+        return 1
+      }
+      return 0
+    })
+  }
+
   return (
-    <VStack data-type="Table"
-      spacing={0}
+    <RoundedRectangle
+      data-type="Table"
+      cornerRadius={12}
+      fill="thinMaterial"
+      stroke={{ lineWidth: 1 }}
       frame={{ maxWidth: 'infinity', alignment: 'leading' }}
-      background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
       {...rest}
     >
-      <HStack
-        spacing={12}
-        padding={{ horizontal: 12, vertical: 10 }}
-        frame={{ maxWidth: 'infinity', alignment: 'leading' }}
-        background={{ fill: 'ultraThinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
-      >
-        {columns.map(column => (
-          <Text
-            key={column.key}
-            font="caption.semibold"
-            frame={{
-              width: column.width,
-              maxWidth: column.width ? undefined : 'infinity',
-              alignment: 'leading',
-            }}
-          >
-            {column.title}
-          </Text>
-        ))}
-      </HStack>
-      <Divider />
-      {dataSource.length === 0 ? (
-        <Text padding={12} foregroundStyle="secondary">
-          {emptyText}
-        </Text>
-      ) : (
-        dataSource.map((record, index) => (
-          <VStack key={rowKey(record, index)} spacing={0} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-            <HStack
-              spacing={12}
-              padding={{ horizontal: 12, vertical: 10 }}
-              frame={{ maxWidth: 'infinity', alignment: 'leading' }}
-              background={
-                selection?.value === rowKey(record, index)
-                  ? { fill: 'tertiary', in: { kind: 'roundedRectangle', cornerRadius: 10 } }
-                  : undefined
-              }
+      <VStack spacing={0} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        <HStack
+          spacing={0}
+          padding={{ horizontal: 12, vertical: 8 }}
+          frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+          background={{ fill: 'ultraThinMaterial', in: { kind: 'rectangle' } }}
+        >
+          {columns.map(column => (
+            <VStack
+              key={column.props.title}
+              spacing={4}
+              alignment={column.props.alignment ?? 'leading'}
+              frame={{
+                width: column.props.width,
+                maxWidth: column.props.width ? undefined : 'infinity',
+                alignment: column.props.alignment ?? 'leading',
+              }}
+              padding={{ trailing: 12 }}
               onTapGesture={() => {
-                selection?.setValue(rowKey(record, index))
-                onSelect?.(record, index)
+                if (column.props.value && sortOrder) {
+                  sortOrder.setValue([column.props.value])
+                }
               }}
             >
-              {columns.map(column => {
-                const cell = column.render?.(record, index) ?? (column.dataIndex ? String(record[column.dataIndex] ?? '') : '')
-
-                return (
+              <Text font="caption.semibold" foregroundStyle="secondary">
+                {column.props.title}
+              </Text>
+              {sortOrder && activeSortKey === column.props.value ? (
+                <Text font="caption2.monospaced" foregroundStyle="tertiary">
+                  sort
+                </Text>
+              ) : null}
+            </VStack>
+          ))}
+        </HStack>
+        <Divider />
+        {rows.length === 0 ? (
+          <Text padding={12} foregroundStyle="secondary">
+            {emptyText}
+          </Text>
+        ) : (
+          rows.map((row, index) => (
+            <VStack key={row.id} spacing={0} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+              <HStack
+                spacing={0}
+                padding={{ horizontal: 12, vertical: 10 }}
+                frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+                background={selection?.value === row.id ? { fill: 'tertiary', in: { kind: 'rectangle' } } : undefined}
+                onTapGesture={() => selection?.setValue(row.id)}
+              >
+                {columns.map(column => (
                   <VStack
-                    key={`${rowKey(record, index)}-${column.key}`}
+                    key={`${row.id}-${column.props.title}`}
+                    alignment={column.props.alignment ?? 'leading'}
                     frame={{
-                      width: column.width,
-                      maxWidth: column.width ? undefined : 'infinity',
-                      alignment: 'leading',
+                      width: column.props.width,
+                      maxWidth: column.props.width ? undefined : 'infinity',
+                      alignment: column.props.alignment ?? 'leading',
                     }}
+                    padding={{ trailing: 12 }}
                   >
-                    {typeof cell === 'string' || typeof cell === 'number' ? <Text>{String(cell)}</Text> : cell}
+                    {renderCell(column, row.record)}
                   </VStack>
-                )
-              })}
-              {rowActions ? <VStack>{rowActions(record, index)}</VStack> : null}
-            </HStack>
-            {index < dataSource.length - 1 ? <Divider /> : null}
-          </VStack>
-        ))
-      )}
-    </VStack>
+                ))}
+              </HStack>
+              {index < rows.length - 1 ? <Divider /> : null}
+            </VStack>
+          ))
+        )}
+      </VStack>
+    </RoundedRectangle>
   )
 }
