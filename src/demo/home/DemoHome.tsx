@@ -41,8 +41,6 @@ export const DemoHome: FC = () => {
         windowMode="maximized"
         theme={theme.value}
         title={activePage?.title ?? activeSection?.title ?? 'Demo Home'}
-        contentScrollAxes="vertical"
-        contentShowsIndicators
       >
         <VStack spacing={0} alignment="leading" padding={16} frame={{ width:'infinity', maxWidth: 'infinity', maxHeight: 'infinity' }}>
           <AppHeader
@@ -62,15 +60,17 @@ export const DemoHome: FC = () => {
               </>
             ) : null}
             <VStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }}>
-              <VStack spacing={18} padding={{ top: 12, horizontal: 20, bottom: 20 }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-                {section.value === 'home' ? (
-                  <HomePage onOpenSection={onOpenSection} />
-                ) : showSidebar && !currentPage.value ? (
-                  <SectionLanding groups={pageGroups} onOpenPage={pageId => currentPage.setValue(pageId)} />
-                ) : currentPage.value ? (
-                  renderDemoPage(currentPage.value)
-                ) : null}
-              </VStack>
+              <ScrollView frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }} showsIndicators>
+                <VStack spacing={18} padding={{ top: 12, horizontal: 20, bottom: 20 }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+                  {section.value === 'home' ? (
+                    <HomePage onOpenSection={onOpenSection} />
+                  ) : showSidebar && !currentPage.value ? (
+                    <SectionLanding groups={pageGroups} onOpenPage={pageId => currentPage.setValue(pageId)} />
+                  ) : currentPage.value ? (
+                    renderDemoPage(currentPage.value)
+                  ) : null}
+                </VStack>
+              </ScrollView>
             </VStack>
           </HStack>
         </VStack>
