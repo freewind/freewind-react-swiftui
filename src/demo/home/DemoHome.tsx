@@ -15,12 +15,12 @@ import {
 import { HomePage } from './HomePage'
 import { demoPages, isDemoCategory, sectionEntries, type DemoHomeSection, type DemoSection } from './model'
 import { renderDemoPage } from './renderDemoPage'
-import { AppHeader } from './shared'
+import { AppHeader, ButtonCard } from './shared'
 
 export const DemoHome: FC = () => {
   const theme = useBinding<ThemeMode>('light')
   const section = useBinding<DemoHomeSection>('home')
-  const currentPage = useBinding('component-text')
+  const currentPage = useBinding<string | null>(null)
   const notesSheetPresented = useBinding(false)
   const notes = useBinding('这里放 demo 说明、转换 hint、组件限制。')
 
@@ -32,7 +32,7 @@ export const DemoHome: FC = () => {
   const onOpenSection = (nextSection: DemoSection) => {
     const entry = sectionEntries.find(item => item.id === nextSection)
     section.setValue(nextSection)
-    currentPage.setValue(entry?.defaultPageId ?? 'component-text')
+    currentPage.setValue(isDemoCategory(nextSection) ? null : entry?.defaultPageId ?? null)
   }
 
   return (
@@ -52,7 +52,10 @@ export const DemoHome: FC = () => {
             title={section.value === 'home' ? 'Demo Home' : activePage?.title ?? activeSection?.title ?? 'Demo'}
             theme={theme}
             canGoBack={section.value !== 'home'}
-            onBack={() => section.setValue('home')}
+            onBack={() => {
+              section.setValue('home')
+              currentPage.setValue(null)
+            }}
           />
           <HStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }} spacing={0} padding={{ top: 16 }}>
             {showSidebar ? (
@@ -68,7 +71,13 @@ export const DemoHome: FC = () => {
             ) : null}
             <VStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }}>
               <VStack spacing={18} padding={{ top: 12, horizontal: 20, bottom: 20 }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-                {section.value === 'home' ? <HomePage onOpenSection={onOpenSection} /> : renderDemoPage(currentPage.value)}
+                {section.value === 'home' ? (
+                  <HomePage onOpenSection={onOpenSection} />
+                ) : showSidebar && !currentPage.value ? (
+                  <SectionLanding pages={pages} onOpenPage={pageId => currentPage.setValue(pageId)} />
+                ) : currentPage.value ? (
+                  renderDemoPage(currentPage.value)
+                ) : null}
               </VStack>
             </VStack>
           </HStack>
@@ -82,7 +91,7 @@ export const DemoHome: FC = () => {
 
 const Sidebar: FC<{
   section: ReturnType<typeof useBinding<DemoHomeSection>>
-  currentPage: ReturnType<typeof useBinding<string>>
+  currentPage: ReturnType<typeof useBinding<string | null>>
   pages: Array<{ id: string; title: string }>
   onOpenNotes: () => void
 }> = ({ currentPage, pages, onOpenNotes }) => {
@@ -100,7 +109,7 @@ const Sidebar: FC<{
             <Button
               key={page.id}
               title={page.title}
-              buttonStyle={currentPage.value === page.id ? 'borderedProminent' : 'bordered'}
+              buttonStyle={currentPage.value === page.id ? 'borderedProminent' : currentPage.value === null ? 'plain' : 'bordered'}
               frame={{ maxWidth: 'infinity', alignment: 'leading' }}
               onPress={() => currentPage.setValue(page.id)}
             />
@@ -108,6 +117,28 @@ const Sidebar: FC<{
         </VStack>
       </ScrollView>
       <Button title="Notes" buttonStyle="bordered" frame={{ maxWidth: 'infinity', alignment: 'leading' }} onPress={onOpenNotes} />
+    </VStack>
+  )
+}
+
+const SectionLanding: FC<{
+  pages: Array<{ id: string; title: string }>
+  onOpenPage: (pageId: string) => void
+}> = ({ pages, onOpenPage }) => {
+  return (
+    <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+      <Text font="title3.semibold">选择页面</Text>
+      <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+        {pages.map(page => (
+          <ButtonCard
+            key={page.id}
+            title={page.title}
+            summary="进入该组件/页面 demo。"
+            buttonTitle="打开"
+            onPress={() => onOpenPage(page.id)}
+          />
+        ))}
+      </VStack>
     </VStack>
   )
 }
