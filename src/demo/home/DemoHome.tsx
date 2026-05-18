@@ -64,7 +64,7 @@ export const DemoHome: FC = () => {
               </>
             ) : null}
             <VStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }}>
-              <ScrollView frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }}>
+              <ScrollView frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }} showsIndicators>
                 <VStack spacing={18} padding={{ top: 12, horizontal: 20, bottom: 20 }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
                   {section.value === 'home' ? <HomePage onOpenSection={onOpenSection} /> : renderDemoPage(currentPage.value)}
                 </VStack>
@@ -93,7 +93,7 @@ const Sidebar: FC<{
       background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 18 } }}
     >
       <Text font="headline">Pages</Text>
-      <ScrollView frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }}>
+      <ScrollView frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }} showsIndicators>
         <VStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
           {pages.map(page => (
             <Button

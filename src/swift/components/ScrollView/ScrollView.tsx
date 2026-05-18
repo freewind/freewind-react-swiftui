@@ -1,19 +1,21 @@
-import type { CSSProperties, FC } from 'react'
-import { viewStyle } from '../runtime'
+import { type CSSProperties, type FC, useContext } from 'react'
+import { parentStackAxisContext, viewStyle } from '../runtime'
 import type { ViewBaseProps } from '../View'
 
 
 export type ScrollViewProps = ViewBaseProps & {
   axes?: 'horizontal' | 'vertical' | Array<'horizontal' | 'vertical'>
+  showsIndicators?: boolean
 }
 
 
-export const ScrollView: FC<ScrollViewProps> = ({ axes = 'vertical', children, ...rest }) => {
+export const ScrollView: FC<ScrollViewProps> = ({ axes = 'vertical', showsIndicators = true, children, ...rest }) => {
+  const parentStackAxis = useContext(parentStackAxisContext)
   const normalized = Array.isArray(axes) ? axes : [axes]
   const style: CSSProperties = {
-    ...viewStyle(rest),
-    overflowX: normalized.includes('horizontal') ? 'auto' : 'hidden',
-    overflowY: normalized.includes('vertical') ? 'auto' : 'hidden',
+    ...viewStyle(rest, parentStackAxis),
+    overflowX: normalized.includes('horizontal') ? (showsIndicators ? 'scroll' : 'auto') : 'hidden',
+    overflowY: normalized.includes('vertical') ? (showsIndicators ? 'scroll' : 'auto') : 'hidden',
   }
 
   return <div style={style}>{children}</div>
