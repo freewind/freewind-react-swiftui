@@ -1,4 +1,4 @@
-import { createContext, isValidElement, type CSSProperties, type ReactNode, useContext, useMemo, useState as useReactState } from 'react'
+import { createContext, isValidElement, type CSSProperties, type ReactNode, useCallback, useContext, useMemo, useState as useReactState } from 'react'
 import { useBinding as useBaseBinding, binding as createBinding } from './hooks/useBinding'
 import { useStateObject } from './hooks/useStateObject'
 import type {
@@ -251,34 +251,45 @@ export const useSceneLifecycle = (): ObservableObject<MockSceneLifecycle> => {
 
 export const useWindowRegistration = (window: MockWindowInfo) => {
   const lifecycle = useSceneLifecycle()
-  const register = () => {
+  const { id, title, isKeyWindow, defaultWidth, defaultHeight } = window
+  const register = useCallback(() => {
+    const nextWindow: MockWindowInfo = { id, title, isKeyWindow, defaultWidth, defaultHeight }
     lifecycle.setValue(prev => ({
       ...prev,
-      windows: [...prev.windows.filter(item => item.id !== window.id), window],
+      windows: [...prev.windows.filter(item => item.id !== id), nextWindow],
     }))
-  }
-  return {
-    register,
-    focus: () => {
-      lifecycle.setValue(prev => ({
-        ...prev,
-        windows: prev.windows.map(item => ({
-          ...item,
-          isKeyWindow: item.id === window.id,
-        })),
-      }))
-    },
-  }
+  }, [defaultHeight, defaultWidth, id, isKeyWindow, lifecycle.setValue, title])
+
+  const focus = useCallback(() => {
+    lifecycle.setValue(prev => ({
+      ...prev,
+      windows: prev.windows.map(item => ({
+        ...item,
+        isKeyWindow: item.id === id,
+      })),
+    }))
+  }, [id, lifecycle.setValue])
+
+  return useMemo(
+    () => ({
+      register,
+      focus,
+    }),
+    [focus, register],
+  )
 }
 
 export const useCommandRegistration = (group: MockCommandGroup) => {
   const lifecycle = useSceneLifecycle()
-  return () => {
+  const { id, title, commandTitles } = group
+  const commandTitlesKey = commandTitles.join('|')
+  return useCallback(() => {
+    const nextGroup: MockCommandGroup = { id, title, commandTitles: [...commandTitles] }
     lifecycle.setValue(prev => ({
       ...prev,
-      commands: [...prev.commands.filter(item => item.id !== group.id), group],
+      commands: [...prev.commands.filter(item => item.id !== id), nextGroup],
     }))
-  }
+  }, [commandTitlesKey, id, lifecycle.setValue, title])
 }
 
 export const useCommandAction = () => {
@@ -357,12 +368,14 @@ export const useDocumentAction = () => {
 
 export const useSceneRegistration = (scene: MockSceneInfo) => {
   const lifecycle = useSceneLifecycle()
-  return () => {
+  const { id, role, title } = scene
+  return useCallback(() => {
+    const nextScene: MockSceneInfo = { id, role, title }
     lifecycle.setValue(prev => ({
       ...prev,
-      scenes: [...prev.scenes.filter(item => item.id !== scene.id), scene],
+      scenes: [...prev.scenes.filter(item => item.id !== id), nextScene],
     }))
-  }
+  }, [id, lifecycle.setValue, role, title])
 }
 
 export const navigationPath = (...items: unknown[]): NavigationPath => {

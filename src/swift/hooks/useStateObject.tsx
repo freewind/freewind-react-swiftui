@@ -1,4 +1,4 @@
-import {useMemo, useState} from "react";
+import { useCallback, useMemo, useState } from 'react'
 
 export type ObservableObject<T extends object> = {
   value: T
@@ -7,14 +7,15 @@ export type ObservableObject<T extends object> = {
 
 export const useStateObject = <T extends object>(initialValue: T): ObservableObject<T> => {
   const [value, setValue] = useState(initialValue)
+  const setObjectValue = useCallback((updater: T | ((prev: T) => T)) => {
+    setValue(prev => (typeof updater === 'function' ? (updater as (prev: T) => T)(prev) : updater))
+  }, [])
 
   return useMemo(
     () => ({
       value,
-      setValue: updater => {
-        setValue(prev => (typeof updater === 'function' ? (updater as (prev: T) => T)(prev) : updater))
-      },
+      setValue: setObjectValue,
     }),
-    [value],
+    [value, setObjectValue],
   )
 }
