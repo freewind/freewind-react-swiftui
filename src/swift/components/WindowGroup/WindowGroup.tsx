@@ -10,6 +10,7 @@ export type WindowStyleProps = {
   minHeight?: number
   defaultWidth?: number
   defaultHeight?: number
+  isFullScreen?: boolean
   theme?: ThemeMode
   title?: string
   subtitle?: string
@@ -60,6 +61,7 @@ export const WindowGroup: FC<PropsWithChildren<WindowStyleProps>> = ({
                                                                        minHeight,
                                                                        defaultWidth,
                                                                        defaultHeight,
+                                                                       isFullScreen = false,
                                                                      theme = 'light',
                                                                        title = 'SwiftUI Preview',
                                                                        subtitle,
@@ -98,22 +100,24 @@ export const WindowGroup: FC<PropsWithChildren<WindowStyleProps>> = ({
         display: 'flex',
         alignItems: 'stretch',
         justifyContent: 'center',
-        padding: 16,
+        padding: isFullScreen ? 0 : 16,
         boxSizing: 'border-box',
       }}
     >
       <div
         style={{
-          width: `min(calc(100vw - 32px), ${String(resolvedWidth)}px)`,
-          height: `min(calc(100vh - 32px), ${String(resolvedHeight)}px)`,
+          width: isFullScreen ? '100vw' : `min(calc(100vw - 32px), ${String(resolvedWidth)}px)`,
+          height: isFullScreen ? '100vh' : `min(calc(100vh - 32px), ${String(resolvedHeight)}px)`,
           maxWidth: '100%',
           maxHeight: '100%',
-          borderRadius: 18,
+          borderRadius: isFullScreen ? 0 : 18,
           overflow: 'hidden',
-          border: `1px solid ${surfaceColors.border}`,
+          border: isFullScreen ? 'none' : `1px solid ${surfaceColors.border}`,
           background: surfaceColors.panelBg,
           boxShadow:
-            theme === 'dark'
+            isFullScreen
+              ? 'none'
+              : theme === 'dark'
               ? '0 20px 60px rgba(0, 0, 0, 0.45)'
               : '0 24px 70px rgba(15, 23, 42, 0.16)',
           display: 'grid',
