@@ -78,7 +78,19 @@ export const View: FC<
     pointerEvents: finalDisabled ? 'none' : undefined,
     opacity: finalDisabled ? 0.55 : baseStyle.opacity,
   }
-  const contentStyle: CSSProperties = stack ? stackStyle : { display: 'contents' }
+  const contentStyle: CSSProperties = stack
+    ? {
+        ...stackStyle,
+        minWidth: 0,
+        minHeight: 0,
+        ...(baseStyle.width !== undefined || baseStyle.maxWidth !== undefined || baseStyle.alignSelf === 'stretch'
+          ? { width: '100%' }
+          : null),
+        ...(baseStyle.height !== undefined || baseStyle.maxHeight !== undefined
+          ? { height: '100%' }
+          : null),
+      }
+    : { display: 'contents' }
 
   return (
     <disabledContext.Provider value={finalDisabled}>
