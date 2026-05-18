@@ -47,7 +47,7 @@ export const DemoHome: FC = () => {
         contentScrollAxes="vertical"
         contentShowsIndicators
       >
-        <VStack spacing={0} padding={16} frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }}>
+        <VStack spacing={0} alignment="leading" padding={16} frame={{ width:'infinity', maxWidth: 'infinity', maxHeight: 'infinity' }}>
           <AppHeader
             title={section.value === 'home' ? 'Demo Home' : activePage?.title ?? activeSection?.title ?? 'Demo'}
             theme={theme}
