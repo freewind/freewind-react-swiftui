@@ -73,18 +73,18 @@ export const View: FC<
   const stackStyle = stackStyleFrom(stack)
   const containerStyle: CSSProperties = {
     ...baseStyle,
-    ...stackStyle,
     position: 'relative',
     pointerEvents: finalDisabled ? 'none' : undefined,
     opacity: finalDisabled ? 0.55 : baseStyle.opacity,
   }
+  const contentStyle: CSSProperties = stack ? stackStyle : { display: 'contents' }
 
   return (
     <disabledContext.Provider value={finalDisabled}>
       <parentStackAxisContext.Provider value={stack?.axis ?? parentStackAxis}>
         <div style={containerStyle}>
           <div
-            style={{display: stack ? undefined : 'contents'}}
+            style={contentStyle}
             onClick={() => rest.onTapGesture?.()}
             onMouseDown={event => {
               if (rest.onLongPressGesture) {
