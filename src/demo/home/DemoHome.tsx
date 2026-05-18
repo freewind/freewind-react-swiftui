@@ -123,7 +123,7 @@ const Sidebar: FC<{
                   <Button
                     key={page.id}
                     title={page.title}
-                    buttonStyle={currentPage.value === page.id ? 'borderedProminent' : currentPage.value === null ? 'plain' : 'bordered'}
+                    buttonStyle={currentPage.value === page.id ? 'borderedProminent' : 'bordered'}
                     frame={{ maxWidth: 'infinity', alignment: 'leading' }}
                     onPress={() => currentPage.setValue(page.id)}
                   />

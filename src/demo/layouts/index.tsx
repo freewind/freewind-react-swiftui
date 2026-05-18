@@ -75,7 +75,7 @@ const DashboardPreview: FC = () => {
         <Zone title="Metric B" tone="green" meta="fixed 1/3" />
         <Zone title="Metric C" tone="red" meta="fixed 1/3" />
       </HStack>
-      <HStack spacing={12} frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'leading' }}>
+      <HStack spacing={12} alignment="top" frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'leading' }}>
         <Zone title="Trend / Chart" tone="green" minHeight={180} meta="main area">
           <Text foregroundColor="#ffffff">wide panel</Text>
         </Zone>
