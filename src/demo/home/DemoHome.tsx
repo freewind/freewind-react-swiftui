@@ -43,6 +43,8 @@ export const DemoHome: FC = () => {
         theme={theme.value}
         title={activePage?.title ?? activeSection?.title ?? 'Demo Home'}
         subtitle="SwiftUI Preview Window"
+        contentScrollAxes="vertical"
+        contentShowsIndicators
       >
         <VStack spacing={0} padding={16} frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }}>
           <AppHeader
@@ -64,11 +66,9 @@ export const DemoHome: FC = () => {
               </>
             ) : null}
             <VStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }}>
-              <ScrollView frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }} showsIndicators>
-                <VStack spacing={18} padding={{ top: 12, horizontal: 20, bottom: 20 }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-                  {section.value === 'home' ? <HomePage onOpenSection={onOpenSection} /> : renderDemoPage(currentPage.value)}
-                </VStack>
-              </ScrollView>
+              <VStack spacing={18} padding={{ top: 12, horizontal: 20, bottom: 20 }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+                {section.value === 'home' ? <HomePage onOpenSection={onOpenSection} /> : renderDemoPage(currentPage.value)}
+              </VStack>
             </VStack>
           </HStack>
         </VStack>

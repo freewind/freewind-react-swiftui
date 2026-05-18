@@ -1,6 +1,8 @@
 import { useEffect, type CSSProperties, type FC, type PropsWithChildren } from 'react'
+import { ScrollView } from '../ScrollView'
 import { surfaceColors, textColorMap, useWindowRegistration } from '../runtime'
 import type { ThemeMode } from '../runtime'
+import type { Axis } from '../../types'
 
 export type WindowStyleProps = {
   id?: string
@@ -11,6 +13,8 @@ export type WindowStyleProps = {
   theme?: ThemeMode
   title?: string
   subtitle?: string
+  contentScrollAxes?: Axis | Axis[]
+  contentShowsIndicators?: boolean
 }
 
 const themePalettes: Record<ThemeMode, Record<string, string>> = {
@@ -59,6 +63,8 @@ export const WindowGroup: FC<PropsWithChildren<WindowStyleProps>> = ({
                                                                      theme = 'light',
                                                                        title = 'SwiftUI Preview',
                                                                        subtitle,
+                                                                       contentScrollAxes,
+                                                                       contentShowsIndicators = true,
                                                                      }) => {
   const vars = themePalettes[theme] as CSSProperties
   const resolvedWidth = Math.max(defaultWidth ?? minWidth ?? 980, 360)
@@ -191,7 +197,19 @@ export const WindowGroup: FC<PropsWithChildren<WindowStyleProps>> = ({
           </div>
           <div/>
         </div>
-        <div style={{minHeight: 0, overflow: 'hidden'}}>{children}</div>
+        <div style={{minHeight: 0, overflow: 'hidden'}}>
+          {contentScrollAxes ? (
+            <ScrollView
+              axes={contentScrollAxes}
+              showsIndicators={contentShowsIndicators}
+              frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }}
+            >
+              {children}
+            </ScrollView>
+          ) : (
+            children
+          )}
+        </div>
       </div>
     </div>
   )
