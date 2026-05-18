@@ -8,6 +8,7 @@ export type DemoIdName = {
   id: string
   title: string
   category: DemoCategory
+  group?: string
 }
 
 export type SectionEntry = {
@@ -17,7 +18,7 @@ export type SectionEntry = {
   defaultPageId: string
 }
 
-export { demoPages } from './demoPages'
+export { demoPages, groupPagesByCategory } from './demoPages'
 export { isDemoCategory } from './isDemoCategory'
 
 export const sectionEntries: SectionEntry[] = [

@@ -13,7 +13,7 @@ import {
   WindowGroup,
 } from '../../swift'
 import { HomePage } from './HomePage'
-import { demoPages, isDemoCategory, sectionEntries, type DemoHomeSection, type DemoSection } from './model'
+import { demoPages, groupPagesByCategory, isDemoCategory, sectionEntries, type DemoHomeSection, type DemoSection } from './model'
 import { renderDemoPage } from './renderDemoPage'
 import { AppHeader, ButtonCard } from './shared'
 
@@ -25,6 +25,7 @@ export const DemoHome: FC = () => {
   const notes = useBinding('这里放 demo 说明、转换 hint、组件限制。')
 
   const pages = isDemoCategory(section.value) ? demoPages.filter(page => page.category === section.value) : []
+  const pageGroups = isDemoCategory(section.value) ? groupPagesByCategory(pages, section.value) : []
   const activePage = demoPages.find(page => page.id === currentPage.value)
   const activeSection = sectionEntries.find(entry => entry.id === section.value)
   const showSidebar = isDemoCategory(section.value)
@@ -63,7 +64,7 @@ export const DemoHome: FC = () => {
                 <Sidebar
                   section={section}
                   currentPage={currentPage}
-                  pages={pages}
+                  groups={pageGroups}
                   onOpenNotes={() => notesSheetPresented.setValue(true)}
                 />
                 <Divider axis="vertical" />
@@ -74,7 +75,7 @@ export const DemoHome: FC = () => {
                 {section.value === 'home' ? (
                   <HomePage onOpenSection={onOpenSection} />
                 ) : showSidebar && !currentPage.value ? (
-                  <SectionLanding pages={pages} onOpenPage={pageId => currentPage.setValue(pageId)} />
+                  <SectionLanding groups={pageGroups} onOpenPage={pageId => currentPage.setValue(pageId)} />
                 ) : currentPage.value ? (
                   renderDemoPage(currentPage.value)
                 ) : null}
@@ -92,9 +93,11 @@ export const DemoHome: FC = () => {
 const Sidebar: FC<{
   section: ReturnType<typeof useBinding<DemoHomeSection>>
   currentPage: ReturnType<typeof useBinding<string | null>>
-  pages: Array<{ id: string; title: string }>
+  groups: Array<{ title: string; pages: Array<{ id: string; title: string }> }>
   onOpenNotes: () => void
-}> = ({ currentPage, pages, onOpenNotes }) => {
+}> = ({ section, currentPage, groups, onOpenNotes }) => {
+  const scrollIdentity = `${section.value}:${groups.map(group => `${group.title}:${group.pages.map(page => page.id).join(',')}`).join('|')}`
+
   return (
     <VStack
       spacing={10}
@@ -103,16 +106,23 @@ const Sidebar: FC<{
       background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 18 } }}
     >
       <Text font="headline">Pages</Text>
-      <ScrollView frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }} showsIndicators>
+      <ScrollView key={scrollIdentity} frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }} showsIndicators>
         <VStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-          {pages.map(page => (
-            <Button
-              key={page.id}
-              title={page.title}
-              buttonStyle={currentPage.value === page.id ? 'borderedProminent' : currentPage.value === null ? 'plain' : 'bordered'}
-              frame={{ maxWidth: 'infinity', alignment: 'leading' }}
-              onPress={() => currentPage.setValue(page.id)}
-            />
+          {groups.map(group => (
+            <VStack key={group.title || 'default'} spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+              {group.title ? <Text font="caption.semibold" foregroundStyle="secondary">{group.title}</Text> : null}
+              <VStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+                {group.pages.map(page => (
+                  <Button
+                    key={page.id}
+                    title={page.title}
+                    buttonStyle={currentPage.value === page.id ? 'borderedProminent' : currentPage.value === null ? 'plain' : 'bordered'}
+                    frame={{ maxWidth: 'infinity', alignment: 'leading' }}
+                    onPress={() => currentPage.setValue(page.id)}
+                  />
+                ))}
+              </VStack>
+            </VStack>
           ))}
         </VStack>
       </ScrollView>
@@ -122,23 +132,28 @@ const Sidebar: FC<{
 }
 
 const SectionLanding: FC<{
-  pages: Array<{ id: string; title: string }>
+  groups: Array<{ title: string; pages: Array<{ id: string; title: string }> }>
   onOpenPage: (pageId: string) => void
-}> = ({ pages, onOpenPage }) => {
+}> = ({ groups, onOpenPage }) => {
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <Text font="title3.semibold">选择页面</Text>
-      <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
-        {pages.map(page => (
-          <ButtonCard
-            key={page.id}
-            title={page.title}
-            summary="进入该组件/页面 demo。"
-            buttonTitle="打开"
-            onPress={() => onOpenPage(page.id)}
-          />
-        ))}
-      </VStack>
+      {groups.map(group => (
+        <VStack key={group.title || 'default'} spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+          {group.title ? <Text font="headline">{group.title}</Text> : null}
+          <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+            {group.pages.map(page => (
+              <ButtonCard
+                key={page.id}
+                title={page.title}
+                summary="进入该组件/页面 demo。"
+                buttonTitle="打开"
+                onPress={() => onOpenPage(page.id)}
+              />
+            ))}
+          </VStack>
+        </VStack>
+      ))}
     </VStack>
   )
 }
