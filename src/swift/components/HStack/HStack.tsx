@@ -2,7 +2,10 @@ import type { FC } from 'react'
 import { mapStackAlignment, View } from '../runtime'
 import type { StackProps } from '../VStack'
 
-const inferHorizontalAlignment = (alignment?: StackProps['alignment'], frameAlignment?: StackProps['frame'] extends infer T ? T extends { alignment?: infer A } ? A : never : never) => {
+const inferHorizontalAlignment = (
+  alignment?: StackProps['alignment'],
+  frameAlignment?: StackProps['frame'] extends infer T ? T extends { alignment?: infer A } ? A : never : never,
+) => {
   if (alignment) {
     return alignment
   }

@@ -7,7 +7,10 @@ export type StackProps = ViewBaseProps & {
   alignment?: 'leading' | 'center' | 'trailing' | 'top' | 'bottom'
 }
 
-const inferVerticalAlignment = (alignment?: StackProps['alignment'], frameAlignment?: ViewBaseProps['frame'] extends infer T ? T extends { alignment?: infer A } ? A : never : never) => {
+const inferVerticalAlignment = (
+  alignment?: StackProps['alignment'],
+  frameAlignment?: ViewBaseProps['frame'] extends infer T ? T extends { alignment?: infer A } ? A : never : never,
+) => {
   if (alignment) {
     return alignment
   }

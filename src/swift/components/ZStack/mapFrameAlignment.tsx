@@ -1,6 +1,10 @@
 import type { FrameAlignment } from '../../types'
 
 export const mapFrameAlignment = (alignment?: FrameAlignment): string | undefined => {
+  if (alignment === undefined) {
+    return undefined
+  }
+
   switch (alignment) {
     case 'leading':
       return 'flex-start center'
@@ -19,7 +23,8 @@ export const mapFrameAlignment = (alignment?: FrameAlignment): string | undefine
     case 'bottomTrailing':
       return 'flex-end flex-end'
     case 'center':
-    default:
       return 'center center'
+    default:
+      return undefined
   }
 }

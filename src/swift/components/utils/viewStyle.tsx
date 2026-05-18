@@ -125,9 +125,20 @@ const applyFrame = (
   const alignment = mapFrameAlignment(frame.alignment)
   if (alignment) {
     const [justifyContent, alignItems] = alignment.split(' ')
-    style.display = style.display ?? 'flex'
-    style.justifyContent = justifyContent as CSSProperties['justifyContent']
-    style.alignItems = alignItems as CSSProperties['alignItems']
+    const hasHorizontalFrame =
+      frame.width !== undefined || frame.minWidth !== undefined || frame.maxWidth !== undefined
+    const hasVerticalFrame =
+      frame.height !== undefined || frame.minHeight !== undefined || frame.maxHeight !== undefined
+
+    if (hasHorizontalFrame || hasVerticalFrame) {
+      style.display = style.display ?? 'grid'
+      if (hasHorizontalFrame) {
+        style.justifyItems = justifyContent as CSSProperties['justifyItems']
+      }
+      if (hasVerticalFrame) {
+        style.alignItems = alignItems as CSSProperties['alignItems']
+      }
+    }
   }
 }
 
