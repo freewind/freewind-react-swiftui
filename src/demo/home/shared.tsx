@@ -12,13 +12,13 @@ export const AppHeader: FC<{
       padding={{ horizontal: 18, vertical: 14 }}
       frame={{ width: 'infinity', maxWidth: 'infinity' }}
       background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 18 } }}
-      spacing={14}
+      spacing={12}
       alignment="center"
     >
-      <HStack spacing={10} frame={{ width: 140, alignment: 'leading' }}>
+      <HStack spacing={10} frame={{ width: 180, alignment: 'leading' }}>
         {canGoBack ? <Button title="返回" buttonStyle="bordered" onPress={onBack} /> : null}
       </HStack>
-      <Text font="title3.semibold" frame={{ maxWidth: 'infinity' }} multilineTextAlignment="center">
+      <Text font="title3.semibold" frame={{ maxWidth: 'infinity', alignment: 'center' }} multilineTextAlignment="center">
         {title}
       </Text>
       <HStack frame={{ width: 180, alignment: 'trailing' }}>
