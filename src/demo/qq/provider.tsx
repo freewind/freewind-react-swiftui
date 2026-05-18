@@ -36,7 +36,7 @@ export const MockEnvironmentProvider: FC<MockEnvironmentProviderProps & { childr
   const [peers, setPeers] = useState(initialPeers)
   const [openedPeerId, setOpenedPeerId] = useState<string | null>('peer-mac')
   const [scanLogs, setScanLogs] = useState<string[]>(['discover peer 192.168.1.20', 'sync digest 3 conversations', 'rebuild list done'])
-  const [isScanLogsPresented, setIsScanLogsPresented] = useState(true)
+  const [isScanLogsPresented, setIsScanLogsPresented] = useState(false)
   const [messagesByPeer, setMessagesByPeer] = useState<Record<string, ChatMessage[]>>(initialMessages)
 
   const pushEvent = (event: MockOpenEvent) => {
