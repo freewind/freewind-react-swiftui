@@ -43,7 +43,7 @@ export const ContextMenu: FC<ContextMenuProps> = ({items, children}) => {
   ) : null
 
   return (
-    <div style={{position: 'relative'}}>
+    <div data-type="ContextMenu" style={{position: 'relative'}}>
       {cloneElement(children, {
         onContextMenu: (event: MouseEvent) => {
           event.preventDefault()

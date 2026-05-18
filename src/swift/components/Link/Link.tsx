@@ -16,7 +16,7 @@ export const Link: FC<LinkProps> = ({ destination, title, children, ...rest }) =
   }
 
   return (
-    <a
+    <a data-type="Link"
       href={destination}
       target="_blank"
       rel="noreferrer"

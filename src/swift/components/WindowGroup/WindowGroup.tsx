@@ -89,7 +89,7 @@ export const WindowGroup: FC<PropsWithChildren<WindowStyleProps>> = ({
   }, [register, focus, id, title, defaultWidth, defaultHeight])
 
   return (
-    <div
+    <div data-type="WindowGroup"
       style={{
         ...vars,
         minWidth,

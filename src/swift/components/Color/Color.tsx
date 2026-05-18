@@ -4,5 +4,5 @@ import { View } from '../View'
 import type { ViewBaseProps } from '../View'
 
 export const Color: FC<ViewBaseProps & { tone?: ForegroundStyleToken }> = ({ tone = 'primary', ...rest }) => {
-  return <View background={tone} {...rest} />
+  return <View dataType="Color" background={tone} {...rest} />
 }

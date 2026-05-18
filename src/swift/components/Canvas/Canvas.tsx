@@ -22,5 +22,5 @@ export const Canvas: FC<CanvasProps> = ({ draw, frame, ...rest }) => {
     draw(context, { width, height })
   }, [draw, frame?.height, frame?.width])
 
-  return <canvas ref={ref} style={viewStyle({ ...rest, frame })} />
+  return <canvas data-type="Canvas" ref={ref} style={viewStyle({ ...rest, frame })} />
 }

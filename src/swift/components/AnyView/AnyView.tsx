@@ -3,5 +3,5 @@ import type { ViewBaseProps } from '../View'
 
 
 export const AnyView: FC<ViewBaseProps> = ({ children }) => {
-  return <>{children}</>
+  return <div data-type="AnyView" style={{ display: 'contents' }}>{children}</div>
 }

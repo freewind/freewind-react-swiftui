@@ -9,7 +9,7 @@ export type ColorPickerProps = ViewBaseProps & {
 
 export const ColorPicker: FC<ColorPickerProps> = ({ selection, title, ...rest }) => {
   return (
-    <HStack spacing={10} {...rest}>
+    <HStack dataType="ColorPicker" spacing={10} {...rest}>
       {title ? <Text>{title}</Text> : null}
       <input
         type="color"

@@ -11,7 +11,7 @@ export const Spacer: FC<SpacerProps> = ({ minLength = 0 }) => {
   const parentStackAxis = useContext(parentStackAxisContext)
 
   return (
-    <div
+    <div data-type="Spacer"
       style={
         parentStackAxis === 'vertical'
           ? { flex: 1, minHeight: minLength, minWidth: 0, alignSelf: 'stretch' }

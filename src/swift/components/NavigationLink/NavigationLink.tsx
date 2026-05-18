@@ -37,7 +37,7 @@ export const NavigationLink: FC<NavigationLinkProps> = ({
   }, [destination, destinationTitle, navigation, title, value])
 
   return (
-    <Button
+    <Button dataType="NavigationLink"
       buttonStyle="plain"
       onPress={() => {
         onNavigate?.()

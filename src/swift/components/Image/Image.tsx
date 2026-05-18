@@ -37,11 +37,11 @@ export const Image: FC<ImageProps> = ({
   }
 
   if (src) {
-    return <img src={src} alt={alt} style={style} />
+    return <img data-type="Image" src={src} alt={alt} style={style} />
   }
 
   return (
-    <Text
+    <Text dataType="Image"
       {...rest}
       font="caption"
       padding={{ horizontal: 8, vertical: 4 }}

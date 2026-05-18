@@ -3,5 +3,5 @@ import type { ViewBaseProps } from '../View'
 
 
 export const GridRow: FC<ViewBaseProps> = ({ children }) => {
-  return <div style={{ display: 'contents' }}>{children}</div>
+  return <div data-type="GridRow" style={{ display: 'contents' }}>{children}</div>
 }

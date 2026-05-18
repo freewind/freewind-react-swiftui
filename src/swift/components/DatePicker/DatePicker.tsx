@@ -10,7 +10,7 @@ export type DatePickerProps = ViewBaseProps & {
 export const DatePicker: FC<DatePickerProps> = ({ selection, mode = 'date', ...rest }) => {
   const type = mode === 'dateAndTime' ? 'datetime-local' : mode
   return (
-    <input
+    <input data-type="DatePicker"
       type={type}
       value={selection.value}
       onChange={event => selection.setValue(event.target.value)}

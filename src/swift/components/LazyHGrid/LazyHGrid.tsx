@@ -16,5 +16,5 @@ export const LazyHGrid: FC<LazyHGridProps> = ({ rows = 2, spacing = 12, children
     gap: spacing,
     overflowX: 'auto',
   }
-  return <div style={style}>{children}</div>
+  return <div data-type="LazyHGrid" style={style}>{children}</div>
 }

@@ -18,5 +18,5 @@ export const ScrollView: FC<ScrollViewProps> = ({ axes = 'vertical', showsIndica
     overflowY: normalized.includes('vertical') ? (showsIndicators ? 'scroll' : 'auto') : 'hidden',
   }
 
-  return <div style={style}>{children}</div>
+  return <div data-type="ScrollView" style={style}>{children}</div>
 }

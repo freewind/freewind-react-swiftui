@@ -3,5 +3,5 @@ import type { ViewBaseProps } from '../View'
 
 
 export const Group: FC<ViewBaseProps> = ({ children }) => {
-  return <>{children}</>
+  return <div data-type="Group" style={{ display: 'contents' }}>{children}</div>
 }

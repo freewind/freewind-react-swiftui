@@ -29,7 +29,7 @@ export const SecureField: FC<TextFieldProps> = ({
   }, [isFocused])
 
   return (
-    <input
+    <input data-type="SecureField"
       ref={ref}
       type="password"
       value={text.value}

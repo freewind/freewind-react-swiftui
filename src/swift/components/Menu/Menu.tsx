@@ -4,12 +4,13 @@ import {Button} from "../Button";
 import type { ContextMenuItem } from '../ContextMenu'
 
 export type MenuProps = {
+  dataType?: string
   items: ContextMenuItem[]
   children: ReactElement
 }
 
 
-export const Menu: FC<MenuProps> = ({items, children}) => {
+export const Menu: FC<MenuProps> = ({dataType = 'Menu', items, children}) => {
   const [open, setOpen] = useState(false)
   const id = useId()
   const menu = open ? (
@@ -37,7 +38,7 @@ export const Menu: FC<MenuProps> = ({items, children}) => {
   ) : null
 
   return (
-    <div style={{position: 'relative'}}>
+    <div data-type={dataType} style={{position: 'relative'}}>
       {cloneElement(children, {
         onClick: (event: MouseEvent) => {
           event.preventDefault()

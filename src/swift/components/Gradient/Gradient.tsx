@@ -9,7 +9,7 @@ export type GradientProps = ViewBaseProps & {
 
 export const Gradient: FC<GradientProps> = ({ colors, direction = '135deg', ...rest }) => {
   return (
-    <div
+    <div data-type="Gradient"
       style={{
         ...viewStyle(rest),
         background: `linear-gradient(${direction}, ${colors.join(', ')})`,

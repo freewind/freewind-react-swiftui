@@ -40,7 +40,7 @@ export const TextField: FC<TextFieldProps> = ({
   }, [isFocused])
 
   return (
-    <input
+    <input data-type="TextField"
       ref={ref}
       value={text.value}
       placeholder={placeholder}

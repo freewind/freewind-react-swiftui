@@ -9,5 +9,5 @@ export type MenuBarExtraProps = ViewBaseProps & {
 }
 
 export const MenuBarExtra: FC<MenuBarExtraProps> = ({ label, items }) => {
-  return <Menu items={items}>{label}</Menu>
+  return <Menu dataType="MenuBarExtra" items={items}>{label}</Menu>
 }

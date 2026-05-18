@@ -26,7 +26,7 @@ export const TabView = <T extends string | number>({
   const currentTab = tabs.find(tab => tab.props.tag === currentTag) ?? tabs[0]
 
   return (
-    <VStack spacing={12} alignment="leading" {...rest}>
+    <VStack dataType="TabView" spacing={12} alignment="leading" {...rest}>
       {tabBarHidden ? null : (
         <HStack
           spacing={6}

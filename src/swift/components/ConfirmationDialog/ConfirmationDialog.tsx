@@ -21,7 +21,7 @@ export const ConfirmationDialog: FC<ConfirmationDialogProps> = ({
   actions,
 }) => {
   return (
-    <Sheet isPresented={isPresented} title="ConfirmationDialog" detents={['medium']}>
+    <Sheet dataType="ConfirmationDialog" isPresented={isPresented} title="ConfirmationDialog" detents={['medium']}>
       <VStack
         spacing={8}
         padding={14}

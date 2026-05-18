@@ -15,7 +15,7 @@ import {View} from "../View";
 export const DropArea: FC<DropAreaProps> = ({children, isTargeted, onDrop, ...rest}) => {
   const targeted = Boolean(isTargeted?.value)
   return (
-    <View
+    <View dataType="DropArea"
       {...rest}
       overlay={
         targeted ? (

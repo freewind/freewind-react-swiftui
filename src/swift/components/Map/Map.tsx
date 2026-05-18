@@ -33,7 +33,7 @@ export const Map: FC<MapProps> = ({
   )
 
   return (
-    <VStack
+    <VStack dataType="Map"
       spacing={0}
       background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}
       clipShape={{ kind: 'roundedRectangle', cornerRadius: 16 }}

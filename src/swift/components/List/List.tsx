@@ -31,7 +31,7 @@ export const List: FC<ListProps> = ({
   const items = normalizeChildren(children)
 
   return (
-    <VStack
+    <VStack dataType="List"
       spacing={0}
       frame={{ maxWidth: 'infinity', alignment: 'leading' }}
       background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}

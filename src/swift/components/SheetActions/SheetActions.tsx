@@ -10,7 +10,7 @@ export const SheetActions: FC<{
   confirmTitle?: string
 }> = ({onCancel, onConfirm, cancelTitle = '取消', confirmTitle = '保存'}) => {
   return (
-    <HStack spacing={10}>
+    <HStack dataType="SheetActions" spacing={10}>
       <Spacer/>
       <Button title={cancelTitle} buttonStyle="bordered" onPress={onCancel}/>
       <Button title={confirmTitle} buttonStyle="borderedProminent" onPress={onConfirm}/>

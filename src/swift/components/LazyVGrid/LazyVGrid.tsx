@@ -47,7 +47,7 @@ const gridTemplateColumns = (columns: GridItemSpec[]) => {
 
 export const LazyVGrid: FC<LazyVGridProps> = ({ columns, spacing = 8, children, ...rest }) => {
   return (
-    <div
+    <div data-type="LazyVGrid"
       style={{
         ...viewStyle(rest),
         display: 'grid',

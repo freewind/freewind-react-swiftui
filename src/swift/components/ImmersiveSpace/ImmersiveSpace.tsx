@@ -4,7 +4,7 @@ import type { StackProps } from '../VStack'
 
 export const ImmersiveSpace: FC<StackProps> = ({ children, ...rest }) => {
   return (
-    <ZStack
+    <ZStack dataType="ImmersiveSpace"
       frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }}
       background="primary"
       foregroundColor="#ffffff"

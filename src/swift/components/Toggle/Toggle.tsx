@@ -18,7 +18,7 @@ export const Toggle: FC<ToggleProps> = ({ isOn, title, label, children, ...rest 
   const toggleLabel = label ?? <Text>{children ?? title ?? 'Toggle'}</Text>
 
   return (
-    <Button buttonStyle="plain" onPress={() => isOn.setValue(!isOn.value)} {...rest}>
+    <Button dataType="Toggle" buttonStyle="plain" onPress={() => isOn.setValue(!isOn.value)} {...rest}>
       <HStack spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
         <HStack
           spacing={0}

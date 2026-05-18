@@ -33,9 +33,9 @@ export const ShapeView: FC<
       ? `${stroke.lineWidth ?? 1}px ${stroke.dash?.length ? 'dashed' : 'solid'} ${stroke.color ?? surfaceColors.border}`
       : undefined,
   }
-  return <div style={style}>{rest.children}</div>
+  return <div data-type="ShapeView" style={style}>{rest.children}</div>
 }
 
 export const Rectangle: FC<ShapeProps> = ({ fill, stroke, ...rest }) => {
-  return <ShapeView {...rest} shape={{ kind: 'rectangle' }} fill={fill} stroke={stroke} />
+  return <ShapeView dataType="Rectangle" {...rest} shape={{ kind: 'rectangle' }} fill={fill} stroke={stroke} />
 }

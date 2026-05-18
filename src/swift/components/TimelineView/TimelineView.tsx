@@ -36,5 +36,5 @@ export const TimelineView: FC<TimelineViewProps> = ({ schedule = 'everySecond', 
   const cadence =
     schedule === 'animation' ? 'live' : schedule === 'everyMinute' ? 'minutes' : 'seconds'
 
-  return <>{typeof children === 'function' ? children({ date, cadence }) : children}</>
+  return <div data-type="TimelineView" style={{ display: 'contents' }}>{typeof children === 'function' ? children({ date, cadence }) : children}</div>
 }

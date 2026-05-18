@@ -4,7 +4,7 @@ import type { ShapeProps } from '../Rectangle'
 
 export const Circle: FC<ShapeProps> = ({ fill = 'accentColor', stroke, ...rest }) => {
   return (
-    <div
+    <div data-type="Circle"
       style={{
         ...viewStyle({
           ...rest,

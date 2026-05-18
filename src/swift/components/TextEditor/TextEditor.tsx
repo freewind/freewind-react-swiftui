@@ -25,7 +25,7 @@ export const TextEditor: FC<TextEditorProps> = ({ text, focused, equals, control
   }, [isFocused])
 
   return (
-    <textarea
+    <textarea data-type="TextEditor"
       ref={ref}
       value={text.value}
       onChange={event => text.setValue(event.target.value)}

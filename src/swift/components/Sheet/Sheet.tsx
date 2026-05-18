@@ -4,6 +4,7 @@ import { VStack } from '../VStack'
 import { Text } from '../Text'
 
 export type SheetProps = {
+  dataType?: string
   isPresented: Binding<boolean>
   title?: string
   detents?: Array<'medium' | 'large'>
@@ -18,6 +19,7 @@ const stopClick = (event: MouseEvent<HTMLDivElement>) => {
 
 
 export const Sheet: FC<SheetProps> = ({
+  dataType = 'Sheet',
   isPresented,
   title,
   detents = ['large'],
@@ -41,6 +43,7 @@ export const Sheet: FC<SheetProps> = ({
 
   return (
     <div
+      data-type={dataType}
       onClick={dismiss}
       style={{
         position: 'fixed',

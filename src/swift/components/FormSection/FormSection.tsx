@@ -7,7 +7,7 @@ export const FormSection: FC<{
   children: ReactNode
 }> = ({ title, children }) => {
   return (
-    <VStack
+    <VStack dataType="FormSection"
       spacing={10}
       padding={14}
       frame={{ maxWidth: 'infinity', alignment: 'leading' }}

@@ -10,7 +10,7 @@ export type GroupBoxProps = ViewBaseProps & {
 
 export const GroupBox: FC<GroupBoxProps> = ({ title, label, children, ...rest }) => {
   return (
-    <VStack
+    <VStack dataType="GroupBox"
       spacing={10}
       padding={14}
       frame={{ maxWidth: 'infinity', alignment: 'leading' }}

@@ -37,7 +37,7 @@ export const Table = <T,>({
   ...rest
 }: TableProps<T>) => {
   return (
-    <VStack
+    <VStack dataType="Table"
       spacing={0}
       frame={{ maxWidth: 'infinity', alignment: 'leading' }}
       background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}

@@ -8,7 +8,7 @@ export type DividerProps = {
 
 export const Divider: FC<DividerProps> = ({ axis = 'horizontal' }) => {
   return (
-    <div
+    <div data-type="Divider"
       style={
         axis === 'horizontal'
           ? { height: 1, width: '100%', background: surfaceColors.border, flexShrink: 0 }

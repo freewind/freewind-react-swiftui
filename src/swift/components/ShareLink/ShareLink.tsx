@@ -11,7 +11,7 @@ export type ShareLinkProps = ViewBaseProps & {
 
 export const ShareLink: FC<ShareLinkProps> = ({ title = '分享', text, url, ...rest }) => {
   return (
-    <Button
+    <Button dataType="ShareLink"
       title={title}
       buttonStyle="bordered"
       onPress={async () => {

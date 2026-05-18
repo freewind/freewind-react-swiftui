@@ -12,6 +12,7 @@ export const createNativePlaceholder = (name: string, note: string): FC<NativePl
   const NativePlaceholder: FC<NativePlaceholderProps> = ({ children, ...rest }) => {
     return (
       <VStack
+        dataType={name}
         spacing={8}
         padding={12}
         frame={{ maxWidth: 'infinity', alignment: 'leading' }}

@@ -14,5 +14,5 @@ export const Grid: FC<GridProps> = ({ columns = 2, spacing = 12, children, ...re
     gridTemplateColumns: `repeat(${String(columns)}, minmax(0, 1fr))`,
     gap: spacing,
   }
-  return <div style={style}>{children}</div>
+  return <div data-type="Grid" style={style}>{children}</div>
 }

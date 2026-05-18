@@ -67,5 +67,5 @@ export const Text: FC<TextProps> = ({
     fontSize: baseStyle.fontSize ?? fontStyles[font].fontSize,
   }
 
-  return <div style={style}>{children}</div>
+  return <div data-type="Text" style={style}>{children}</div>
 }

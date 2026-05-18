@@ -11,7 +11,7 @@ export type PasteButtonProps = ViewBaseProps & {
 
 export const PasteButton: FC<PasteButtonProps> = ({ text, title = '粘贴', onPaste, ...rest }) => {
   return (
-    <Button
+    <Button dataType="PasteButton"
       title={title}
       buttonStyle="bordered"
       onPress={async () => {

@@ -5,6 +5,7 @@ import {VStack} from "../VStack";
 import type { Binding } from '../runtime'
 
 export type PopoverProps = {
+  dataType?: string
   isPresented: Binding<boolean>
   title?: string
   content: ReactNode
@@ -15,6 +16,7 @@ export type PopoverProps = {
 
 
 export const Popover: FC<PopoverProps> = ({
+  dataType = 'Popover',
   isPresented,
   title,
   content,
@@ -28,7 +30,7 @@ export const Popover: FC<PopoverProps> = ({
   }
 
   return (
-    <div style={{position: 'relative', display: 'inline-flex'}}>
+    <div data-type={dataType} style={{position: 'relative', display: 'inline-flex'}}>
       {cloneElement(children, {
         onClick: (event: MouseEvent) => {
           event.preventDefault()

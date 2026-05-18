@@ -19,7 +19,7 @@ export const DisclosureGroup: FC<DisclosureGroupProps> = ({ title, isExpanded, c
   const setExpanded = isExpanded ? isExpanded.setValue : setLocalExpanded
 
   return (
-    <VStack spacing={8} alignment="leading" {...rest}>
+    <VStack dataType="DisclosureGroup" spacing={8} alignment="leading" {...rest}>
       <Button buttonStyle="plain" onPress={() => setExpanded(!expanded)} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
         <HStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
           <Text font="caption2.monospaced">{expanded ? '▾' : '▸'}</Text>

@@ -4,7 +4,7 @@ import type { StackProps } from '../VStack'
 
 export const HStack: FC<StackProps> = ({ spacing = 0, alignment = 'center', children, ...rest }) => {
   return (
-    <View
+    <View dataType="HStack"
       {...rest}
       stack={{
         axis: 'horizontal',

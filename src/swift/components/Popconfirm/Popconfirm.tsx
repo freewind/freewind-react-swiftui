@@ -29,7 +29,7 @@ export const Popconfirm: FC<PopconfirmProps> = ({
                                                 }) => {
   const shown = useBinding(false)
   return (
-    <Popover
+    <Popover dataType="Popconfirm"
       isPresented={shown}
       content={
         <VStack spacing={10} alignment="leading" frame={{maxWidth: 'infinity', alignment: 'leading'}}>

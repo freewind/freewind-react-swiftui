@@ -23,7 +23,7 @@ export const OutlineGroup = <T,>({
   ...rest
 }: OutlineGroupProps<T>) => {
   return (
-    <VStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }} {...rest}>
+    <VStack dataType="OutlineGroup" spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }} {...rest}>
       {items.map((item, index) => {
         const itemId = id(item, index)
         const nested = childrenOf?.(item) ?? []

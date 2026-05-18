@@ -22,7 +22,7 @@ export const FullScreenCover: FC<FullScreenCoverProps> = ({ isPresented, title, 
   }
 
   return (
-    <div style={style}>
+    <div data-type="FullScreenCover" style={style}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
         {title ? <Text font="headline.semibold" foregroundColor="#ffffff">{title}</Text> : <span />}
         <Button title="关闭" buttonStyle="bordered" onPress={() => isPresented.setValue(false)} />

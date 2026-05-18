@@ -4,7 +4,7 @@ import type { StackProps } from '../VStack'
 
 export const Toolbar: FC<StackProps> = ({ spacing = 10, children, ...rest }) => {
   return (
-    <HStack
+    <HStack dataType="Toolbar"
       spacing={spacing}
       padding={{ horizontal: 12, vertical: 10 }}
       frame={{ maxWidth: 'infinity', alignment: 'leading' }}

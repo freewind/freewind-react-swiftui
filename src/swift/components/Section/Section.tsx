@@ -13,7 +13,7 @@ export type SectionProps = ViewBaseProps & {
 
 export const Section: FC<SectionProps> = ({ title, header, footer, children, ...rest }) => {
   return (
-    <VStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }} {...rest}>
+    <VStack dataType="Section" spacing={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }} {...rest}>
       {header ?? title ? (
         <Text font="caption.semibold" foregroundStyle="secondary">
           {header ?? title}

@@ -19,5 +19,5 @@ export const RoundedRectangle: FC<ShapeProps> = ({ cornerRadius = 16, fill, stro
       : undefined,
   }
 
-  return <div style={style}>{rest.children}</div>
+  return <div data-type="RoundedRectangle" style={style}>{rest.children}</div>
 }
