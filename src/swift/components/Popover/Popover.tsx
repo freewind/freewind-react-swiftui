@@ -5,7 +5,7 @@ import {VStack} from "../VStack";
 import type { Binding } from '../runtime'
 
 export type PopoverProps = {
-  dataType?: string
+  'data-type'?: string
   isPresented: Binding<boolean>
   title?: string
   content: ReactNode
@@ -16,7 +16,7 @@ export type PopoverProps = {
 
 
 export const Popover: FC<PopoverProps> = ({
-  dataType = 'Popover',
+  ['data-type']: dataType = 'Popover',
   isPresented,
   title,
   content,

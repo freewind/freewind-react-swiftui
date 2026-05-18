@@ -31,7 +31,7 @@ export const Picker = <T extends string | number>({
   }
 
   return (
-    <VStack dataType="Picker" spacing={6} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+    <VStack data-type="Picker" spacing={6} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       {rest.labelsHidden ? null : label ?? (
         <Text font="caption" foregroundStyle="secondary">
           {String(selection.value)}

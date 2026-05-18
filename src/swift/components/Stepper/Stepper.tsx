@@ -32,7 +32,7 @@ export const Stepper: FC<StepperProps> = ({
   const controlSize = rest.controlSize ?? 'small'
 
   return (
-    <HStack dataType="Stepper" spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }} {...rest}>
+    <HStack data-type="Stepper" spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }} {...rest}>
       <VStack spacing={2} alignment="leading" frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
         {rest.labelsHidden ? null : label ?? <Text>{children ?? title ?? 'Stepper'}</Text>}
         {rest.labelsHidden ? null : valueLabel ?? (

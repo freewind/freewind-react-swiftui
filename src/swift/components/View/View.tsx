@@ -3,7 +3,7 @@ import type { BackgroundSpec, ControlSizeToken, ForegroundStyleToken, FrameSpec,
 import {disabledContext, parentStackAxisContext, viewStyle} from '../runtime'
 
 export type ViewBaseProps = PropsWithChildren<{
-  dataType?: string
+  'data-type'?: string
   padding?: number | {
     top?: number
     bottom?: number
@@ -64,7 +64,7 @@ export const View: FC<
     align?: string
   }
 }
-> = ({children, stack, overlay, disabled, dataType = 'View', ...rest}) => {
+> = ({children, stack, overlay, disabled, ['data-type']: dataType = 'View', ...rest}) => {
   const inheritedDisabled = useContext(disabledContext)
   const parentStackAxis = useContext(parentStackAxisContext)
   const finalDisabled = inheritedDisabled || Boolean(disabled)

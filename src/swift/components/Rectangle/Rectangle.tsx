@@ -37,5 +37,5 @@ export const ShapeView: FC<
 }
 
 export const Rectangle: FC<ShapeProps> = ({ fill, stroke, ...rest }) => {
-  return <ShapeView dataType="Rectangle" {...rest} shape={{ kind: 'rectangle' }} fill={fill} stroke={stroke} />
+  return <ShapeView data-type="Rectangle" {...rest} shape={{ kind: 'rectangle' }} fill={fill} stroke={stroke} />
 }

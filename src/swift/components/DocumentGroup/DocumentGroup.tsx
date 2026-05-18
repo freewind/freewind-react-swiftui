@@ -42,7 +42,7 @@ export const DocumentGroup: FC<DocumentGroupProps> = ({
       : null
 
   return (
-    <VStack dataType="DocumentGroup"
+    <VStack data-type="DocumentGroup"
       spacing={10}
       padding={14}
       background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 18 } }}

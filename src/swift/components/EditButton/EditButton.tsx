@@ -16,7 +16,7 @@ export const EditButton: FC<EditButtonProps> = ({
   ...rest
 }) => {
   return (
-    <Button dataType="EditButton"
+    <Button data-type="EditButton"
       title={isEditing.value ? doneTitle : editTitle}
       buttonStyle="borderless"
       onPress={() => isEditing.setValue(!isEditing.value)}

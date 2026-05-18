@@ -4,13 +4,13 @@ import {Button} from "../Button";
 import type { ContextMenuItem } from '../ContextMenu'
 
 export type MenuProps = {
-  dataType?: string
+  'data-type'?: string
   items: ContextMenuItem[]
   children: ReactElement
 }
 
 
-export const Menu: FC<MenuProps> = ({dataType = 'Menu', items, children}) => {
+export const Menu: FC<MenuProps> = ({['data-type']: dataType = 'Menu', items, children}) => {
   const [open, setOpen] = useState(false)
   const id = useId()
   const menu = open ? (

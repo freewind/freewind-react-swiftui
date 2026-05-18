@@ -5,7 +5,7 @@ import type { StackProps } from '../VStack'
 
 export const ZStack: FC<StackProps> = ({ alignment = 'center', children, ...rest }) => {
   return (
-    <View dataType="ZStack"
+    <View data-type="ZStack"
       {...rest}
       stack={{
         axis: 'z',

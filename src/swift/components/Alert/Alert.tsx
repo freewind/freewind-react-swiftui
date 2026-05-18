@@ -31,7 +31,7 @@ export const Alert: FC<AlertProps> = ({
   const actions = [secondaryButton, primaryButton ?? fallbackAction].filter(Boolean) as AlertAction[]
 
   return (
-    <Sheet dataType="Alert" isPresented={isPresented} title="Alert" detents={['medium']}>
+    <Sheet data-type="Alert" isPresented={isPresented} title="Alert" detents={['medium']}>
       <VStack
         spacing={12}
         padding={18}

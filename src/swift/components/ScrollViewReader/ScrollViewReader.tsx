@@ -14,7 +14,7 @@ export type ScrollViewReaderProps = Omit<ViewBaseProps, 'children'> & {
 
 export const ScrollViewReader: FC<ScrollViewReaderProps> = ({ children, position, ...rest }) => {
   return (
-    <View dataType="ScrollViewReader" {...rest}>
+    <View data-type="ScrollViewReader" {...rest}>
       {children({
         scrollTo: (id, options) => {
           position?.setValue({

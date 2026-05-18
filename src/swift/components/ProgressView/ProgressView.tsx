@@ -22,7 +22,7 @@ export const ProgressView: FC<ProgressViewProps> = ({
                                                     }) => {
   const normalized = value === undefined ? 0.36 : Math.max(0, Math.min(1, total <= 0 ? 0 : value / total))
   return (
-    <VStack dataType="ProgressView" spacing={8} alignment="leading" {...rest}>
+    <VStack data-type="ProgressView" spacing={8} alignment="leading" {...rest}>
       {label ? <Text>{label}</Text> : null}
       <div
         style={{

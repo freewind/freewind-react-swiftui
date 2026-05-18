@@ -3,5 +3,5 @@ import { Link } from '../Link/Link'
 import type { LinkProps } from '../Link/Link'
 
 export const HelpLink: FC<LinkProps> = props => {
-  return <Link dataType="HelpLink" title={props.title ?? '帮助'} {...props} />
+  return <Link data-type="HelpLink" title={props.title ?? '帮助'} {...props} />
 }

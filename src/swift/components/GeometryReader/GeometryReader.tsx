@@ -17,7 +17,7 @@ export type GeometryReaderProps = Omit<ViewBaseProps, 'children'> & {
 
 export const GeometryReader: FC<GeometryReaderProps> = ({ children, ...rest }) => {
   return (
-    <View dataType="GeometryReader" {...rest}>
+    <View data-type="GeometryReader" {...rest}>
       {children({
         size: {
           width: 1280,

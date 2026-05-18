@@ -26,7 +26,7 @@ export const Commands: FC<CommandsProps> = ({ spacing = 6, id, title, children, 
   }, [register, id, title, commandTitles.join('|')])
 
   return (
-    <VStack dataType="Commands" spacing={spacing} padding={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }} {...rest}>
+    <VStack data-type="Commands" spacing={spacing} padding={8} frame={{ maxWidth: 'infinity', alignment: 'leading' }} {...rest}>
       {title ? (
         <Text font="caption.semibold" foregroundStyle="secondary">
           {title}

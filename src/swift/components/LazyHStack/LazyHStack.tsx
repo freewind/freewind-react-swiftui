@@ -4,5 +4,5 @@ import type { StackProps } from '../VStack'
 
 
 export const LazyHStack: FC<StackProps> = props => {
-  return <HStack dataType="LazyHStack" {...props} />
+  return <HStack data-type="LazyHStack" {...props} />
 }

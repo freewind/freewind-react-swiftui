@@ -4,7 +4,7 @@ import { VStack } from '../VStack'
 import { Text } from '../Text'
 
 export type SheetProps = {
-  dataType?: string
+  'data-type'?: string
   isPresented: Binding<boolean>
   title?: string
   detents?: Array<'medium' | 'large'>
@@ -19,7 +19,7 @@ const stopClick = (event: MouseEvent<HTMLDivElement>) => {
 
 
 export const Sheet: FC<SheetProps> = ({
-  dataType = 'Sheet',
+  ['data-type']: dataType = 'Sheet',
   isPresented,
   title,
   detents = ['large'],

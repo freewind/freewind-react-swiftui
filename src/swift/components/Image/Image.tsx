@@ -41,7 +41,7 @@ export const Image: FC<ImageProps> = ({
   }
 
   return (
-    <Text dataType="Image"
+    <Text data-type="Image"
       {...rest}
       font="caption"
       padding={{ horizontal: 8, vertical: 4 }}

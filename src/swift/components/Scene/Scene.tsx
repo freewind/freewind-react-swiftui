@@ -22,7 +22,7 @@ export const Scene: FC<SceneProps> = ({ id, role = 'windowApplication', title, c
   }, [register, id, role, title])
 
   return (
-    <VStack dataType="Scene" spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }} {...rest}>
+    <VStack data-type="Scene" spacing={10} frame={{ maxWidth: 'infinity', alignment: 'leading' }} {...rest}>
       {id || title ? (
         <VStack spacing={2} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
           {title ? <Text font="caption.semibold">{title}</Text> : null}

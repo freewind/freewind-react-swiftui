@@ -10,7 +10,7 @@ export const TextFieldRow: FC<{
   placeholder?: string
 }> = ({ label, text, placeholder }) => {
   return (
-    <VStack dataType="TextFieldRow" spacing={6} frame={{maxWidth: 'infinity', alignment: 'leading'}}>
+    <VStack data-type="TextFieldRow" spacing={6} frame={{maxWidth: 'infinity', alignment: 'leading'}}>
       <Text font="caption" foregroundStyle="secondary">
         {label}
       </Text>

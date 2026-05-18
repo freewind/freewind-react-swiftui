@@ -40,7 +40,7 @@ export const Slider: FC<SliderProps> = ({
         : surfaceColors.accent
 
   return (
-    <VStack dataType="Slider" spacing={6} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+    <VStack data-type="Slider" spacing={6} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       {rest.labelsHidden ? null : label ? label : null}
       <HStack spacing={8} frame={{ maxWidth: 'infinity', alignment: 'center' }}>
         {rest.labelsHidden ? null : minimumValueLabel ? minimumValueLabel : <Text font="caption" foregroundStyle="secondary">{String(min)}</Text>}

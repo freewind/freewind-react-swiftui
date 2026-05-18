@@ -13,7 +13,7 @@ export const TextEditorSheet: FC<{
   onConfirm?: () => void
 }> = ({ title, isPresented, text, onConfirm }) => {
   return (
-    <Sheet dataType="TextEditorSheet" isPresented={isPresented}>
+    <Sheet data-type="TextEditorSheet" isPresented={isPresented}>
       <VStack
         spacing={12}
         padding={20}

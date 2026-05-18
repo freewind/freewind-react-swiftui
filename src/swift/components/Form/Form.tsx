@@ -5,7 +5,7 @@ import { VStack } from '../VStack'
 
 export const Form: FC<StackProps> = ({ spacing = 12, padding = 16, children, ...rest }) => {
   return (
-    <VStack dataType="Form"
+    <VStack data-type="Form"
       spacing={spacing}
       padding={padding}
       frame={{ maxWidth: 'infinity', alignment: 'leading' }}

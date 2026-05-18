@@ -9,7 +9,7 @@ export type StackProps = ViewBaseProps & {
 
 export const VStack: FC<StackProps> = ({ spacing = 0, alignment = 'center', children, ...rest }) => {
   return (
-    <View dataType="VStack"
+    <View data-type="VStack"
       {...rest}
       stack={{
         axis: 'vertical',

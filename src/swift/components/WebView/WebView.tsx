@@ -46,7 +46,7 @@ export const WebView: FC<WebViewProps> = ({ src, title = 'WebView', showsNavigat
   )
 
   return (
-    <VStack dataType="WebView"
+    <VStack data-type="WebView"
       spacing={0}
       frame={rest.frame}
       background={{ fill: 'thinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 16 } }}

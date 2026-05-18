@@ -13,7 +13,7 @@ export type LabelProps = ViewBaseProps & {
 
 export const Label: FC<LabelProps> = ({ title, systemImage, ...rest }) => {
   return (
-    <HStack dataType="Label" spacing={8} {...rest}>
+    <HStack data-type="Label" spacing={8} {...rest}>
       {systemImage ? <Image systemName={systemImage} /> : null}
       <Text>{title}</Text>
     </HStack>
