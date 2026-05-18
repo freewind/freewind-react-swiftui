@@ -1,4 +1,5 @@
 import type { FC, MouseEvent, ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import type { Binding } from '../runtime'
 import { VStack } from '../VStack'
 import { Text } from '../Text'
@@ -41,7 +42,7 @@ export const Sheet: FC<SheetProps> = ({
 
   const maxWidth = detents.includes('medium') && !detents.includes('large') ? 520 : 720
 
-  return (
+  const sheetNode = (
     <div
       data-type={dataType}
       onClick={dismiss}
@@ -68,4 +69,10 @@ export const Sheet: FC<SheetProps> = ({
       </div>
     </div>
   )
+
+  if (typeof document === 'undefined') {
+    return sheetNode
+  }
+
+  return createPortal(sheetNode, document.body)
 }

@@ -1,4 +1,5 @@
 import type { CSSProperties, FC, ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import { Button } from '../Button'
 import { Text, type Binding } from '../runtime'
 
@@ -21,7 +22,7 @@ export const FullScreenCover: FC<FullScreenCoverProps> = ({ isPresented, title, 
     overflow: 'auto',
   }
 
-  return (
+  const coverNode = (
     <div data-type="FullScreenCover" style={style}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
         {title ? <Text font="headline.semibold" foregroundColor="#ffffff">{title}</Text> : <span />}
@@ -30,4 +31,10 @@ export const FullScreenCover: FC<FullScreenCoverProps> = ({ isPresented, title, 
       {children}
     </div>
   )
+
+  if (typeof document === 'undefined') {
+    return coverNode
+  }
+
+  return createPortal(coverNode, document.body)
 }
