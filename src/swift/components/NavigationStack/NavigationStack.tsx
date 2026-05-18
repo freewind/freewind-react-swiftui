@@ -107,8 +107,8 @@ export const NavigationStack: FC<NavigationStackProps> = ({ rootTitle, rootSubti
   )
 
   return (
-    <navigationStackContext.Provider data-type="NavigationStack" value={contextValue}>
-      <VStack spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }} background={{ fill: 'ultraThinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 20 } }} padding={12} {...rest}>
+    <navigationStackContext.Provider value={contextValue}>
+      <VStack data-type="NavigationStack" spacing={12} frame={{ maxWidth: 'infinity', alignment: 'leading' }} background={{ fill: 'ultraThinMaterial', in: { kind: 'roundedRectangle', cornerRadius: 20 } }} padding={12} {...rest}>
         <HStack spacing={10} padding={{ horizontal: 4, vertical: 2 }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
           {canPop ? (
             <Button
