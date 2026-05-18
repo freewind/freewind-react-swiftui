@@ -78,7 +78,6 @@ import { WindowAccessorDemo } from '../../swift/components/WindowAccessor'
 import { WindowGroupDemo } from '../../swift/components/WindowGroup'
 import { ZStackDemo } from '../../swift/components/ZStack'
 import { DashboardDemo, FormSheetDemo, SplitViewDemo } from '../layouts'
-import { EmojiDemo } from '../emoji'
 import { FileBrowserDemo } from '../file-browser'
 import { ImageBrowserDemo } from '../image-browser'
 import { NativeSwiftSourceDemo } from '../native-swift'
@@ -174,7 +173,6 @@ export const renderDemoPage = (pageId: string) => {
     'form-sheet': FormSheetDemo,
     qq: QQDemo,
     todo: TodoDemo,
-    emoji: EmojiDemo,
     'image-browser': ImageBrowserDemo,
     'file-browser': FileBrowserDemo,
     'system-api': SystemApiMockDemo,

@@ -135,7 +135,6 @@ const otherPages: DemoPage[] = [
   { id: 'form-sheet', title: '表单弹层', category: 'layouts' },
   { id: 'qq', title: 'QQ 聊天', category: 'apps' },
   { id: 'todo', title: 'Todo List', category: 'apps' },
-  { id: 'emoji', title: 'Emoji 选择器', category: 'apps' },
   { id: 'image-browser', title: '图片浏览器', category: 'apps' },
   { id: 'file-browser', title: '文件浏览器', category: 'apps' },
   { id: 'system-api', title: '系统 API Mock', category: 'apps' },
