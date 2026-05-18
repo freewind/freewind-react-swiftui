@@ -1,4 +1,4 @@
-import type { FC, MouseEvent, ReactNode } from 'react'
+import { useEffect, type FC, type MouseEvent, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import type { Binding } from '../runtime'
 import { VStack } from '../VStack'
@@ -18,6 +18,13 @@ const stopClick = (event: MouseEvent<HTMLDivElement>) => {
   event.stopPropagation()
 }
 
+const resolvePortalRoot = () => {
+  if (typeof document === 'undefined') {
+    return null
+  }
+
+  return document.querySelector('[data-type="WindowGroup"]') ?? document.body
+}
 
 export const Sheet: FC<SheetProps> = ({
   ['data-type']: dataType = 'Sheet',
@@ -41,6 +48,24 @@ export const Sheet: FC<SheetProps> = ({
   }
 
   const maxWidth = detents.includes('medium') && !detents.includes('large') ? 520 : 720
+
+  useEffect(() => {
+    if (!isPresented.value || interactiveDismissDisabled || typeof window === 'undefined') {
+      return
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') {
+        return
+      }
+
+      event.preventDefault()
+      dismiss()
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [interactiveDismissDisabled, isPresented.value])
 
   const sheetNode = (
     <div
@@ -70,9 +95,11 @@ export const Sheet: FC<SheetProps> = ({
     </div>
   )
 
-  if (typeof document === 'undefined') {
+  const portalRoot = resolvePortalRoot()
+
+  if (!portalRoot) {
     return sheetNode
   }
 
-  return createPortal(sheetNode, document.body)
+  return createPortal(sheetNode, portalRoot)
 }

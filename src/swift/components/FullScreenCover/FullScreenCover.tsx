@@ -9,6 +9,14 @@ export type FullScreenCoverProps = {
   children: ReactNode
 }
 
+const resolvePortalRoot = () => {
+  if (typeof document === 'undefined') {
+    return null
+  }
+
+  return document.querySelector('[data-type="WindowGroup"]') ?? document.body
+}
+
 export const FullScreenCover: FC<FullScreenCoverProps> = ({ isPresented, title, children }) => {
   if (!isPresented.value) {
     return null
@@ -32,9 +40,11 @@ export const FullScreenCover: FC<FullScreenCoverProps> = ({ isPresented, title, 
     </div>
   )
 
-  if (typeof document === 'undefined') {
+  const portalRoot = resolvePortalRoot()
+
+  if (!portalRoot) {
     return coverNode
   }
 
-  return createPortal(coverNode, document.body)
+  return createPortal(coverNode, portalRoot)
 }
