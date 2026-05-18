@@ -27,9 +27,27 @@ export const DemoHome: FC = () => {
   const activeSection = sectionEntries.find(entry => entry.id === section.value)
   const showSidebar = isDemoCategory(section.value)
   const contentScrollIdentity = `${section.value}:${currentPage.value ?? 'landing'}`
+  const contentBranchKey =
+    section.value === 'home'
+      ? 'home'
+      : showSidebar && !currentPage.value
+        ? `${section.value}:landing`
+        : `${section.value}:${currentPage.value ?? 'empty'}`
+
+  const blurActiveElement = () => {
+    if (typeof document === 'undefined') {
+      return
+    }
+
+    const activeElement = document.activeElement
+    if (activeElement instanceof HTMLElement) {
+      activeElement.blur()
+    }
+  }
 
   const onOpenSection = (nextSection: DemoSection) => {
     const entry = sectionEntries.find(item => item.id === nextSection)
+    blurActiveElement()
     section.setValue(nextSection)
     currentPage.setValue(isDemoCategory(nextSection) ? null : entry?.defaultPageId ?? null)
   }
@@ -62,7 +80,7 @@ export const DemoHome: FC = () => {
             ) : null}
             <VStack frame={{ maxWidth: 'infinity', maxHeight: 'infinity', alignment: 'topLeading' }}>
               <ScrollView key={contentScrollIdentity} frame={{ maxWidth: 'infinity', maxHeight: 'infinity' }} showsIndicators>
-                <VStack spacing={18} padding={{ top: 12, horizontal: 20, bottom: 20 }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
+                <VStack key={contentBranchKey} spacing={18} padding={{ top: 12, horizontal: 20, bottom: 20 }} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
                   {section.value === 'home' ? (
                     <HomePage onOpenSection={onOpenSection} />
                   ) : showSidebar && !currentPage.value ? (
@@ -123,6 +141,17 @@ const SectionLanding: FC<{
   groups: Array<{ title: string; pages: Array<{ id: string; title: string }> }>
   onOpenPage: (pageId: string) => void
 }> = ({ groups, onOpenPage }) => {
+  const openPage = (pageId: string) => {
+    if (typeof document !== 'undefined') {
+      const activeElement = document.activeElement
+      if (activeElement instanceof HTMLElement) {
+        activeElement.blur()
+      }
+    }
+
+    onOpenPage(pageId)
+  }
+
   return (
     <VStack spacing={18} frame={{ maxWidth: 'infinity', alignment: 'leading' }}>
       <Text font="title3.semibold">选择页面</Text>
@@ -136,7 +165,7 @@ const SectionLanding: FC<{
                 title={page.title}
                 summary="进入该组件/页面 demo。"
                 buttonTitle="打开"
-                onPress={() => onOpenPage(page.id)}
+                onPress={() => openPage(page.id)}
               />
             ))}
           </VStack>
