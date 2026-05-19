@@ -5,6 +5,18 @@
 ## 要求
 
 由于我们这边是用React形式复刻SwiftUI的原生的组件，方便之后转换。所以当我们要修改什么功能的时候，不允许修改组件的名字和接口，比如参数、参数、可选值等等。
+- 强约束：`src/swift/*`，尤其 `src/swift/components/*` 下的组件，在“转换到 SwiftUI / 生成 SwiftUI / 做 translator 映射”时，一律视为“SwiftUI 原生组件签名声明”。
+- 转换时只看组件签名：
+  - 组件名
+  - props / 参数名
+  - 可选值
+  - children / slot 结构
+  - `Binding` / state 语义
+- 转换时禁止把组件内部浏览器实现细节当作 SwiftUI 语义来源：
+  - 禁看内部 `div/input/button/span/img/iframe`
+  - 禁看内部 DOM 层级 / CSS / 定位 / portal / runtime hack
+  - 禁按内部 mock 实现去推导 SwiftUI 结构
+- 这些内部细节只服务浏览器预演；对 SwiftUI 转换来说，它们都是 impl detail，不是协议面。
 
 ## 数据结构与分层
 
@@ -200,6 +212,7 @@
   - `src/swift/components/<Component>/<Component>.tsx`
   - `src/swift/components/<Component>/<Component>.demo.tsx`
   - `src/swift/components/<Component>/index.ts`
+- `src/swift/*` 下组件对 translator / codegen 的主要意义是“签名与语义映射”，不是内部 DOM 实现。
 - `Custom Components` 只能组合 `src/swift/components/*` 暴露的原生 DSL 组件。
 - `Custom Components` 禁直接依赖原生 DOM、禁外部 UI 库、禁绕过 DSL 直接吃 runtime 内部 helper。
 - 新增系统能力，优先加 mock facade，再决定 demo 如何消费。
